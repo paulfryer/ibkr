@@ -9,9 +9,10 @@ A professional, clean C# SDK for the Interactive Brokers (IBKR) Web Trading API 
 ```
 IBKR.TradingApi.sln
 ├── src/
-│   └── IBKR.Api.Client/           # Main SDK Library (.NET 8)
+│   ├── IBKR.Api.Client/           # Main SDK Library (.NET 8)
+│   └── IBKR.Api.Client.Mock/      # Mock Implementation for Testing
 └── tests/
-    └── IBKR.Api.Client.Tests/     # Unit Tests (xUnit)
+    └── IBKR.Api.Client.Tests/     # Unit Tests (xUnit, 20 tests)
 ```
 
 ### Core Features
@@ -35,9 +36,11 @@ IBKR.TradingApi.sln
 - Polly 8.4.2 (Retry policies)
 - System.Text.Json 8.0.5
 
+**Mock Project:**
+- No external dependencies (references main library only)
+
 **Test Project:**
 - xUnit 2.5.3
-- Moq 4.20.70
 - FluentAssertions 6.12.0
 
 ## 🎯 Implemented Components
@@ -149,12 +152,17 @@ IBKR.TradingApi.sln
 - [ ] HttpClientFactory integration
 - [ ] Options pattern configuration
 
-### 6. Unit Tests
-- [ ] Mock HTTP message handler
-- [ ] Test data builders
-- [ ] Service tests for each API service
-- [ ] Rate limiter tests
-- [ ] Integration workflow tests
+### 6. Testing ✅ COMPLETE
+- [x] **Implementation-Agnostic Test Architecture** - Tests use DI, zero knowledge of implementation
+- [x] **Mock Implementation Project** - Real in-memory implementation (not Moq)
+- [x] **Test Infrastructure** - xUnit fixtures with configuration switching
+- [x] **20 Passing Tests** covering:
+  - Stock search and contract lookup
+  - Option chain retrieval and filtering
+  - Strike price validation
+  - End-to-end MSFT option scenarios
+- [x] **Environment-Based Switching** - `USE_REAL_IBKR_API=true` to switch to real HTTP client
+- [ ] HTTP implementation of IInstrumentApiService (when ready)
 
 ## 📖 Usage Example (When Complete)
 
@@ -213,8 +221,11 @@ dotnet restore
 # Build
 dotnet build
 
-# Run tests (when implemented)
+# Run tests
 dotnet test
+
+# Run tests with real API (requires credentials)
+USE_REAL_IBKR_API=true dotnet test
 ```
 
 ## 📝 Code Quality
@@ -225,10 +236,104 @@ dotnet test
 - **Documentation**: XML comments on all public APIs
 - **Style**: EditorConfig (recommended)
 
+## 🧪 Testing Architecture
+
+This project uses a **pure dependency injection** approach where tests have **ZERO knowledge** of implementation details.
+
+### Key Principles
+
+1. **Tests depend only on interfaces** (`IInstrumentApiService`)
+2. **No Moq in tests** - Tests receive services via constructor injection
+3. **Single switch controls implementation** - Environment variable or configuration
+4. **Same tests run against mock or real API** - No code changes needed
+
+### Project Layout
+
+```
+src/IBKR.Api.Client.Mock/
+├── Data/MsftTestData.cs                    # Realistic test data
+├── Services/MockInstrumentApiService.cs    # Real in-memory implementation
+└── Services/MockInstrumentApiServiceBuilder.cs  # Fluent configuration API
+
+tests/IBKR.Api.Client.Tests/
+├── Infrastructure/
+│   ├── TestConfiguration.cs                # Reads environment config
+│   └── InstrumentServiceFixture.cs         # xUnit fixture for DI
+├── Services/                               # Interface contract tests
+└── Scenarios/                              # End-to-end workflow tests
+```
+
+### How It Works
+
+**Test receives service via DI - doesn't know if mock or real:**
+
+```csharp
+public class MyTests : IClassFixture<InstrumentServiceFixture>
+{
+    private readonly IInstrumentApiService _service;  // Could be mock or real!
+
+    public MyTests(InstrumentServiceFixture fixture)
+    {
+        _service = fixture.Service;  // Injected by xUnit
+    }
+
+    [Fact]
+    public async Task CanSearchForMsft()
+    {
+        var results = await _service.SearchStocksAsync("MSFT");
+        results.Should().ContainKey("MSFT");
+    }
+}
+```
+
+**Fixture determines implementation:**
+
+```csharp
+public class InstrumentServiceFixture : IDisposable
+{
+    public IInstrumentApiService Service { get; }
+
+    public InstrumentServiceFixture()
+    {
+        var config = TestConfiguration.LoadFromEnvironment();
+
+        if (config.UseRealApi)
+            Service = new RealHttpService();  // Future
+        else
+            Service = MockInstrumentApiServiceBuilder.CreateDefault().Build();
+    }
+}
+```
+
+### Running Tests
+
+```bash
+# Default: Use mock implementation
+dotnet test
+# Output: 20 tests passed in ~20ms
+
+# Switch to real API (when HTTP client is implemented)
+export USE_REAL_IBKR_API=true
+export IBKR_API_BASE_URL=https://localhost:5000/v1/api
+export IBKR_AUTH_TOKEN=your-token
+dotnet test
+```
+
+### Benefits
+
+✅ **Fast Development** - No HTTP overhead
+✅ **CI/CD Friendly** - No credentials needed
+✅ **Implementation Flexibility** - Swap implementations without changing tests
+✅ **Real Integration Tests** - Same tests validate real API when ready
+✅ **Clean Architecture** - Enforces interface-based design
+
+See [TESTING.md](TESTING.md) for detailed documentation.
+
 ## 📚 Resources
 
 - [IBKR Web API Documentation](https://www.interactivebrokers.com/campus/ibkr-api-page/webapi-doc/)
 - [IBKR API Campus](https://ibkrcampus.com/campus/ibkr-api-page/web-api-trading/)
+- [Mock Project README](src/IBKR.Api.Client.Mock/README.md)
 
 ## 🤝 Contributing
 

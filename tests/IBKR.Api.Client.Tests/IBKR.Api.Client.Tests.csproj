@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\IBKR.Api.Client\IBKR.Api.Client.csproj" />
+    <ProjectReference Include="..\..\src\IBKR.Api.Client.Mock\IBKR.Api.Client.Mock.csproj" />
   </ItemGroup>
 
 </Project>

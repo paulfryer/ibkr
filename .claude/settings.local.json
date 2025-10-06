@@ -3,7 +3,8 @@
     "allow": [
       "WebFetch(domain:ibkrcampus.com)",
       "WebSearch",
-      "WebFetch(domain:interactivebrokers.github.io)"
+      "WebFetch(domain:interactivebrokers.github.io)",
+      "WebFetch(domain:api.ibkr.com)"
     ],
     "deny": [],
     "ask": []
