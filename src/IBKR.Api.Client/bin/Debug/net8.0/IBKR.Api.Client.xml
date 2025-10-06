@@ -1,0 +1,1251 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>IBKR.Api.Client</name>
+    </assembly>
+    <members>
+        <member name="T:IBKR.Api.Client.Core.IBKRClientOptions">
+            <summary>
+            Configuration options for the IBKR API client.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Core.IBKRClientOptions.BaseUrl">
+            <summary>
+            Gets or sets the base URL for the IBKR API.
+            Default: https://api.ibkr.com/v1/api
+            For Client Portal Gateway: https://localhost:5000/v1/api
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Core.IBKRClientOptions.BearerToken">
+            <summary>
+            Gets or sets the bearer token for authentication.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Core.IBKRClientOptions.AccessToken">
+            <summary>
+            Gets or sets the OAuth 2.0 access token.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Core.IBKRClientOptions.RateLimitPerSecond">
+            <summary>
+            Gets or sets the global rate limit (requests per second).
+            Default: 50 (production API limit)
+            Client Portal Gateway: 10
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Core.IBKRClientOptions.EnableRetry">
+            <summary>
+            Gets or sets a value indicating whether to enable automatic retry on transient failures.
+            Default: true
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Core.IBKRClientOptions.MaxRetryAttempts">
+            <summary>
+            Gets or sets the maximum number of retry attempts.
+            Default: 3
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Core.IBKRClientOptions.RetryDelayMilliseconds">
+            <summary>
+            Gets or sets the base delay for exponential backoff (in milliseconds).
+            Default: 1000ms
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Core.IBKRClientOptions.TimeoutSeconds">
+            <summary>
+            Gets or sets the HTTP request timeout (in seconds).
+            Default: 30 seconds
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Core.IBKRClientOptions.ThrowOnApiError">
+            <summary>
+            Gets or sets a value indicating whether to throw exceptions on API errors.
+            If false, errors are returned in the response object.
+            Default: true
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Core.IBKRClientOptions.EnableLogging">
+            <summary>
+            Gets or sets a value indicating whether to log HTTP requests and responses.
+            Default: false
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Core.IBKRClientOptions.ValidateSslCertificates">
+            <summary>
+            Gets or sets a value indicating whether to validate SSL certificates.
+            Default: true (should only be false for testing with self-signed certs)
+            </summary>
+        </member>
+        <member name="M:IBKR.Api.Client.Core.IBKRClientOptions.Validate">
+            <summary>
+            Validates the configuration options.
+            </summary>
+            <exception cref="T:System.ArgumentException">Thrown when configuration is invalid.</exception>
+        </member>
+        <member name="T:IBKR.Api.Client.Exceptions.AuthenticationException">
+            <summary>
+            Exception thrown when authentication fails or credentials are invalid.
+            </summary>
+        </member>
+        <member name="M:IBKR.Api.Client.Exceptions.AuthenticationException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:IBKR.Api.Client.Exceptions.AuthenticationException"/> class.
+            </summary>
+            <param name="message">The message that describes the error.</param>
+        </member>
+        <member name="M:IBKR.Api.Client.Exceptions.AuthenticationException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:IBKR.Api.Client.Exceptions.AuthenticationException"/> class with inner exception.
+            </summary>
+            <param name="message">The message that describes the error.</param>
+            <param name="innerException">The exception that is the cause of the current exception.</param>
+        </member>
+        <member name="M:IBKR.Api.Client.Exceptions.AuthenticationException.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:IBKR.Api.Client.Exceptions.AuthenticationException"/> class with response content.
+            </summary>
+            <param name="message">The message that describes the error.</param>
+            <param name="responseContent">The response content from the API.</param>
+        </member>
+        <member name="T:IBKR.Api.Client.Exceptions.IBKRApiException">
+            <summary>
+            Base exception for all IBKR API-related errors.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Exceptions.IBKRApiException.StatusCode">
+            <summary>
+            Gets the HTTP status code associated with this exception, if applicable.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Exceptions.IBKRApiException.ResponseContent">
+            <summary>
+            Gets the response content from the API, if available.
+            </summary>
+        </member>
+        <member name="M:IBKR.Api.Client.Exceptions.IBKRApiException.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:IBKR.Api.Client.Exceptions.IBKRApiException"/> class.
+            </summary>
+        </member>
+        <member name="M:IBKR.Api.Client.Exceptions.IBKRApiException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:IBKR.Api.Client.Exceptions.IBKRApiException"/> class with a specified error message.
+            </summary>
+            <param name="message">The message that describes the error.</param>
+        </member>
+        <member name="M:IBKR.Api.Client.Exceptions.IBKRApiException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:IBKR.Api.Client.Exceptions.IBKRApiException"/> class with a specified error message and inner exception.
+            </summary>
+            <param name="message">The message that describes the error.</param>
+            <param name="innerException">The exception that is the cause of the current exception.</param>
+        </member>
+        <member name="M:IBKR.Api.Client.Exceptions.IBKRApiException.#ctor(System.String,System.Net.HttpStatusCode,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:IBKR.Api.Client.Exceptions.IBKRApiException"/> class with HTTP details.
+            </summary>
+            <param name="message">The message that describes the error.</param>
+            <param name="statusCode">The HTTP status code.</param>
+            <param name="responseContent">The response content from the API.</param>
+        </member>
+        <member name="M:IBKR.Api.Client.Exceptions.IBKRApiException.#ctor(System.String,System.Net.HttpStatusCode,System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:IBKR.Api.Client.Exceptions.IBKRApiException"/> class with HTTP details and inner exception.
+            </summary>
+            <param name="message">The message that describes the error.</param>
+            <param name="statusCode">The HTTP status code.</param>
+            <param name="responseContent">The response content from the API.</param>
+            <param name="innerException">The exception that is the cause of the current exception.</param>
+        </member>
+        <member name="T:IBKR.Api.Client.Exceptions.OrderException">
+            <summary>
+            Exception thrown when an order operation fails.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Exceptions.OrderException.OrderId">
+            <summary>
+            Gets the order ID associated with this exception, if available.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Exceptions.OrderException.AccountId">
+            <summary>
+            Gets the account ID associated with this exception, if available.
+            </summary>
+        </member>
+        <member name="M:IBKR.Api.Client.Exceptions.OrderException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:IBKR.Api.Client.Exceptions.OrderException"/> class.
+            </summary>
+            <param name="message">The message that describes the error.</param>
+        </member>
+        <member name="M:IBKR.Api.Client.Exceptions.OrderException.#ctor(System.String,System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:IBKR.Api.Client.Exceptions.OrderException"/> class with order details.
+            </summary>
+            <param name="message">The message that describes the error.</param>
+            <param name="orderId">The order ID associated with this exception.</param>
+            <param name="accountId">The account ID associated with this exception.</param>
+        </member>
+        <member name="M:IBKR.Api.Client.Exceptions.OrderException.#ctor(System.String,System.Net.HttpStatusCode,System.String,System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:IBKR.Api.Client.Exceptions.OrderException"/> class with HTTP details.
+            </summary>
+            <param name="message">The message that describes the error.</param>
+            <param name="statusCode">The HTTP status code.</param>
+            <param name="responseContent">The response content from the API.</param>
+            <param name="orderId">The order ID associated with this exception.</param>
+            <param name="accountId">The account ID associated with this exception.</param>
+        </member>
+        <member name="T:IBKR.Api.Client.Exceptions.RateLimitExceededException">
+            <summary>
+            Exception thrown when the API rate limit has been exceeded.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Exceptions.RateLimitExceededException.RetryAfter">
+            <summary>
+            Gets the time when the rate limit will reset, if known.
+            </summary>
+        </member>
+        <member name="M:IBKR.Api.Client.Exceptions.RateLimitExceededException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:IBKR.Api.Client.Exceptions.RateLimitExceededException"/> class.
+            </summary>
+            <param name="message">The message that describes the error.</param>
+        </member>
+        <member name="M:IBKR.Api.Client.Exceptions.RateLimitExceededException.#ctor(System.String,System.DateTimeOffset)">
+            <summary>
+            Initializes a new instance of the <see cref="T:IBKR.Api.Client.Exceptions.RateLimitExceededException"/> class with retry information.
+            </summary>
+            <param name="message">The message that describes the error.</param>
+            <param name="retryAfter">The time when the rate limit will reset.</param>
+        </member>
+        <member name="M:IBKR.Api.Client.Exceptions.RateLimitExceededException.#ctor(System.String,System.String,System.Nullable{System.DateTimeOffset})">
+            <summary>
+            Initializes a new instance of the <see cref="T:IBKR.Api.Client.Exceptions.RateLimitExceededException"/> class with response content.
+            </summary>
+            <param name="message">The message that describes the error.</param>
+            <param name="responseContent">The response content from the API.</param>
+            <param name="retryAfter">The time when the rate limit will reset.</param>
+        </member>
+        <member name="T:IBKR.Api.Client.Exceptions.SessionExpiredException">
+            <summary>
+            Exception thrown when the current session has expired and requires re-authentication.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Exceptions.SessionExpiredException.ExpiredAt">
+            <summary>
+            Gets the time when the session expired.
+            </summary>
+        </member>
+        <member name="M:IBKR.Api.Client.Exceptions.SessionExpiredException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:IBKR.Api.Client.Exceptions.SessionExpiredException"/> class.
+            </summary>
+            <param name="message">The message that describes the error.</param>
+        </member>
+        <member name="M:IBKR.Api.Client.Exceptions.SessionExpiredException.#ctor(System.String,System.DateTimeOffset)">
+            <summary>
+            Initializes a new instance of the <see cref="T:IBKR.Api.Client.Exceptions.SessionExpiredException"/> class with expiration time.
+            </summary>
+            <param name="message">The message that describes the error.</param>
+            <param name="expiredAt">The time when the session expired.</param>
+        </member>
+        <member name="M:IBKR.Api.Client.Exceptions.SessionExpiredException.#ctor(System.String,System.String,System.Nullable{System.DateTimeOffset})">
+            <summary>
+            Initializes a new instance of the <see cref="T:IBKR.Api.Client.Exceptions.SessionExpiredException"/> class with response content.
+            </summary>
+            <param name="message">The message that describes the error.</param>
+            <param name="responseContent">The response content from the API.</param>
+            <param name="expiredAt">The time when the session expired.</param>
+        </member>
+        <member name="T:IBKR.Api.Client.Infrastructure.RateLimiter.IRateLimiter">
+            <summary>
+            Interface for rate limiting HTTP requests.
+            </summary>
+        </member>
+        <member name="M:IBKR.Api.Client.Infrastructure.RateLimiter.IRateLimiter.WaitAsync(System.Threading.CancellationToken)">
+            <summary>
+            Waits asynchronously until a request can be made without exceeding the rate limit.
+            </summary>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns>A task that completes when the request can proceed.</returns>
+        </member>
+        <member name="M:IBKR.Api.Client.Infrastructure.RateLimiter.IRateLimiter.TryAcquire">
+            <summary>
+            Tries to acquire permission to make a request immediately.
+            </summary>
+            <returns>True if the request can proceed immediately; otherwise, false.</returns>
+        </member>
+        <member name="T:IBKR.Api.Client.Infrastructure.RateLimiter.TokenBucketRateLimiter">
+            <summary>
+            Token bucket rate limiter implementation.
+            Allows bursts up to the bucket capacity while maintaining an average rate.
+            </summary>
+        </member>
+        <member name="M:IBKR.Api.Client.Infrastructure.RateLimiter.TokenBucketRateLimiter.#ctor(System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:IBKR.Api.Client.Infrastructure.RateLimiter.TokenBucketRateLimiter"/> class.
+            </summary>
+            <param name="requestsPerSecond">Maximum number of requests per second.</param>
+        </member>
+        <member name="M:IBKR.Api.Client.Infrastructure.RateLimiter.TokenBucketRateLimiter.WaitAsync(System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:IBKR.Api.Client.Infrastructure.RateLimiter.TokenBucketRateLimiter.TryAcquire">
+            <inheritdoc/>
+        </member>
+        <member name="T:IBKR.Api.Client.Models.Accounts.AccountInfo">
+            <summary>
+            Detailed information about an account.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Accounts.AccountInfo.Id">
+            <summary>
+            Gets or sets the internal account identifier.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Accounts.AccountInfo.AccountId">
+            <summary>
+            Gets or sets the account ID.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Accounts.AccountInfo.AccountVan">
+            <summary>
+            Gets or sets the account VAN (Virtual Account Number).
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Accounts.AccountInfo.AccountTitle">
+            <summary>
+            Gets or sets the account title.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Accounts.AccountInfo.DisplayName">
+            <summary>
+            Gets or sets the display name.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Accounts.AccountInfo.AccountAlias">
+            <summary>
+            Gets or sets the account alias.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Accounts.AccountInfo.AccountStatus">
+            <summary>
+            Gets or sets the account status code.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Accounts.AccountInfo.Currency">
+            <summary>
+            Gets or sets the account currency.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Accounts.AccountInfo.Type">
+            <summary>
+            Gets or sets the account type.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Accounts.AccountInfo.TradingType">
+            <summary>
+            Gets or sets the trading type.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Accounts.AccountInfo.BusinessType">
+            <summary>
+            Gets or sets the business type.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Accounts.AccountInfo.IbEntity">
+            <summary>
+            Gets or sets the IB entity.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Accounts.AccountInfo.ClearingStatus">
+            <summary>
+            Gets or sets the clearing status.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Accounts.AccountInfo.Parent">
+            <summary>
+            Gets or sets parent account information.
+            </summary>
+        </member>
+        <member name="T:IBKR.Api.Client.Models.Accounts.AccountParent">
+            <summary>
+            Parent account information for multi-level account structures.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Accounts.AccountParent.Mmc">
+            <summary>
+            Gets or sets the master management client list.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Accounts.AccountParent.AccountId">
+            <summary>
+            Gets or sets the parent account ID.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Accounts.AccountParent.IsMParent">
+            <summary>
+            Gets or sets a value indicating whether this is a multiplex parent.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Accounts.AccountParent.IsMChild">
+            <summary>
+            Gets or sets a value indicating whether this is a multiplex child.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Accounts.AccountParent.IsMultiplex">
+            <summary>
+            Gets or sets a value indicating whether multiplex is enabled.
+            </summary>
+        </member>
+        <member name="T:IBKR.Api.Client.Models.Accounts.TradingAccountsResponse">
+            <summary>
+            Response containing the list of trading accounts.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Accounts.TradingAccountsResponse.Accounts">
+            <summary>
+            Gets or sets the list of account IDs.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Accounts.TradingAccountsResponse.SelectedAccount">
+            <summary>
+            Gets or sets the currently selected account ID.
+            </summary>
+        </member>
+        <member name="T:IBKR.Api.Client.Models.Authentication.AuthStatusResponse">
+            <summary>
+            Response from the authentication status endpoint.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Authentication.AuthStatusResponse.Authenticated">
+            <summary>
+            Gets or sets a value indicating whether the user is authenticated.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Authentication.AuthStatusResponse.Connected">
+            <summary>
+            Gets or sets a value indicating whether the connection is established.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Authentication.AuthStatusResponse.Competing">
+            <summary>
+            Gets or sets a value indicating whether there is a competing session.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Authentication.AuthStatusResponse.Message">
+            <summary>
+            Gets or sets the status message.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Authentication.AuthStatusResponse.ServerInfo">
+            <summary>
+            Gets or sets the server information.
+            </summary>
+        </member>
+        <member name="T:IBKR.Api.Client.Models.Authentication.ServerInfo">
+            <summary>
+            Information about the API server.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Authentication.ServerInfo.ServerName">
+            <summary>
+            Gets or sets the server name.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Authentication.ServerInfo.ServerVersion">
+            <summary>
+            Gets or sets the server version.
+            </summary>
+        </member>
+        <member name="T:IBKR.Api.Client.Models.Authentication.SsoInitResponse">
+            <summary>
+            Response from SSO initialization endpoint.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Authentication.SsoInitResponse.AuthUrl">
+            <summary>
+            Gets or sets the authentication URL for SSO flow.
+            </summary>
+        </member>
+        <member name="T:IBKR.Api.Client.Models.Authentication.TickleResponse">
+            <summary>
+            Response from the tickle endpoint (session keep-alive).
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Authentication.TickleResponse.Session">
+            <summary>
+            Gets or sets the session identifier.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Authentication.TickleResponse.SsoExpires">
+            <summary>
+            Gets or sets the SSO expiration time (Unix timestamp).
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Authentication.TickleResponse.Collission">
+            <summary>
+            Gets or sets a value indicating whether there is a session collision.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Authentication.TickleResponse.UserId">
+            <summary>
+            Gets or sets the user ID.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Authentication.TickleResponse.IServer">
+            <summary>
+            Gets or sets the iServer information.
+            </summary>
+        </member>
+        <member name="T:IBKR.Api.Client.Models.Common.ApiResponse`1">
+            <summary>
+            Generic wrapper for API responses.
+            </summary>
+            <typeparam name="T">The type of data returned in the response.</typeparam>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Common.ApiResponse`1.Data">
+            <summary>
+            Gets or sets the response data.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Common.ApiResponse`1.IsSuccess">
+            <summary>
+            Gets or sets a value indicating whether the request was successful.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Common.ApiResponse`1.ErrorMessage">
+            <summary>
+            Gets or sets the error message, if any.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Common.ApiResponse`1.StatusCode">
+            <summary>
+            Gets or sets the HTTP status code.
+            </summary>
+        </member>
+        <member name="T:IBKR.Api.Client.Models.Common.PagedResult`1">
+            <summary>
+            Represents a paged result set.
+            </summary>
+            <typeparam name="T">The type of items in the result set.</typeparam>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Common.PagedResult`1.Items">
+            <summary>
+            Gets or sets the items in the current page.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Common.PagedResult`1.TotalCount">
+            <summary>
+            Gets or sets the total number of items across all pages.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Common.PagedResult`1.PageNumber">
+            <summary>
+            Gets or sets the current page number.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Common.PagedResult`1.PageSize">
+            <summary>
+            Gets or sets the page size.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Common.PagedResult`1.HasNextPage">
+            <summary>
+            Gets a value indicating whether there is a next page.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Common.PagedResult`1.HasPreviousPage">
+            <summary>
+            Gets a value indicating whether there is a previous page.
+            </summary>
+        </member>
+        <member name="T:IBKR.Api.Client.Models.Enums.OptionRight">
+            <summary>
+            Represents the right/type of an option contract.
+            </summary>
+        </member>
+        <member name="F:IBKR.Api.Client.Models.Enums.OptionRight.C">
+            <summary>
+            Call option - right to buy
+            </summary>
+        </member>
+        <member name="F:IBKR.Api.Client.Models.Enums.OptionRight.P">
+            <summary>
+            Put option - right to sell
+            </summary>
+        </member>
+        <member name="T:IBKR.Api.Client.Models.Enums.OrderSide">
+            <summary>
+            Represents the side of an order (buy or sell).
+            </summary>
+        </member>
+        <member name="F:IBKR.Api.Client.Models.Enums.OrderSide.BUY">
+            <summary>
+            Buy order
+            </summary>
+        </member>
+        <member name="F:IBKR.Api.Client.Models.Enums.OrderSide.SELL">
+            <summary>
+            Sell order
+            </summary>
+        </member>
+        <member name="T:IBKR.Api.Client.Models.Enums.OrderStatusEnum">
+            <summary>
+            Represents the current status of an order.
+            </summary>
+        </member>
+        <member name="F:IBKR.Api.Client.Models.Enums.OrderStatusEnum.Submitted">
+            <summary>
+            Order has been submitted but not yet acknowledged
+            </summary>
+        </member>
+        <member name="F:IBKR.Api.Client.Models.Enums.OrderStatusEnum.Filled">
+            <summary>
+            Order has been filled completely
+            </summary>
+        </member>
+        <member name="F:IBKR.Api.Client.Models.Enums.OrderStatusEnum.Cancelled">
+            <summary>
+            Order has been canceled
+            </summary>
+        </member>
+        <member name="F:IBKR.Api.Client.Models.Enums.OrderStatusEnum.PartiallyFilled">
+            <summary>
+            Order has been partially filled
+            </summary>
+        </member>
+        <member name="F:IBKR.Api.Client.Models.Enums.OrderStatusEnum.PendingSubmit">
+            <summary>
+            Order is pending submission
+            </summary>
+        </member>
+        <member name="F:IBKR.Api.Client.Models.Enums.OrderStatusEnum.PendingCancel">
+            <summary>
+            Order is pending cancellation
+            </summary>
+        </member>
+        <member name="F:IBKR.Api.Client.Models.Enums.OrderStatusEnum.PreSubmitted">
+            <summary>
+            Order has been pre-submitted
+            </summary>
+        </member>
+        <member name="F:IBKR.Api.Client.Models.Enums.OrderStatusEnum.Inactive">
+            <summary>
+            Order is inactive
+            </summary>
+        </member>
+        <member name="F:IBKR.Api.Client.Models.Enums.OrderStatusEnum.Unknown">
+            <summary>
+            Order status is unknown
+            </summary>
+        </member>
+        <member name="T:IBKR.Api.Client.Models.Enums.OrderType">
+            <summary>
+            Represents the type of order to be placed.
+            </summary>
+        </member>
+        <member name="F:IBKR.Api.Client.Models.Enums.OrderType.MKT">
+            <summary>
+            Market order - executes at the current market price
+            </summary>
+        </member>
+        <member name="F:IBKR.Api.Client.Models.Enums.OrderType.LMT">
+            <summary>
+            Limit order - executes at a specified price or better
+            </summary>
+        </member>
+        <member name="F:IBKR.Api.Client.Models.Enums.OrderType.STP">
+            <summary>
+            Stop order - becomes a market order when the stop price is reached
+            </summary>
+        </member>
+        <member name="F:IBKR.Api.Client.Models.Enums.OrderType.STP_LMT">
+            <summary>
+            Stop-limit order - becomes a limit order when the stop price is reached
+            </summary>
+        </member>
+        <member name="F:IBKR.Api.Client.Models.Enums.OrderType.REL">
+            <summary>
+            Relative order - price specified as an offset from the market
+            </summary>
+        </member>
+        <member name="F:IBKR.Api.Client.Models.Enums.OrderType.TRAIL">
+            <summary>
+            Trailing stop order - stop price follows the market by a specified amount
+            </summary>
+        </member>
+        <member name="F:IBKR.Api.Client.Models.Enums.OrderType.MIDPRICE">
+            <summary>
+            Midpoint order - executes at the midpoint between bid and ask
+            </summary>
+        </member>
+        <member name="T:IBKR.Api.Client.Models.Enums.SecurityType">
+            <summary>
+            Represents the type of financial security/instrument.
+            </summary>
+        </member>
+        <member name="F:IBKR.Api.Client.Models.Enums.SecurityType.STK">
+            <summary>
+            Stock
+            </summary>
+        </member>
+        <member name="F:IBKR.Api.Client.Models.Enums.SecurityType.OPT">
+            <summary>
+            Option
+            </summary>
+        </member>
+        <member name="F:IBKR.Api.Client.Models.Enums.SecurityType.FUT">
+            <summary>
+            Future
+            </summary>
+        </member>
+        <member name="F:IBKR.Api.Client.Models.Enums.SecurityType.FOP">
+            <summary>
+            Future Option
+            </summary>
+        </member>
+        <member name="F:IBKR.Api.Client.Models.Enums.SecurityType.IND">
+            <summary>
+            Index
+            </summary>
+        </member>
+        <member name="F:IBKR.Api.Client.Models.Enums.SecurityType.CASH">
+            <summary>
+            Cash/Forex
+            </summary>
+        </member>
+        <member name="F:IBKR.Api.Client.Models.Enums.SecurityType.BOND">
+            <summary>
+            Bond
+            </summary>
+        </member>
+        <member name="F:IBKR.Api.Client.Models.Enums.SecurityType.FUND">
+            <summary>
+            Mutual Fund
+            </summary>
+        </member>
+        <member name="T:IBKR.Api.Client.Models.Enums.TimeInForce">
+            <summary>
+            Specifies how long an order remains active before it is executed or expires.
+            </summary>
+        </member>
+        <member name="F:IBKR.Api.Client.Models.Enums.TimeInForce.DAY">
+            <summary>
+            Day order - valid for the current trading day only
+            </summary>
+        </member>
+        <member name="F:IBKR.Api.Client.Models.Enums.TimeInForce.GTC">
+            <summary>
+            Good Till Canceled - remains active until filled or manually canceled
+            </summary>
+        </member>
+        <member name="F:IBKR.Api.Client.Models.Enums.TimeInForce.IOC">
+            <summary>
+            Immediate or Cancel - fills immediately (partially or fully) or cancels
+            </summary>
+        </member>
+        <member name="F:IBKR.Api.Client.Models.Enums.TimeInForce.FOK">
+            <summary>
+            Fill or Kill - must be filled entirely immediately or is canceled
+            </summary>
+        </member>
+        <member name="F:IBKR.Api.Client.Models.Enums.TimeInForce.OPG">
+            <summary>
+            At the Opening - executes at the market opening
+            </summary>
+        </member>
+        <member name="F:IBKR.Api.Client.Models.Enums.TimeInForce.DTC">
+            <summary>
+            Day Till Canceled - valid until the end of the trading day
+            </summary>
+        </member>
+        <member name="T:IBKR.Api.Client.Models.Instruments.SecurityDefinition">
+            <summary>
+            Security definition search result.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Instruments.SecurityDefinition.Conid">
+            <summary>
+            Gets or sets the contract ID.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Instruments.SecurityDefinition.CompanyHeader">
+            <summary>
+            Gets or sets the company header.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Instruments.SecurityDefinition.CompanyName">
+            <summary>
+            Gets or sets the company name.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Instruments.SecurityDefinition.Symbol">
+            <summary>
+            Gets or sets the symbol.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Instruments.SecurityDefinition.Description">
+            <summary>
+            Gets or sets the description.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Instruments.SecurityDefinition.Restricted">
+            <summary>
+            Gets or sets the restricted status.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Instruments.SecurityDefinition.Sections">
+            <summary>
+            Gets or sets the sections containing contract details.
+            </summary>
+        </member>
+        <member name="T:IBKR.Api.Client.Models.Instruments.SecuritySection">
+            <summary>
+            Section of a security definition with contract details.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Instruments.SecuritySection.SecType">
+            <summary>
+            Gets or sets the security type.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Instruments.SecuritySection.Months">
+            <summary>
+            Gets or sets the available months (for derivatives).
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Instruments.SecuritySection.Exchange">
+            <summary>
+            Gets or sets the exchange.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Instruments.SecuritySection.ShowPrips">
+            <summary>
+            Gets or sets a value indicating whether PRIIPs information should be shown.
+            </summary>
+        </member>
+        <member name="T:IBKR.Api.Client.Models.Instruments.SecurityInfo">
+            <summary>
+            Detailed information about a security.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Instruments.SecurityInfo.Conid">
+            <summary>
+            Gets or sets the contract ID.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Instruments.SecurityInfo.Symbol">
+            <summary>
+            Gets or sets the symbol.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Instruments.SecurityInfo.SecType">
+            <summary>
+            Gets or sets the security type.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Instruments.SecurityInfo.Exchange">
+            <summary>
+            Gets or sets the exchange.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Instruments.SecurityInfo.ListingExchange">
+            <summary>
+            Gets or sets the listing exchange.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Instruments.SecurityInfo.Right">
+            <summary>
+            Gets or sets the option right (C for Call, P for Put).
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Instruments.SecurityInfo.Strike">
+            <summary>
+            Gets or sets the strike price (for options).
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Instruments.SecurityInfo.Currency">
+            <summary>
+            Gets or sets the currency.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Instruments.SecurityInfo.Cusip">
+            <summary>
+            Gets or sets the CUSIP identifier.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Instruments.SecurityInfo.Coupon">
+            <summary>
+            Gets or sets the coupon rate (for bonds).
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Instruments.SecurityInfo.Desc1">
+            <summary>
+            Gets or sets the first description line.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Instruments.SecurityInfo.Desc2">
+            <summary>
+            Gets or sets the second description line.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Instruments.SecurityInfo.MaturityDate">
+            <summary>
+            Gets or sets the maturity date.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Instruments.SecurityInfo.Multiplier">
+            <summary>
+            Gets or sets the contract multiplier.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Instruments.SecurityInfo.TradingClass">
+            <summary>
+            Gets or sets the trading class.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Instruments.SecurityInfo.ValidExchanges">
+            <summary>
+            Gets or sets the valid exchanges.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Instruments.SecurityInfo.ShowPrips">
+            <summary>
+            Gets or sets a value indicating whether PRIIPs information should be shown.
+            </summary>
+        </member>
+        <member name="T:IBKR.Api.Client.Models.MarketData.HistoricalData">
+            <summary>
+            Historical market data response.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.MarketData.HistoricalData.Data">
+            <summary>
+            Gets or sets the array of bar data.
+            </summary>
+        </member>
+        <member name="T:IBKR.Api.Client.Models.MarketData.BarData">
+            <summary>
+            Represents a single OHLC bar of market data.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.MarketData.BarData.Open">
+            <summary>
+            Gets or sets the open price.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.MarketData.BarData.High">
+            <summary>
+            Gets or sets the high price.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.MarketData.BarData.Low">
+            <summary>
+            Gets or sets the low price.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.MarketData.BarData.Close">
+            <summary>
+            Gets or sets the close price.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.MarketData.BarData.Volume">
+            <summary>
+            Gets or sets the volume.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.MarketData.BarData.Timestamp">
+            <summary>
+            Gets or sets the timestamp.
+            </summary>
+        </member>
+        <member name="T:IBKR.Api.Client.Models.MarketData.MarketDataSnapshot">
+            <summary>
+            Market data snapshot for a contract.
+            Field IDs: 31=last, 84=bid, 85=bid size, 86=ask, 88=ask size, 7059=last size
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.MarketData.MarketDataSnapshot.Conid">
+            <summary>
+            Gets or sets the contract ID.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.MarketData.MarketDataSnapshot.ConidEx">
+            <summary>
+            Gets or sets the extended contract ID.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.MarketData.MarketDataSnapshot.ServerId">
+            <summary>
+            Gets or sets the server ID.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.MarketData.MarketDataSnapshot.Updated">
+            <summary>
+            Gets or sets the last update timestamp.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.MarketData.MarketDataSnapshot.LastPrice">
+            <summary>
+            Gets or sets the last price (field 31).
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.MarketData.MarketDataSnapshot.BidPrice">
+            <summary>
+            Gets or sets the bid price (field 84).
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.MarketData.MarketDataSnapshot.BidSize">
+            <summary>
+            Gets or sets the bid size (field 85).
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.MarketData.MarketDataSnapshot.AskPrice">
+            <summary>
+            Gets or sets the ask price (field 86).
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.MarketData.MarketDataSnapshot.AskSize">
+            <summary>
+            Gets or sets the ask size (field 88).
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.MarketData.MarketDataSnapshot.LastSize">
+            <summary>
+            Gets or sets the last size (field 7059).
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.MarketData.MarketDataSnapshot.AdditionalFields">
+            <summary>
+            Gets or sets additional fields returned by the API.
+            </summary>
+        </member>
+        <member name="T:IBKR.Api.Client.Models.Orders.Order">
+            <summary>
+            Represents an order with full details.
+            </summary>
+        </member>
+        <member name="T:IBKR.Api.Client.Models.Orders.OrderReplyMessage">
+            <summary>
+            Reply message that requires confirmation before order placement.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Orders.OrderReplyMessage.Id">
+            <summary>
+            Gets or sets the message ID for confirmation.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Orders.OrderReplyMessage.Message">
+            <summary>
+            Gets or sets the message text array.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Orders.OrderReplyMessage.IsSuppressed">
+            <summary>
+            Gets or sets a value indicating whether the message is suppressed.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Orders.OrderReplyMessage.MessageIds">
+            <summary>
+            Gets or sets the list of message IDs.
+            </summary>
+        </member>
+        <member name="T:IBKR.Api.Client.Models.Orders.OrderRequest">
+            <summary>
+            Request to place or modify an order.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Orders.OrderRequest.Conid">
+            <summary>
+            Gets or sets the contract ID (required).
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Orders.OrderRequest.Conidex">
+            <summary>
+            Gets or sets the extended contract ID for combos/spreads.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Orders.OrderRequest.Side">
+            <summary>
+            Gets or sets the order side (BUY or SELL) (required).
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Orders.OrderRequest.OrderType">
+            <summary>
+            Gets or sets the order type (required).
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Orders.OrderRequest.Price">
+            <summary>
+            Gets or sets the limit price (for limit orders).
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Orders.OrderRequest.AuxPrice">
+            <summary>
+            Gets or sets the auxiliary price (stop price for stop orders).
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Orders.OrderRequest.Quantity">
+            <summary>
+            Gets or sets the order quantity (required).
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Orders.OrderRequest.Tif">
+            <summary>
+            Gets or sets the time in force (required).
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Orders.OrderRequest.OutsideRth">
+            <summary>
+            Gets or sets a value indicating whether to allow trading outside regular hours.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Orders.OrderRequest.COID">
+            <summary>
+            Gets or sets the client order ID (for bracket orders).
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Orders.OrderRequest.ParentId">
+            <summary>
+            Gets or sets the parent order ID (for child orders in bracket orders).
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Orders.OrderRequest.ListingExchange">
+            <summary>
+            Gets or sets the listing exchange.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Orders.OrderRequest.Referrer">
+            <summary>
+            Gets or sets the referrer.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Orders.OrderRequest.OrderRef">
+            <summary>
+            Gets or sets the user-defined order reference.
+            </summary>
+        </member>
+        <member name="T:IBKR.Api.Client.Models.Orders.OrderResponse">
+            <summary>
+            Response from order placement or modification.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Orders.OrderResponse.OrderId">
+            <summary>
+            Gets or sets the order ID.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Orders.OrderResponse.OrderStatus">
+            <summary>
+            Gets or sets the order status.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Orders.OrderResponse.EncryptMessage">
+            <summary>
+            Gets or sets the encrypted message.
+            </summary>
+        </member>
+        <member name="T:IBKR.Api.Client.Models.Orders.OrderStatus">
+            <summary>
+            Detailed status information for an order.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Orders.OrderStatus.OrderId">
+            <summary>
+            Gets or sets the order ID.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Orders.OrderStatus.Status">
+            <summary>
+            Gets or sets the order status.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Orders.OrderStatus.Filled">
+            <summary>
+            Gets or sets the filled quantity.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Orders.OrderStatus.Remaining">
+            <summary>
+            Gets or sets the remaining quantity.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Orders.OrderStatus.AvgFillPrice">
+            <summary>
+            Gets or sets the average fill price.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Orders.OrderStatus.PermId">
+            <summary>
+            Gets or sets the permanent order ID.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Orders.OrderStatus.ParentId">
+            <summary>
+            Gets or sets the parent order ID.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Orders.OrderStatus.LastFillPrice">
+            <summary>
+            Gets or sets the last fill price.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Orders.OrderStatus.ClientId">
+            <summary>
+            Gets or sets the client ID.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Orders.OrderStatus.WhyHeld">
+            <summary>
+            Gets or sets the reason why the order is held.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Orders.OrderStatus.MktCapPrice">
+            <summary>
+            Gets or sets the market cap price.
+            </summary>
+        </member>
+        <member name="T:IBKR.Api.Client.Models.Portfolio.LedgerEntry">
+            <summary>
+            Represents cash balance ledger entry for a specific currency.
+            </summary>
+        </member>
+        <member name="T:IBKR.Api.Client.Models.Portfolio.SummaryValue">
+            <summary>
+            Represents a summary value for portfolio/account information.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Portfolio.SummaryValue.Amount">
+            <summary>
+            Gets or sets the numeric amount.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Portfolio.SummaryValue.Currency">
+            <summary>
+            Gets or sets the currency.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Portfolio.SummaryValue.IsNull">
+            <summary>
+            Gets or sets a value indicating whether the value is null.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Portfolio.SummaryValue.Timestamp">
+            <summary>
+            Gets or sets the timestamp.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Portfolio.SummaryValue.Value">
+            <summary>
+            Gets or sets the string value representation.
+            </summary>
+        </member>
+        <member name="P:IBKR.Api.Client.Models.Portfolio.SummaryValue.Severity">
+            <summary>
+            Gets or sets the severity level.
+            </summary>
+        </member>
+    </members>
+</doc>
