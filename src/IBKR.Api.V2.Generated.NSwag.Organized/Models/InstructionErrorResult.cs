@@ -2,12 +2,12 @@ using System.CodeDom.Compiler;
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
 
-namespace IBKR.Api.V2.Generated.NSwag;
+namespace IBKR.Api.V2.Generated.NSwag.Models;
 
 [GeneratedCode("NJsonSchema", "14.0.3.0 (NJsonSchema v11.0.0.0 (Newtonsoft.Json v13.0.0.0))")]
 public class InstructionErrorResult : InstructionResult
 {
-    [JsonProperty("error", Required = Required.Always)]
-    [Required]
-    public Error Error { get; set; } = new();
+	[JsonProperty("error", Required = Required.Always)]
+	[Required]
+	public Error Error { get; set; } = new Error();
 }

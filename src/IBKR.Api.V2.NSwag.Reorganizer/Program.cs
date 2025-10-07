@@ -173,6 +173,11 @@ class Program
                 Console.WriteLine($"  ✓ Deleted {Path.GetFileName(oldInterfaceFile)}");
             }
 
+            // Step 10: Update namespaces to match folder structure
+            Console.WriteLine("\nUpdating namespaces to match folder structure...");
+            var namespaceUpdater = new NamespaceUpdater(outputProjectDir);
+            await namespaceUpdater.UpdateNamespaces();
+
             Console.WriteLine($"\n✅ Success! Organized project created at:");
             Console.WriteLine($"   {outputProjectDir}");
             Console.WriteLine($"   Interfaces: {interfacesDir}");

@@ -1,18 +1,26 @@
 using System.CodeDom.Compiler;
+using System.Collections.Generic;
 using Newtonsoft.Json;
+using IBKR.Api.V2.Generated.NSwag.Helpers;
 
-namespace IBKR.Api.V2.Generated.NSwag;
+namespace IBKR.Api.V2.Generated.NSwag.Models;
 
-[JsonConverter(typeof(JsonInheritanceConverter), "type")]
+[JsonConverter(typeof(JsonInheritanceConverter), new object[] { "type" })]
 [GeneratedCode("NJsonSchema", "14.0.3.0 (NJsonSchema v11.0.0.0 (Newtonsoft.Json v13.0.0.0))")]
 public class AgreementRevision
 {
-    private IDictionary<string, object>? _additionalProperties;
+	private IDictionary<string, object>? _additionalProperties;
 
-    [JsonExtensionData]
-    public IDictionary<string, object> AdditionalProperties
-    {
-        get => _additionalProperties ?? (_additionalProperties = new Dictionary<string, object>());
-        set => _additionalProperties = value;
-    }
+	[JsonExtensionData]
+	public IDictionary<string, object> AdditionalProperties
+	{
+		get
+		{
+			return _additionalProperties ?? (_additionalProperties = new Dictionary<string, object>());
+		}
+		set
+		{
+			_additionalProperties = value;
+		}
+	}
 }

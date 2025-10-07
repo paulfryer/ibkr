@@ -11,8 +11,10 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using IBKR.Api.V2.Generated.NSwag.Models;
+using IBKR.Api.V2.Generated.NSwag.Interfaces;
 
-namespace IBKR.Api.V2.Generated.NSwag;
+namespace IBKR.Api.V2.Generated.NSwag.Services;
 
 /// <summary>
 /// Implementation of PaService

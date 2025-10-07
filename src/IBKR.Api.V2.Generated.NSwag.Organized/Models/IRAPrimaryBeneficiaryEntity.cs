@@ -1,59 +1,66 @@
+using System;
 using System.CodeDom.Compiler;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using IBKR.Api.V2.Generated.NSwag.Helpers;
 
-namespace IBKR.Api.V2.Generated.NSwag;
+namespace IBKR.Api.V2.Generated.NSwag.Models;
 
 [GeneratedCode("NJsonSchema", "14.0.3.0 (NJsonSchema v11.0.0.0 (Newtonsoft.Json v13.0.0.0))")]
 public class IRAPrimaryBeneficiaryEntity
 {
-    private IDictionary<string, object>? _additionalProperties;
+	private IDictionary<string, object>? _additionalProperties;
 
-    [JsonProperty("name", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-    public string Name { get; set; }
+	[JsonProperty("name", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+	public string Name { get; set; } = null;
 
-    [JsonProperty("address", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-    public Address Address { get; set; }
+	[JsonProperty("address", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+	public Address Address { get; set; } = null;
 
-    [JsonProperty("id", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-    public string Id { get; set; }
+	[JsonProperty("id", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+	public string Id { get; set; } = null;
 
-    [JsonProperty("externalId", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-    public string ExternalId { get; set; }
+	[JsonProperty("externalId", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+	public string ExternalId { get; set; } = null;
 
-    [JsonProperty("ownershipPercentage", Required = Required.DisallowNull,
-        NullValueHandling = NullValueHandling.Ignore)]
-    public double OwnershipPercentage { get; set; }
+	[JsonProperty("ownershipPercentage", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+	public double OwnershipPercentage { get; set; } = 0.0;
 
-    [JsonProperty("title", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-    public Title Title { get; set; }
+	[JsonProperty("title", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+	public Title Title { get; set; } = null;
 
-    [JsonProperty("relationship", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-    [JsonConverter(typeof(StringEnumConverter))]
-    public IRAPrimaryBeneficiaryEntityRelationship Relationship { get; set; } =
-        IRAPrimaryBeneficiaryEntityRelationship.Brother;
+	[JsonProperty("relationship", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+	[JsonConverter(typeof(StringEnumConverter))]
+	public IRAPrimaryBeneficiaryEntityRelationship Relationship { get; set; } = IRAPrimaryBeneficiaryEntityRelationship.Brother;
 
-    [JsonProperty("executor", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-    public Individual Executor { get; set; }
+	[JsonProperty("executor", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+	public Individual Executor { get; set; } = null;
 
-    [JsonProperty("executionDate", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-    [JsonConverter(typeof(DateFormatConverter))]
-    public DateTimeOffset ExecutionDate { get; set; } = default;
+	[JsonProperty("executionDate", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+	[JsonConverter(typeof(DateFormatConverter))]
+	public DateTimeOffset ExecutionDate { get; set; } = default(DateTimeOffset);
 
-    [JsonProperty("articleOfWill", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-    public string ArticleOfWill { get; set; }
+	[JsonProperty("articleOfWill", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+	public string ArticleOfWill { get; set; } = null;
 
-    [JsonProperty("entityType", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-    [JsonConverter(typeof(StringEnumConverter))]
-    public IRAPrimaryBeneficiaryEntityEntityType EntityType { get; set; } = IRAPrimaryBeneficiaryEntityEntityType.Trust;
+	[JsonProperty("entityType", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+	[JsonConverter(typeof(StringEnumConverter))]
+	public IRAPrimaryBeneficiaryEntityEntityType EntityType { get; set; } = IRAPrimaryBeneficiaryEntityEntityType.Trust;
 
-    [JsonProperty("charityNumber", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-    public string CharityNumber { get; set; }
+	[JsonProperty("charityNumber", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+	public string CharityNumber { get; set; } = null;
 
-    [JsonExtensionData]
-    public IDictionary<string, object> AdditionalProperties
-    {
-        get => _additionalProperties ?? (_additionalProperties = new Dictionary<string, object>());
-        set => _additionalProperties = value;
-    }
+	[JsonExtensionData]
+	public IDictionary<string, object> AdditionalProperties
+	{
+		get
+		{
+			return _additionalProperties ?? (_additionalProperties = new Dictionary<string, object>());
+		}
+		set
+		{
+			_additionalProperties = value;
+		}
+	}
 }

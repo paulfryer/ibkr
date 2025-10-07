@@ -1,31 +1,38 @@
 using System.CodeDom.Compiler;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace IBKR.Api.V2.Generated.NSwag;
+namespace IBKR.Api.V2.Generated.NSwag.Models;
 
 [GeneratedCode("NJsonSchema", "14.0.3.0 (NJsonSchema v11.0.0.0 (Newtonsoft.Json v13.0.0.0))")]
 public class DocumentSubmission
 {
-    private IDictionary<string, object>? _additionalProperties;
+	private IDictionary<string, object>? _additionalProperties;
 
-    [JsonProperty("documents", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-    public ICollection<Document> Documents { get; set; }
+	[JsonProperty("documents", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+	public ICollection<Document> Documents { get; set; } = null;
 
-    [JsonProperty("accountId", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-    public string AccountId { get; set; }
+	[JsonProperty("accountId", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+	public string AccountId { get; set; } = null;
 
-    [JsonProperty("inputLanguage", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-    [JsonConverter(typeof(StringEnumConverter))]
-    public DocumentSubmissionInputLanguage InputLanguage { get; set; } = DocumentSubmissionInputLanguage.En;
+	[JsonProperty("inputLanguage", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+	[JsonConverter(typeof(StringEnumConverter))]
+	public DocumentSubmissionInputLanguage InputLanguage { get; set; } = DocumentSubmissionInputLanguage.En;
 
-    [JsonProperty("translation", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-    public bool Translation { get; set; }
+	[JsonProperty("translation", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+	public bool Translation { get; set; } = false;
 
-    [JsonExtensionData]
-    public IDictionary<string, object> AdditionalProperties
-    {
-        get => _additionalProperties ?? (_additionalProperties = new Dictionary<string, object>());
-        set => _additionalProperties = value;
-    }
+	[JsonExtensionData]
+	public IDictionary<string, object> AdditionalProperties
+	{
+		get
+		{
+			return _additionalProperties ?? (_additionalProperties = new Dictionary<string, object>());
+		}
+		set
+		{
+			_additionalProperties = value;
+		}
+	}
 }

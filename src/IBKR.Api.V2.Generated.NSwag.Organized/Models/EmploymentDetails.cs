@@ -1,39 +1,45 @@
 using System.CodeDom.Compiler;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace IBKR.Api.V2.Generated.NSwag;
+namespace IBKR.Api.V2.Generated.NSwag.Models;
 
 [GeneratedCode("NJsonSchema", "14.0.3.0 (NJsonSchema v11.0.0.0 (Newtonsoft.Json v13.0.0.0))")]
 public class EmploymentDetails
 {
-    private IDictionary<string, object>? _additionalProperties;
+	private IDictionary<string, object>? _additionalProperties;
 
-    [JsonProperty("employer", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-    public string Employer { get; set; }
+	[JsonProperty("employer", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+	public string Employer { get; set; } = null;
 
-    [JsonProperty("occupation", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-    public string Occupation { get; set; }
+	[JsonProperty("occupation", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+	public string Occupation { get; set; } = null;
 
-    [JsonProperty("description", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-    public string Description { get; set; }
+	[JsonProperty("description", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+	public string Description { get; set; } = null;
 
-    [JsonProperty("employerBusiness", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-    public string EmployerBusiness { get; set; }
+	[JsonProperty("employerBusiness", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+	public string EmployerBusiness { get; set; } = null;
 
-    [JsonProperty("employerAddress", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-    public Address EmployerAddress { get; set; }
+	[JsonProperty("employerAddress", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+	public Address EmployerAddress { get; set; } = null;
 
-    [JsonProperty("employerPhone", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-    public string EmployerPhone { get; set; }
+	[JsonProperty("employerPhone", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+	public string EmployerPhone { get; set; } = null;
 
-    [JsonProperty("emplCountryResCountryDetails", Required = Required.DisallowNull,
-        NullValueHandling = NullValueHandling.Ignore)]
-    public string EmplCountryResCountryDetails { get; set; }
+	[JsonProperty("emplCountryResCountryDetails", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+	public string EmplCountryResCountryDetails { get; set; } = null;
 
-    [JsonExtensionData]
-    public IDictionary<string, object> AdditionalProperties
-    {
-        get => _additionalProperties ?? (_additionalProperties = new Dictionary<string, object>());
-        set => _additionalProperties = value;
-    }
+	[JsonExtensionData]
+	public IDictionary<string, object> AdditionalProperties
+	{
+		get
+		{
+			return _additionalProperties ?? (_additionalProperties = new Dictionary<string, object>());
+		}
+		set
+		{
+			_additionalProperties = value;
+		}
+	}
 }

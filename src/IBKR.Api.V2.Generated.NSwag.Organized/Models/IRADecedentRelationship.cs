@@ -1,13 +1,17 @@
 using System.CodeDom.Compiler;
 using System.Runtime.Serialization;
 
-namespace IBKR.Api.V2.Generated.NSwag;
+namespace IBKR.Api.V2.Generated.NSwag.Models;
 
 [GeneratedCode("NJsonSchema", "14.0.3.0 (NJsonSchema v11.0.0.0 (Newtonsoft.Json v13.0.0.0))")]
 public enum IRADecedentRelationship
 {
-    [EnumMember(Value = "Other")] Other,
-    [EnumMember(Value = "Trust")] Trust,
-    [EnumMember(Value = "Spouse")] Spouse,
-    [EnumMember(Value = "Individual")] Individual
+	[EnumMember(Value = "Other")]
+	Other,
+	[EnumMember(Value = "Trust")]
+	Trust,
+	[EnumMember(Value = "Spouse")]
+	Spouse,
+	[EnumMember(Value = "Individual")]
+	Individual
 }
