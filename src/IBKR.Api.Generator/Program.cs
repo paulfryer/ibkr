@@ -180,8 +180,15 @@ class Program
         var buildResult = await RunCommand("dotnet", $"build \"{projectFile}\"", solutionDir);
         Console.WriteLine(buildResult);
 
+        // Step 10: Reorganize into 3-project structure (Contract, Client, MockClient)
+        Console.WriteLine($"\nReorganizing Kiota project into 3-project structure...");
+        var reorganizer = new KiotaReorganization.KiotaReorganizer(projectDir, solutionDir);
+        reorganizer.Reorganize();
+
         Console.WriteLine($"\n✓ {generatorName} generation complete!");
-        Console.WriteLine($"  Project: {projectDir}");
+        Console.WriteLine($"  Contract: {Path.Combine(solutionDir, "src", generatorName, "IBKR.Api.Kiota.Contract")}");
+        Console.WriteLine($"  Client: {Path.Combine(solutionDir, "src", generatorName, "IBKR.Api.Kiota.Client")}");
+        Console.WriteLine($"  MockClient: {Path.Combine(solutionDir, "src", generatorName, "IBKR.Api.Kiota.MockClient")}");
     }
 
     static async Task GenerateWithNSwag(string specPath)

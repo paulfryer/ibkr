@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Kiota.Authentication.Azure" Version="1.19.0" />
+    <PackageReference Include="Microsoft.Kiota.Bundle" Version="1.19.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\IBKR.Api.Kiota.Contract\IBKR.Api.Kiota.Contract.csproj" />
+  </ItemGroup>
+
+</Project>
