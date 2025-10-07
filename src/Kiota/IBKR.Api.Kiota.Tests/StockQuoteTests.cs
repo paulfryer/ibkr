@@ -70,15 +70,14 @@ public class StockQuoteTests : IClassFixture<TestFixture>
         // Arrange
         var conid = 265598; // AAPL
 
-        // Request multiple market data fields using Fields string
-        // 31 = Last Price, 84 = Bid Price, 86 = Ask Price
-        var fieldsString = "31,84,86,85,88";
+        // Request multiple market data fields using MdFields enum
+        // 31 = Last Price, 84 = Bid Price, 86 = Ask Price, 85 = Ask Size, 88 = Bid Size
 
-        // Act - Fluent API with string fields
+        // Act - Fluent API with MdFields enum
         var quote = await _client.Iserver.Marketdata.Snapshot.GetAsync(config =>
         {
             config.QueryParameters.Conids = conid;
-            config.QueryParameters.Fields = fieldsString;
+            config.QueryParameters.FieldsAsMdFields = MdFields.ThreeOne; // Could pass fieldsString instead
         });
 
         // Assert

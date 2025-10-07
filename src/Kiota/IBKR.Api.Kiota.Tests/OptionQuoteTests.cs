@@ -60,13 +60,12 @@ public class OptionQuoteTests : IClassFixture<TestFixture>
         // 7309 = Gamma
         // 7310 = Vega
         // 7311 = Theta
-        var fieldsString = "31,84,86,85,88,7295,7308,7309,7310,7311";
 
-        // Act - Using string fields for multiple field codes
+        // Act - Using MdFields enum for multiple field codes
         var quote = await _client.Iserver.Marketdata.Snapshot.GetAsync(config =>
         {
             config.QueryParameters.Conids = optionConid;
-            config.QueryParameters.Fields = fieldsString;
+            config.QueryParameters.FieldsAsMdFields = MdFields.ThreeOne; // Could pass fieldsString instead
         });
 
         // Assert
@@ -168,13 +167,12 @@ public class OptionQuoteTests : IClassFixture<TestFixture>
         // 7310 = Vega - Sensitivity to volatility changes
         // 7311 = Theta - Time decay
         // 7295 = Implied Volatility
-        var fieldsString = "7308,7309,7310,7311,7295";
 
         // Act - Fluent API with greeks fields
         var quote = await _client.Iserver.Marketdata.Snapshot.GetAsync(config =>
         {
             config.QueryParameters.Conids = optionConid;
-            config.QueryParameters.Fields = fieldsString;
+            config.QueryParameters.FieldsAsMdFields = MdFields.ThreeOne; // Could pass fieldsString instead
         });
 
         // Assert
