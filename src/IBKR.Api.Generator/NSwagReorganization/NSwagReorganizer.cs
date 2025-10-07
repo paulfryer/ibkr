@@ -6,7 +6,9 @@ using System.Text.RegularExpressions;
 namespace IBKR.Api.Generator.NSwagReorganization;
 
 /// <summary>
-/// Reorganizes the monolithic NSwag-generated client into a clean service-oriented architecture
+/// Reorganizes the monolithic NSwag-generated client into a clean service-oriented architecture.
+/// Creates Contract (Models, Interfaces) and Client (Services) projects.
+/// Note: MockClient and Tests are created separately by IBKR.Api.TestScaffold
 /// </summary>
 public class NSwagReorganizer
 {
@@ -31,17 +33,12 @@ public class NSwagReorganizer
             throw new FileNotFoundException($"Assembly not found: {_tempNSwagAssemblyPath}");
         }
 
-        // Step 1: Define the 3 project directories
+        // Step 1: Define the 2 project directories
         var baseDir = Path.GetDirectoryName(_outputProjectDir)!;
         var contractDir = Path.Combine(baseDir, "IBKR.Api.NSwag.Contract");
         var httpClientDir = Path.Combine(baseDir, "IBKR.Api.NSwag.Client");
-        var mockClientDir = Path.Combine(baseDir, "IBKR.Api.NSwag.MockClient");
 
-        // Check if MockClient already exists (contains user code we should preserve)
-        var mockClientExists = Directory.Exists(mockClientDir) &&
-                               File.Exists(Path.Combine(mockClientDir, "IBKR.Api.NSwag.MockClient.csproj"));
-
-        // Clean output directories (idempotent) - but preserve MockClient if it exists
+        // Clean output directories (idempotent)
         foreach (var dir in new[] { contractDir, httpClientDir })
         {
             if (Directory.Exists(dir))
@@ -70,25 +67,7 @@ public class NSwagReorganizer
         Directory.CreateDirectory(httpClientDir);
         var servicesDir = Directory.CreateDirectory(Path.Combine(httpClientDir, "Services")).FullName;
         Console.WriteLine($"Client project: {httpClientDir}");
-        Console.WriteLine($"  • Services/");
-
-        // Step 4: Create directory structure for MockClient project (only if it doesn't exist)
-        string mockServicesDir;
-        if (!mockClientExists)
-        {
-            Console.WriteLine("\n=== Creating MockClient Project Structure ===");
-            Directory.CreateDirectory(mockClientDir);
-            mockServicesDir = Directory.CreateDirectory(Path.Combine(mockClientDir, "Services")).FullName;
-            Console.WriteLine($"MockClient project: {mockClientDir}");
-            Console.WriteLine($"  • Services/\n");
-        }
-        else
-        {
-            Console.WriteLine("\n=== MockClient Project Already Exists ===");
-            Console.WriteLine($"Preserving existing MockClient project with user code");
-            Console.WriteLine($"MockClient project: {mockClientDir}\n");
-            mockServicesDir = Path.Combine(mockClientDir, "Services");
-        }
+        Console.WriteLine($"  • Services/\n");
 
         // Step 3: Initialize decompiler
         Console.WriteLine("Initializing decompiler...");
@@ -208,28 +187,20 @@ public class NSwagReorganizer
             Console.WriteLine($"  ✓ Deleted {Path.GetFileName(oldInterfaceFile)}");
         }
 
-        // Step 10: Create project files for all 3 projects
+        // Step 10: Create project files for Contract and Client projects
         Console.WriteLine("\n=== Creating project files ===");
         await CreateContractProjectFile(contractDir);
         await CreateClientProjectFile(httpClientDir);
-        if (!mockClientExists)
-        {
-            await CreateMockClientProjectFile(mockClientDir);
-        }
 
         // Step 11: Update namespaces to match folder structure
         Console.WriteLine("\n=== Updating namespaces ===");
         await UpdateNamespacesForProject(contractDir, "IBKR.Api.NSwag.Contract");
         await UpdateNamespacesForProject(httpClientDir, "IBKR.Api.NSwag.Client");
-        if (!mockClientExists)
-        {
-            await UpdateNamespacesForProject(mockClientDir, "IBKR.Api.NSwag.MockClient");
-        }
 
-        Console.WriteLine($"\n✅ Success! Created 3 projects:");
+        Console.WriteLine($"\n✅ Success! Created 2 projects:");
         Console.WriteLine($"   Contract: {contractDir}");
         Console.WriteLine($"   Client: {httpClientDir}");
-        Console.WriteLine($"   MockClient: {mockClientDir}");
+        Console.WriteLine($"\nNote: Run IBKR.Api.TestScaffold to create MockClient and Test projects");
     }
 
     private static bool IsClientType(ITypeDefinition type)
@@ -388,28 +359,6 @@ public partial class ApiException<TResult> : ApiException
         Console.WriteLine($"  ✓ Created {Path.GetFileName(projectFile)}");
     }
 
-    private static async Task CreateMockClientProjectFile(string projectDir)
-    {
-        var projectFile = Path.Combine(projectDir, "IBKR.Api.NSwag.MockClient.csproj");
-
-        var content = @"<Project Sdk=""Microsoft.NET.Sdk"">
-
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <ProjectReference Include=""..\IBKR.Api.NSwag.Contract\IBKR.Api.NSwag.Contract.csproj"" />
-  </ItemGroup>
-
-</Project>
-";
-
-        await File.WriteAllTextAsync(projectFile, content);
-        Console.WriteLine($"  ✓ Created {Path.GetFileName(projectFile)}");
-    }
 
     private static async Task UpdateNamespacesForProject(string projectDir, string baseNamespace)
     {

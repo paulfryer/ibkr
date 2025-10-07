@@ -137,26 +137,23 @@ class Program
         var createResult = await RunCommand("dotnet", $"new classlib -n {projectName} -o \"{projectDir}\" -f net8.0", solutionDir);
         Console.WriteLine(createResult);
 
-        // Step 5: Add to solution
-        Console.WriteLine($"Adding project to solution");
-        var addResult = await RunCommand("dotnet", $"sln \"{solutionFile}\" add \"{projectFile}\"", solutionDir);
-        Console.WriteLine(addResult);
+        // Note: We don't add the temp project to the solution - the reorganizer will add Contract/Client instead
 
-        // Step 6: Delete default Class1.cs
+        // Step 5: Delete default Class1.cs
         var class1Path = Path.Combine(projectDir, "Class1.cs");
         if (File.Exists(class1Path))
         {
             File.Delete(class1Path);
         }
 
-        // Step 7: Run Kiota generation with FIXED spec and VALIDATION ENABLED
+        // Step 6: Run Kiota generation with FIXED spec and VALIDATION ENABLED
         Console.WriteLine($"Running Kiota code generation with fixed spec (validation enabled)...");
         var kiotaResult = await RunCommand("kiota",
             $"generate --language CSharp --openapi \"{fixedSpecPath}\" --output . --class-name IBKRClient --namespace-name {projectName} --clean-output",
             projectDir);
         Console.WriteLine(kiotaResult);
 
-        // Step 8: Create .csproj with dependencies
+        // Step 7: Create .csproj with dependencies
         Console.WriteLine($"Adding Kiota dependencies to project...");
         var csprojContent = @"<Project Sdk=""Microsoft.NET.Sdk"">
 
@@ -175,13 +172,13 @@ class Program
 ";
         await File.WriteAllTextAsync(projectFile, csprojContent);
 
-        // Step 9: Build the project
+        // Step 8: Build the project
         Console.WriteLine($"Building project...");
         var buildResult = await RunCommand("dotnet", $"build \"{projectFile}\"", solutionDir);
         Console.WriteLine(buildResult);
 
-        // Step 10: Reorganize into 3-project structure (Contract, Client, MockClient)
-        Console.WriteLine($"\nReorganizing Kiota project into 3-project structure...");
+        // Step 9: Reorganize into 2-project structure (Contract, Client)
+        Console.WriteLine($"\nReorganizing Kiota project into 2-project structure...");
         var reorganizer = new KiotaReorganization.KiotaReorganizer(projectDir, solutionDir);
         reorganizer.Reorganize();
 
@@ -282,16 +279,14 @@ class Program
             Console.WriteLine($"  You can manually delete: {tempBaseDir}");
         }
 
-        // Step 7: Add all 3 projects to solution if not already there
+        // Step 7: Add Contract and Client projects to solution if not already there
         var contractProjectFile = Path.Combine(Path.GetDirectoryName(finalProjectDir)!, "IBKR.Api.NSwag.Contract", "IBKR.Api.NSwag.Contract.csproj");
         var httpClientProjectFile = Path.Combine(Path.GetDirectoryName(finalProjectDir)!, "IBKR.Api.NSwag.Client", "IBKR.Api.NSwag.Client.csproj");
-        var mockClientProjectFile = Path.Combine(Path.GetDirectoryName(finalProjectDir)!, "IBKR.Api.NSwag.MockClient", "IBKR.Api.NSwag.MockClient.csproj");
 
         var projectFiles = new[]
         {
             (contractProjectFile, "IBKR.Api.NSwag.Contract"),
-            (httpClientProjectFile, "IBKR.Api.NSwag.Client"),
-            (mockClientProjectFile, "IBKR.Api.NSwag.MockClient")
+            (httpClientProjectFile, "IBKR.Api.NSwag.Client")
         };
 
         Console.WriteLine($"\nAdding projects to solution...");
@@ -328,7 +323,7 @@ class Program
         Console.WriteLine($"\n✓ {generatorName} generation complete!");
         Console.WriteLine($"  Contract: {Path.GetDirectoryName(contractProjectFile)}");
         Console.WriteLine($"  Client: {Path.GetDirectoryName(httpClientProjectFile)}");
-        Console.WriteLine($"  MockClient: {Path.GetDirectoryName(mockClientProjectFile)}");
+        Console.WriteLine($"\nNote: Run IBKR.Api.TestScaffold to create MockClient and Test projects");
     }
 
     static string GetSolutionDirectory()

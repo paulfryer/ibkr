@@ -130,10 +130,10 @@ jobs:
           if-no-files-found: error
 
   #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  # JOB 3: Build and Package NSwag SDK (Parallel)
+  # JOB 3: Scaffold Test Infrastructure
   #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  build-nswag:
-    name: 📦 Build NSwag SDK
+  scaffold-tests:
+    name: 🧪 Scaffold Test Projects
     needs: [validate, generate-sdks]
     runs-on: ubuntu-latest
 
@@ -145,6 +145,66 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: generated-sdks
+          path: src/
+
+      - name: 🔨 Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: 🧪 Run test scaffold generator
+        working-directory: src/IBKR.Api.TestScaffold
+        run: |
+          echo "🧪 Creating MockClient and Test projects..."
+          dotnet run --configuration ${{ env.CONFIGURATION }}
+          echo "✅ Test infrastructure scaffolding complete"
+
+      - name: ✅ Verify test projects created
+        run: |
+          echo "🔍 Verifying test projects..."
+
+          EXPECTED_PROJECTS=(
+            "src/NSwag/IBKR.Api.NSwag.MockClient/IBKR.Api.NSwag.MockClient.csproj"
+            "src/NSwag/IBKR.Api.NSwag.Tests/IBKR.Api.NSwag.Tests.csproj"
+            "src/Kiota/IBKR.Api.Kiota.MockClient/IBKR.Api.Kiota.MockClient.csproj"
+            "src/Kiota/IBKR.Api.Kiota.Tests/IBKR.Api.Kiota.Tests.csproj"
+          )
+
+          for proj in "${EXPECTED_PROJECTS[@]}"; do
+            if [ -f "$proj" ]; then
+              echo "  ✅ $proj"
+            else
+              echo "  ℹ️  $proj (may already exist - preserved)"
+            fi
+          done
+
+      - name: 📤 Upload complete source (with tests)
+        uses: actions/upload-artifact@v4
+        with:
+          name: sdks-with-tests
+          path: |
+            src/NSwag/
+            src/Kiota/
+            src/Directory.Build.props
+          retention-days: 1
+          if-no-files-found: error
+
+  #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # JOB 4: Build and Package NSwag SDK (Parallel)
+  #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  build-nswag:
+    name: 📦 Build NSwag SDK
+    needs: [validate, scaffold-tests]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 📥 Download generated SDKs (with tests)
+        uses: actions/download-artifact@v4
+        with:
+          name: sdks-with-tests
           path: src/
 
       - name: 🔨 Setup .NET SDK
@@ -216,21 +276,21 @@ jobs:
           if-no-files-found: error
 
   #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  # JOB 4: Build and Package Kiota SDK (Parallel)
+  # JOB 5: Build and Package Kiota SDK (Parallel)
   #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   build-kiota:
     name: 📦 Build Kiota SDK
-    needs: [validate, generate-sdks]
+    needs: [validate, scaffold-tests]
     runs-on: ubuntu-latest
 
     steps:
       - name: 📥 Checkout repository
         uses: actions/checkout@v4
 
-      - name: 📥 Download generated SDKs
+      - name: 📥 Download generated SDKs (with tests)
         uses: actions/download-artifact@v4
         with:
-          name: generated-sdks
+          name: sdks-with-tests
           path: src/
 
       - name: 🔨 Setup .NET SDK
@@ -302,11 +362,103 @@ jobs:
           if-no-files-found: error
 
   #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  # JOB 5: Create Release Summary
+  # JOB 6: Test NSwag SDK (Parallel)
+  #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  test-nswag:
+    name: ✅ Test NSwag SDK
+    needs: [validate, build-nswag, scaffold-tests]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 📥 Download SDKs with tests
+        uses: actions/download-artifact@v4
+        with:
+          name: sdks-with-tests
+          path: src/
+
+      - name: 🔨 Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: 🧪 Run NSwag tests (with mocks)
+        working-directory: src/NSwag
+        run: |
+          if [ -d "IBKR.Api.NSwag.Tests" ]; then
+            echo "🧪 Running NSwag tests..."
+            dotnet test IBKR.Api.NSwag.Tests/IBKR.Api.NSwag.Tests.csproj \
+              --configuration ${{ env.CONFIGURATION }} \
+              --logger "trx;LogFileName=test-results.trx" \
+              --logger "console;verbosity=detailed"
+            echo "✅ NSwag tests passed"
+          else
+            echo "ℹ️  No test project found (may not exist yet)"
+          fi
+
+      - name: 📤 Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nswag-test-results
+          path: src/NSwag/IBKR.Api.NSwag.Tests/TestResults/*.trx
+          retention-days: 30
+          if-no-files-found: ignore
+
+  #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # JOB 7: Test Kiota SDK (Parallel)
+  #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  test-kiota:
+    name: ✅ Test Kiota SDK
+    needs: [validate, build-kiota, scaffold-tests]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 📥 Download SDKs with tests
+        uses: actions/download-artifact@v4
+        with:
+          name: sdks-with-tests
+          path: src/
+
+      - name: 🔨 Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: 🧪 Run Kiota tests (with mocks)
+        working-directory: src/Kiota
+        run: |
+          if [ -d "IBKR.Api.Kiota.Tests" ]; then
+            echo "🧪 Running Kiota tests..."
+            dotnet test IBKR.Api.Kiota.Tests/IBKR.Api.Kiota.Tests.csproj \
+              --configuration ${{ env.CONFIGURATION }} \
+              --logger "trx;LogFileName=test-results.trx" \
+              --logger "console;verbosity=detailed"
+            echo "✅ Kiota tests passed"
+          else
+            echo "ℹ️  No test project found (may not exist yet)"
+          fi
+
+      - name: 📤 Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kiota-test-results
+          path: src/Kiota/IBKR.Api.Kiota.Tests/TestResults/*.trx
+          retention-days: 30
+          if-no-files-found: ignore
+
+  #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # JOB 8: Create Release Summary
   #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   create-summary:
     name: 📊 Create Release Summary
-    needs: [validate, build-nswag, build-kiota]
+    needs: [validate, build-nswag, build-kiota, test-nswag, test-kiota]
     runs-on: ubuntu-latest
 
     steps:

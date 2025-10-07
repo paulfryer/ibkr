@@ -4,10 +4,10 @@ using System.Text.RegularExpressions;
 namespace IBKR.Api.Generator.KiotaReorganization;
 
 /// <summary>
-/// Reorganizes the Kiota-generated monolithic client into a 3-project architecture:
+/// Reorganizes the Kiota-generated monolithic client into a 2-project architecture:
 /// - Contract: Models (POCOs)
 /// - Client: RequestBuilders and IBKRClient
-/// - MockClient: IRequestAdapter mocking helpers
+/// Note: MockClient and Tests are created separately by IBKR.Api.TestScaffold
 /// </summary>
 public class KiotaReorganizer
 {
@@ -27,19 +27,10 @@ public class KiotaReorganizer
         var baseDir = Path.GetDirectoryName(_sourceProjectDir)!;
         var contractDir = Path.Combine(baseDir, "IBKR.Api.Kiota.Contract");
         var clientDir = Path.Combine(baseDir, "IBKR.Api.Kiota.Client");
-        var mockClientDir = Path.Combine(baseDir, "IBKR.Api.Kiota.MockClient");
-
-        // Check if MockClient already exists (contains user code we should preserve)
-        var mockClientExists = Directory.Exists(mockClientDir) &&
-                               File.Exists(Path.Combine(mockClientDir, "IBKR.Api.Kiota.MockClient.csproj"));
 
         // Step 1: Create project directories
         Directory.CreateDirectory(contractDir);
         Directory.CreateDirectory(clientDir);
-        if (!mockClientExists)
-        {
-            Directory.CreateDirectory(mockClientDir);
-        }
 
         // Step 2: Create Contract project (Models only)
         CreateContractProject(contractDir);
@@ -53,26 +44,19 @@ public class KiotaReorganizer
         // Step 5: Move RequestBuilders and IBKRClient to Client
         MoveRequestBuilders(clientDir);
 
-        // Step 6: Create MockClient project (only if it doesn't exist)
-        if (!mockClientExists)
-        {
-            CreateMockClientProject(mockClientDir, contractDir);
-        }
-        else
-        {
-            Console.WriteLine("MockClient project already exists - preserving user code");
-        }
-
-        // Step 7: Update namespaces in Client project
+        // Step 6: Update namespaces in Client project
         UpdateClientNamespaces(clientDir);
 
-        // Step 8: Add all projects to solution
-        AddProjectsToSolution(contractDir, clientDir, mockClientDir);
+        // Step 7: Add projects to solution
+        AddProjectsToSolution(contractDir, clientDir);
 
-        // Step 9: Delete original generated project
+        // Step 8: Delete original generated project
         DeleteSourceProject();
 
         Console.WriteLine("Kiota reorganization complete!");
+        Console.WriteLine($"  Contract: {contractDir}");
+        Console.WriteLine($"  Client: {clientDir}");
+        Console.WriteLine("\nNote: Run IBKR.Api.TestScaffold to create MockClient and Test projects");
     }
 
     private void CreateContractProject(string contractDir)
@@ -124,53 +108,6 @@ public class KiotaReorganizer
         File.WriteAllText(Path.Combine(clientDir, "IBKR.Api.Kiota.Client.csproj"), csprojContent);
     }
 
-    private void CreateMockClientProject(string mockClientDir, string contractDir)
-    {
-        Console.WriteLine("Creating MockClient project...");
-
-        var csprojContent = @"<Project Sdk=""Microsoft.NET.Sdk"">
-
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include=""Microsoft.Kiota.Abstractions"" Version=""1.19.0"" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include=""..\IBKR.Api.Kiota.Contract\IBKR.Api.Kiota.Contract.csproj"" />
-  </ItemGroup>
-
-</Project>
-";
-        File.WriteAllText(Path.Combine(mockClientDir, "IBKR.Api.Kiota.MockClient.csproj"), csprojContent);
-
-        // Create a placeholder helper class
-        var helperContent = @"using Microsoft.Kiota.Abstractions;
-
-namespace IBKR.Api.Kiota.MockClient;
-
-/// <summary>
-/// Helper utilities for mocking IRequestAdapter in tests.
-/// Use this with your preferred mocking framework (NSubstitute, Moq, etc.)
-/// </summary>
-public static class MockRequestAdapterHelper
-{
-    // TODO: Add helper methods for common IRequestAdapter mocking scenarios
-    // Example:
-    // public static IRequestAdapter CreateMockAdapter()
-    // {
-    //     var mock = Substitute.For<IRequestAdapter>();
-    //     // Configure common behaviors
-    //     return mock;
-    // }
-}
-";
-        File.WriteAllText(Path.Combine(mockClientDir, "MockRequestAdapterHelper.cs"), helperContent);
-    }
 
     private void MoveModels(string contractDir)
     {
@@ -335,7 +272,7 @@ public static class MockRequestAdapterHelper
         }
     }
 
-    private void AddProjectsToSolution(string contractDir, string clientDir, string mockClientDir)
+    private void AddProjectsToSolution(string contractDir, string clientDir)
     {
         Console.WriteLine("Adding projects to solution...");
 
@@ -347,18 +284,12 @@ public static class MockRequestAdapterHelper
             return;
         }
 
-        // Remove old monolithic project if it exists in solution
-        var oldProjectPath = "Kiota\\IBKR.Api.Kiota\\IBKR.Api.Kiota.csproj";
-        RunDotnetCommand($"sln \"{solutionFile}\" remove \"{oldProjectPath}\"");
-
-        // Use dotnet sln add to add the new projects
+        // Add the Contract and Client projects to solution
         var contractProj = Path.Combine(contractDir, "IBKR.Api.Kiota.Contract.csproj");
         var clientProj = Path.Combine(clientDir, "IBKR.Api.Kiota.Client.csproj");
-        var mockClientProj = Path.Combine(mockClientDir, "IBKR.Api.Kiota.MockClient.csproj");
 
         RunDotnetCommand($"sln \"{solutionFile}\" add \"{contractProj}\" --solution-folder Kiota");
         RunDotnetCommand($"sln \"{solutionFile}\" add \"{clientProj}\" --solution-folder Kiota");
-        RunDotnetCommand($"sln \"{solutionFile}\" add \"{mockClientProj}\" --solution-folder Kiota");
     }
 
     private void DeleteSourceProject()

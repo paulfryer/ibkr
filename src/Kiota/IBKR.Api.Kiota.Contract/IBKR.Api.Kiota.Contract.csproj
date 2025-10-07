@@ -4,10 +4,6 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-
-    <!-- NuGet Package Metadata -->
-    <PackageId>IBKR.Api.Kiota.Contract</PackageId>
-    <Description>Contract library for Interactive Brokers REST API - Contains strongly-typed model classes (POCOs) for the Kiota-generated SDK.</Description>
   </PropertyGroup>
 
   <ItemGroup>
