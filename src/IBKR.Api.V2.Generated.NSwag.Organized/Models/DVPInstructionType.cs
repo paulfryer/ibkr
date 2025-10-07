@@ -6,14 +6,9 @@ namespace IBKR.Api.V2.Generated.NSwag;
 [GeneratedCode("NJsonSchema", "14.0.3.0 (NJsonSchema v11.0.0.0 (Newtonsoft.Json v13.0.0.0))")]
 public enum DVPInstructionType
 {
-	[EnumMember(Value = "DTCID")]
-	DTCID,
-	[EnumMember(Value = "NSCC")]
-	NSCC,
-	[EnumMember(Value = "CMTA")]
-	CMTA,
-	[EnumMember(Value = "GUS")]
-	GUS,
-	[EnumMember(Value = "OCCSSF")]
-	OCCSSF
+    [EnumMember(Value = "DTCID")] DTCID,
+    [EnumMember(Value = "NSCC")] NSCC,
+    [EnumMember(Value = "CMTA")] CMTA,
+    [EnumMember(Value = "GUS")] GUS,
+    [EnumMember(Value = "OCCSSF")] OCCSSF
 }

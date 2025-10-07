@@ -95,6 +95,9 @@ class Program
                     // Fix all lowercase type references
                     code = FixAllLowercaseTypes(code, lowercaseTypes);
 
+                    // Fix specific known case issues
+                    code = code.Replace("public Accounttype ", "public AccountType? ");
+
                     // Determine output folder
                     string folder;
                     if (IsClientType(typeDefinition))
@@ -131,21 +134,49 @@ class Program
             Console.WriteLine($"  • Helpers: {helpersCount} files");
             Console.WriteLine($"  • Skipped: {skipped} types\n");
 
-            // Step 6: Create project file
+            // Step 6: Fix ApiException to add generic version
+            Console.WriteLine("\nFixing ApiException...");
+            await FixApiException(modelsDir);
+
+            // Step 7: Create project file
             Console.WriteLine("Creating project file...");
             await CreateProjectFile(outputProjectDir);
 
             // Step 7: Split interfaces into service-based interfaces
             Console.WriteLine("\nSplitting monolithic interface into service interfaces...");
             var interfacesDir = Path.Combine(outputProjectDir, "Interfaces");
-            var sourceInterface = Path.Combine(solutionDir, "src", "IBKR.Api.V2.Generated.NSwag.Organized", "Clients", "IIBKRClient.cs");
+            var sourceInterface = Path.Combine(outputProjectDir, "Clients", "IIBKRClient.cs");
 
             var splitter = new InterfaceSplitter(sourceInterface, interfacesDir);
             await splitter.SplitInterfaces();
 
+            // Step 8: Generate service implementation classes (BEFORE deleting the source files)
+            Console.WriteLine("\nGenerating service implementation classes...");
+            var servicesDir = Path.Combine(outputProjectDir, "Services");
+            var sourceClient = Path.Combine(outputProjectDir, "Clients", "IBKRClient.cs");
+
+            var serviceGenerator = new ServiceImplementationGenerator(sourceClient, interfacesDir, servicesDir);
+            await serviceGenerator.GenerateServiceImplementations();
+
+            // Step 9: Delete old monolithic client files from Clients/ folder (they're now in Services/)
+            Console.WriteLine("\nRemoving old monolithic client files from Clients/...");
+            var oldClientFile = Path.Combine(clientsDir, "IBKRClient.cs");
+            var oldInterfaceFile = Path.Combine(clientsDir, "IIBKRClient.cs");
+            if (File.Exists(oldClientFile))
+            {
+                File.Delete(oldClientFile);
+                Console.WriteLine($"  ✓ Deleted {Path.GetFileName(oldClientFile)}");
+            }
+            if (File.Exists(oldInterfaceFile))
+            {
+                File.Delete(oldInterfaceFile);
+                Console.WriteLine($"  ✓ Deleted {Path.GetFileName(oldInterfaceFile)}");
+            }
+
             Console.WriteLine($"\n✅ Success! Organized project created at:");
             Console.WriteLine($"   {outputProjectDir}");
             Console.WriteLine($"   Interfaces: {interfacesDir}");
+            Console.WriteLine($"   Services: {servicesDir}");
 
             return 0;
         }
@@ -197,6 +228,69 @@ class Program
             fileName = fileName.Replace(c, '_');
         }
         return fileName;
+    }
+
+    static async Task FixApiException(string modelsDir)
+    {
+        var apiExceptionPath = Path.Combine(modelsDir, "ApiException.cs");
+        if (!File.Exists(apiExceptionPath))
+        {
+            Console.WriteLine("  ⚠ ApiException.cs not found, skipping");
+            return;
+        }
+
+        var content = await File.ReadAllTextAsync(apiExceptionPath);
+
+        // Check if generic version already exists
+        if (content.Contains("ApiException<TResult>"))
+        {
+            Console.WriteLine("  ✓ ApiException already has generic version");
+            return;
+        }
+
+        // Add generic version after the non-generic class (after its closing brace)
+        var genericVersion = @"
+[GeneratedCode(""NSwag"", ""14.0.3.0 (NJsonSchema v11.0.0.0 (Newtonsoft.Json v13.0.0.0))"")]
+public partial class ApiException<TResult> : ApiException
+{
+	public TResult Result { get; private set; }
+
+	public ApiException(string message, int statusCode, string? response, IReadOnlyDictionary<string, IEnumerable<string>> headers, TResult result, Exception? innerException)
+		: base(message, statusCode, response, headers, innerException)
+	{
+		Result = result;
+	}
+}
+";
+
+        // Find the end of the non-generic ApiException class (look for "public class ApiException" then find its closing brace)
+        var classStart = content.IndexOf("public class ApiException : Exception");
+        if (classStart > 0)
+        {
+            // Count braces to find the matching closing brace
+            int braceDepth = 0;
+            int classBodyStart = content.IndexOf('{', classStart);
+            if (classBodyStart > 0)
+            {
+                for (int i = classBodyStart; i < content.Length; i++)
+                {
+                    if (content[i] == '{') braceDepth++;
+                    else if (content[i] == '}')
+                    {
+                        braceDepth--;
+                        if (braceDepth == 0)
+                        {
+                            // Found the closing brace of the class, insert after it
+                            content = content.Insert(i + 1, genericVersion);
+                            await File.WriteAllTextAsync(apiExceptionPath, content);
+                            Console.WriteLine("  ✓ Added generic ApiException<TResult>");
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+        Console.WriteLine("  ⚠ Could not find proper location to insert generic ApiException");
     }
 
     static async Task CreateProjectFile(string projectDir)

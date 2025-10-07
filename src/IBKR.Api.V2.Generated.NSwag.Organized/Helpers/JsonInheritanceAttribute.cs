@@ -1,4 +1,3 @@
-using System;
 using System.CodeDom.Compiler;
 
 namespace IBKR.Api.V2.Generated.NSwag;
@@ -7,13 +6,13 @@ namespace IBKR.Api.V2.Generated.NSwag;
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface, AllowMultiple = true)]
 internal class JsonInheritanceAttribute : Attribute
 {
-	public string Key { get; }
+    public JsonInheritanceAttribute(string key, System.Type type)
+    {
+        Key = key;
+        Type = type;
+    }
 
-	public System.Type Type { get; }
+    public string Key { get; }
 
-	public JsonInheritanceAttribute(string key, System.Type type)
-	{
-		Key = key;
-		Type = type;
-	}
+    public System.Type Type { get; }
 }

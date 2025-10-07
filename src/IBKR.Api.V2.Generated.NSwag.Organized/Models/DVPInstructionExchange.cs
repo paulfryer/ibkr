@@ -6,20 +6,12 @@ namespace IBKR.Api.V2.Generated.NSwag;
 [GeneratedCode("NJsonSchema", "14.0.3.0 (NJsonSchema v11.0.0.0 (Newtonsoft.Json v13.0.0.0))")]
 public enum DVPInstructionExchange
 {
-	[EnumMember(Value = "NYSE")]
-	NYSE,
-	[EnumMember(Value = "AMEX")]
-	AMEX,
-	[EnumMember(Value = "NASDAQ")]
-	NASDAQ,
-	[EnumMember(Value = "CBOE")]
-	CBOE,
-	[EnumMember(Value = "ISE")]
-	ISE,
-	[EnumMember(Value = "BOX")]
-	BOX,
-	[EnumMember(Value = "PHLX")]
-	PHLX,
-	[EnumMember(Value = "PSE")]
-	PSE
+    [EnumMember(Value = "NYSE")] NYSE,
+    [EnumMember(Value = "AMEX")] AMEX,
+    [EnumMember(Value = "NASDAQ")] NASDAQ,
+    [EnumMember(Value = "CBOE")] CBOE,
+    [EnumMember(Value = "ISE")] ISE,
+    [EnumMember(Value = "BOX")] BOX,
+    [EnumMember(Value = "PHLX")] PHLX,
+    [EnumMember(Value = "PSE")] PSE
 }

@@ -6,12 +6,8 @@ namespace IBKR.Api.V2.Generated.NSwag;
 [GeneratedCode("NJsonSchema", "14.0.3.0 (NJsonSchema v11.0.0.0 (Newtonsoft.Json v13.0.0.0))")]
 public enum AssetExperienceKnowledgeLevel
 {
-	[EnumMember(Value = "Extensive")]
-	Extensive,
-	[EnumMember(Value = "Good")]
-	Good,
-	[EnumMember(Value = "Limited")]
-	Limited,
-	[EnumMember(Value = "None")]
-	None
+    [EnumMember(Value = "Extensive")] Extensive,
+    [EnumMember(Value = "Good")] Good,
+    [EnumMember(Value = "Limited")] Limited,
+    [EnumMember(Value = "None")] None
 }

@@ -6,10 +6,7 @@ namespace IBKR.Api.V2.Generated.NSwag;
 [GeneratedCode("NJsonSchema", "14.0.3.0 (NJsonSchema v11.0.0.0 (Newtonsoft.Json v13.0.0.0))")]
 public enum ACHInstructionType
 {
-	[EnumMember(Value = "CREDIT")]
-	CREDIT,
-	[EnumMember(Value = "DEBIT")]
-	DEBIT,
-	[EnumMember(Value = "DEBIT_CREDIT")]
-	DEBIT_CREDIT
+    [EnumMember(Value = "CREDIT")] CREDIT,
+    [EnumMember(Value = "DEBIT")] DEBIT,
+    [EnumMember(Value = "DEBIT_CREDIT")] DEBIT_CREDIT
 }
