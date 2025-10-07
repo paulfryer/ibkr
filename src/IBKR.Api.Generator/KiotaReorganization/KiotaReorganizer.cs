@@ -29,10 +29,17 @@ public class KiotaReorganizer
         var clientDir = Path.Combine(baseDir, "IBKR.Api.Kiota.Client");
         var mockClientDir = Path.Combine(baseDir, "IBKR.Api.Kiota.MockClient");
 
+        // Check if MockClient already exists (contains user code we should preserve)
+        var mockClientExists = Directory.Exists(mockClientDir) &&
+                               File.Exists(Path.Combine(mockClientDir, "IBKR.Api.Kiota.MockClient.csproj"));
+
         // Step 1: Create project directories
         Directory.CreateDirectory(contractDir);
         Directory.CreateDirectory(clientDir);
-        Directory.CreateDirectory(mockClientDir);
+        if (!mockClientExists)
+        {
+            Directory.CreateDirectory(mockClientDir);
+        }
 
         // Step 2: Create Contract project (Models only)
         CreateContractProject(contractDir);
@@ -46,8 +53,15 @@ public class KiotaReorganizer
         // Step 5: Move RequestBuilders and IBKRClient to Client
         MoveRequestBuilders(clientDir);
 
-        // Step 6: Create MockClient project
-        CreateMockClientProject(mockClientDir, contractDir);
+        // Step 6: Create MockClient project (only if it doesn't exist)
+        if (!mockClientExists)
+        {
+            CreateMockClientProject(mockClientDir, contractDir);
+        }
+        else
+        {
+            Console.WriteLine("MockClient project already exists - preserving user code");
+        }
 
         // Step 7: Update namespaces in Client project
         UpdateClientNamespaces(clientDir);
