@@ -25,10 +25,11 @@
       - CS8600: Converting null literal or possible null value to non-nullable type
       - CS8603: Possible null reference return
       - CS8604: Possible null reference argument
+      - CS8619: Nullability of reference types in value doesn't match target type
       - CS8625: Cannot convert null literal to non-nullable reference type
       - CS8765: Nullability of parameter doesn't match overridden member
     -->
-    <NoWarn>$(NoWarn);CS1591;CS0612;CS8600;CS8603;CS8604;CS8625;CS8765</NoWarn>
+    <NoWarn>$(NoWarn);CS1591;CS0612;CS8600;CS8603;CS8604;CS8619;CS8625;CS8765</NoWarn>
 
     <!-- Source Link Support (for debugging) -->
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
