@@ -73,17 +73,13 @@ public class StockQuoteTests : IClassFixture<TestFixture>
         var conid = "265598"; // AAPL
 
         // Request multiple market data fields:
-        // 31 = Last Price
-        // 84 = Bid Price
-        // 86 = Ask Price
-        // 85 = Ask Size
-        // 88 = Bid Size
-        var fieldsString = "31,84,86,85,88";
+        // 31 = Last Price, 84 = Bid Price, 86 = Ask Price
+        // 85 = Ask Size, 88 = Bid Size
 
         // Act
         var quote = await _iserverService.SnapshotAsync(
             conids: conid,
-            fields: null // Can also pass as string
+            fields: null // Could pass MdFields enum or string like "31,84,86,85,88"
         );
 
         // Assert

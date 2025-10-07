@@ -32,7 +32,7 @@ public class OptionChainTests : IClassFixture<TestFixture>
         var month = "202501"; // January 2025 (YYYYMM format)
 
         // Act - Fluent API: client.Iserver.Secdef.Strikes
-        var strikes = await _client.Iserver.Secdef.Strikes.GetAsync(config =>
+        var strikes = await _client.Iserver.Secdef.Strikes.GetAsStrikesGetResponseAsync(config =>
         {
             config.QueryParameters.Conid = conid;
             config.QueryParameters.Sectype = sectype;
@@ -93,7 +93,7 @@ public class OptionChainTests : IClassFixture<TestFixture>
         var month = "202501"; // January 2025
 
         // Act - Step 1: Get available strikes using fluent API
-        var strikes = await _client.Iserver.Secdef.Strikes.GetAsync(config =>
+        var strikes = await _client.Iserver.Secdef.Strikes.GetAsStrikesGetResponseAsync(config =>
         {
             config.QueryParameters.Conid = underlyingConid;
             config.QueryParameters.Sectype = "OPT";
@@ -136,7 +136,7 @@ public class OptionChainTests : IClassFixture<TestFixture>
         Assert.NotNull(conid);
 
         // Act - Step 2: Get option strikes using fluent API
-        var strikes = await _client.Iserver.Secdef.Strikes.GetAsync(config =>
+        var strikes = await _client.Iserver.Secdef.Strikes.GetAsStrikesGetResponseAsync(config =>
         {
             config.QueryParameters.Conid = conid;
             config.QueryParameters.Sectype = "OPT";
@@ -205,7 +205,7 @@ public class OptionChainTests : IClassFixture<TestFixture>
         // Format 1: YYYYMM for getting strikes
         var monthFormat1 = "202501"; // January 2025
 
-        var strikes = await _client.Iserver.Secdef.Strikes.GetAsync(config =>
+        var strikes = await _client.Iserver.Secdef.Strikes.GetAsStrikesGetResponseAsync(config =>
         {
             config.QueryParameters.Conid = conid;
             config.QueryParameters.Sectype = "OPT";
@@ -258,7 +258,7 @@ public class OptionChainTests : IClassFixture<TestFixture>
             .Iserver
             .Secdef
             .Strikes
-            .GetAsync(config =>
+            .GetAsStrikesGetResponseAsync(config =>
             {
                 config.QueryParameters.Conid = conid;
                 config.QueryParameters.Sectype = "OPT";

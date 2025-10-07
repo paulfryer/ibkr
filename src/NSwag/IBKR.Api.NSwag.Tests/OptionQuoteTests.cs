@@ -51,22 +51,15 @@ public class OptionQuoteTests : IClassFixture<TestFixture>
         var optionConid = "12345678"; // Example option conid
 
         // Request multiple option-specific market data fields:
-        // 31 = Last Price
-        // 84 = Bid Price
-        // 86 = Ask Price
-        // 85 = Ask Size
-        // 88 = Bid Size
-        // 7295 = Implied Volatility
-        // 7308 = Delta
-        // 7309 = Gamma
-        // 7310 = Vega
-        // 7311 = Theta
-        var fieldsString = "31,84,86,85,88,7295,7308,7309,7310,7311";
+        // Request multiple fields including Greeks:
+        // 31 = Last Price, 84 = Bid, 86 = Ask, 85 = Ask Size, 88 = Bid Size
+        // 7295 = Implied Volatility, 7308 = Delta, 7309 = Gamma
+        // 7310 = Vega, 7311 = Theta
 
         // Act
         var quote = await _iserverService.SnapshotAsync(
             conids: optionConid,
-            fields: null // Using string fields instead of enum
+            fields: null // Could pass string like "31,84,86,85,88,7295,7308,7309,7310,7311"
         );
 
         // Assert
@@ -155,17 +148,13 @@ public class OptionQuoteTests : IClassFixture<TestFixture>
         var optionConid = "12345678";
 
         // Request option greeks:
-        // 7308 = Delta - Rate of change of option price relative to underlying price
-        // 7309 = Gamma - Rate of change of delta
-        // 7310 = Vega - Sensitivity to volatility changes
-        // 7311 = Theta - Time decay
-        // 7295 = Implied Volatility
-        var fieldsString = "7308,7309,7310,7311,7295";
+        // 7308 = Delta, 7309 = Gamma, 7310 = Vega
+        // 7311 = Theta, 7295 = Implied Volatility
 
         // Act
         var quote = await _iserverService.SnapshotAsync(
             conids: optionConid,
-            fields: null
+            fields: null // Could pass string like "7308,7309,7310,7311,7295"
         );
 
         // Assert
