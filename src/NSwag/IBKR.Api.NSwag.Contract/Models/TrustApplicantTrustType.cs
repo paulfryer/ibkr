@@ -1,0 +1,17 @@
+using System.CodeDom.Compiler;
+using System.Runtime.Serialization;
+
+namespace IBKR.Api.NSwag.Contract.Models;
+
+[GeneratedCode("NJsonSchema", "14.0.3.0 (NJsonSchema v11.0.0.0 (Newtonsoft.Json v13.0.0.0))")]
+public enum TrustApplicantTrustType
+{
+	[EnumMember(Value = "COMPLEX_TRUST")]
+	COMPLEX_TRUST,
+	[EnumMember(Value = "SINGLE_TRUST")]
+	SINGLE_TRUST,
+	[EnumMember(Value = "GRANTOR_TRUST")]
+	GRANTOR_TRUST,
+	[EnumMember(Value = "US_TAXABLE_TRUST")]
+	US_TAXABLE_TRUST
+}

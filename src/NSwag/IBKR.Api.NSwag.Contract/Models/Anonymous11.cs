@@ -1,0 +1,40 @@
+using System.CodeDom.Compiler;
+using System.Collections.Generic;
+using Newtonsoft.Json;
+
+namespace IBKR.Api.NSwag.Contract.Models;
+
+[GeneratedCode("NJsonSchema", "14.0.3.0 (NJsonSchema v11.0.0.0 (Newtonsoft.Json v13.0.0.0))")]
+public class Anonymous11
+{
+	private IDictionary<string, object>? _additionalProperties;
+
+	[JsonProperty("id", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+	public string Id { get; set; } = null;
+
+
+	[JsonProperty("isSuppressed", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+	public bool IsSuppressed { get; set; } = false;
+
+
+	[JsonProperty("message", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+	public ICollection<string> Message { get; set; } = null;
+
+
+	[JsonProperty("messageIds", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+	public ICollection<string> MessageIds { get; set; } = null;
+
+
+	[JsonExtensionData]
+	public IDictionary<string, object> AdditionalProperties
+	{
+		get
+		{
+			return _additionalProperties ?? (_additionalProperties = new Dictionary<string, object>());
+		}
+		set
+		{
+			_additionalProperties = value;
+		}
+	}
+}
