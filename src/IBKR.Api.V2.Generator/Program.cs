@@ -183,58 +183,88 @@ class Program
         var projectName = $"IBKR.Api.V2.Generated.{generatorName}";
 
         var solutionDir = GetSolutionDirectory();
-        var projectDir = Path.Combine(solutionDir, "src", projectName);
-        var projectFile = Path.Combine(projectDir, $"{projectName}.csproj");
+        var finalProjectDir = Path.Combine(solutionDir, "src", projectName);
         var solutionFile = Path.Combine(solutionDir, "IBKR.TradingApi.sln");
 
-        // Step 1: Remove from solution if exists
-        if (File.Exists(projectFile))
-        {
-            Console.WriteLine($"Removing existing project from solution: {projectName}");
-            var removeResult = await RunCommand("dotnet", $"sln \"{solutionFile}\" remove \"{projectFile}\"", solutionDir);
-            Console.WriteLine(removeResult);
-        }
+        // Step 1: Generate raw NSwag code to temp directory
+        var tempProjectName = $"{projectName}.Temp";
+        var tempProjectDir = Path.Combine(solutionDir, "src", tempProjectName);
+        var tempProjectFile = Path.Combine(tempProjectDir, $"{tempProjectName}.csproj");
 
-        // Step 2: Delete project directory if exists
-        if (Directory.Exists(projectDir))
+        // Clean temp directory if exists
+        if (Directory.Exists(tempProjectDir))
         {
-            Console.WriteLine($"Deleting existing project directory: {projectDir}");
-            Directory.Delete(projectDir, recursive: true);
+            Console.WriteLine($"Cleaning temp directory: {tempProjectDir}");
+            Directory.Delete(tempProjectDir, recursive: true);
             await Task.Delay(500);
         }
 
-        // Step 3: Create new project
-        Console.WriteLine($"Creating new project: {projectName}");
-        var createResult = await RunCommand("dotnet", $"new classlib -n {projectName} -o \"{projectDir}\" -f net8.0", solutionDir);
-        Console.WriteLine(createResult);
+        // Create temp project
+        Console.WriteLine($"Creating temp project: {tempProjectName}");
+        Directory.CreateDirectory(tempProjectDir);
 
-        // Step 4: Add to solution
-        Console.WriteLine($"Adding project to solution");
-        var addResult = await RunCommand("dotnet", $"sln \"{solutionFile}\" add \"{projectFile}\"", solutionDir);
-        Console.WriteLine(addResult);
-
-        // Step 5: Delete default Class1.cs
-        var class1Path = Path.Combine(projectDir, "Class1.cs");
+        // Delete default Class1.cs
+        var class1Path = Path.Combine(tempProjectDir, "Class1.cs");
         if (File.Exists(class1Path))
         {
             File.Delete(class1Path);
         }
 
-        // Step 6: Generate with NSwag
-        Console.WriteLine($"Running NSwag code generation...");
-        await TestNSwagGenerator(specPath, projectDir);
+        // Step 2: Generate raw NSwag code to temp directory
+        Console.WriteLine($"Generating raw NSwag code to temp directory...");
+        await TestNSwagGenerator(specPath, tempProjectDir);
 
-        // Step 7: Apply NSwag-specific post-generation fixes
-        var projectFixer = new NSwagProjectFixer(projectDir, projectFile);
+        // Step 3: Apply NSwag-specific post-generation fixes to temp
+        var projectFixer = new NSwagProjectFixer(tempProjectDir, tempProjectFile);
         await projectFixer.ApplyAllFixes();
 
-        // Step 8: Build the project
-        Console.WriteLine($"Building project...");
-        var buildResult = await RunCommand("dotnet", $"build \"{projectFile}\"", solutionDir);
+        // Step 4: Build the temp project
+        Console.WriteLine($"\nBuilding temp project...");
+        var buildResult = await RunCommand("dotnet", $"build \"{tempProjectFile}\"", solutionDir);
         Console.WriteLine(buildResult);
 
+        // Verify build succeeded
+        var tempAssemblyPath = Path.Combine(tempProjectDir, "bin", "Debug", "net8.0", $"{tempProjectName}.dll");
+        if (!File.Exists(tempAssemblyPath))
+        {
+            throw new FileNotFoundException($"Temp assembly not found after build: {tempAssemblyPath}");
+        }
+
+        Console.WriteLine($"✓ Temp assembly built: {tempAssemblyPath}");
+
+        // Step 5: Run reorganizer on temp assembly -> final project directory
+        Console.WriteLine($"\nReorganizing temp assembly into final project...");
+        var reorganizer = new IBKR.Api.V2.Generator.NSwagReorganization.NSwagReorganizer(tempAssemblyPath, finalProjectDir);
+        await reorganizer.ReorganizeAsync();
+
+        // Step 6: Clean up temp directory
+        Console.WriteLine($"\nCleaning up temp directory...");
+        Directory.Delete(tempProjectDir, recursive: true);
+        Console.WriteLine($"  ✓ Deleted {tempProjectDir}");
+
+        // Step 7: Add final project to solution if not already there
+        var finalProjectFile = Path.Combine(finalProjectDir, $"{projectName}.csproj");
+        if (!File.Exists(finalProjectFile))
+        {
+            throw new FileNotFoundException($"Final project file not created: {finalProjectFile}");
+        }
+
+        // Check if project is in solution
+        var slnContent = await File.ReadAllTextAsync(solutionFile);
+        if (!slnContent.Contains(projectName))
+        {
+            Console.WriteLine($"\nAdding project to solution...");
+            var addResult = await RunCommand("dotnet", $"sln \"{solutionFile}\" add \"{finalProjectFile}\"", solutionDir);
+            Console.WriteLine(addResult);
+        }
+
+        // Step 8: Build the final project
+        Console.WriteLine($"\nBuilding final project...");
+        var finalBuildResult = await RunCommand("dotnet", $"build \"{finalProjectFile}\"", solutionDir);
+        Console.WriteLine(finalBuildResult);
+
         Console.WriteLine($"\n✓ {generatorName} generation complete!");
-        Console.WriteLine($"  Project: {projectDir}");
+        Console.WriteLine($"  Final Project: {finalProjectDir}");
     }
 
     static string GetSolutionDirectory()

@@ -25,6 +25,9 @@
     <!-- JSON handling -->
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="System.Text.Json" Version="8.0.5" />
+
+    <!-- Decompiler for NSwag reorganization -->
+    <PackageReference Include="ICSharpCode.Decompiler" Version="8.2.0.7535" />
   </ItemGroup>
 
 </Project>
