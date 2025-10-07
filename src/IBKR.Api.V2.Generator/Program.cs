@@ -27,10 +27,11 @@ class Program
         Console.WriteLine($"  Last modified: {fileInfo.LastWriteTime}\n");
 
         Console.WriteLine("Select generator to test:");
+        Console.WriteLine("0. All (Generate both Kiota and NSwag)");
         Console.WriteLine("1. Kiota (Microsoft's modern generator)");
         Console.WriteLine("2. NSwag (CSharp client)");
         Console.WriteLine("3. Microsoft OpenApi Reader (Parse & Analyze)");
-        Console.Write("\nChoice (1-3): ");
+        Console.Write("\nChoice (0-3): ");
 
         var choice = Console.ReadLine();
 
@@ -38,6 +39,12 @@ class Program
         {
             switch (choice)
             {
+                case "0":
+                    Console.WriteLine("\n=== Generating Both SDKs ===\n");
+                    await GenerateWithKiota(specPath);
+                    Console.WriteLine("\n" + new string('=', 80) + "\n");
+                    await GenerateWithNSwag(specPath);
+                    break;
                 case "1":
                     await GenerateWithKiota(specPath);
                     break;
@@ -186,39 +193,55 @@ class Program
         var finalProjectDir = Path.Combine(solutionDir, "src", projectName);
         var solutionFile = Path.Combine(solutionDir, "IBKR.TradingApi.sln");
 
-        // Step 1: Generate raw NSwag code to temp directory
+        // Step 1: Generate raw NSwag code to temp directory (in bin/temp/ to avoid source control)
         var tempProjectName = $"{projectName}.Temp";
-        var tempProjectDir = Path.Combine(solutionDir, "src", tempProjectName);
+        var tempBaseDir = Path.Combine(solutionDir, "bin", "temp");
+        var tempProjectDir = Path.Combine(tempBaseDir, tempProjectName);
         var tempProjectFile = Path.Combine(tempProjectDir, $"{tempProjectName}.csproj");
 
-        // Clean temp directory if exists
-        if (Directory.Exists(tempProjectDir))
+        // Clean entire bin/temp directory if exists
+        if (Directory.Exists(tempBaseDir))
         {
-            Console.WriteLine($"Cleaning temp directory: {tempProjectDir}");
-            Directory.Delete(tempProjectDir, recursive: true);
-            await Task.Delay(500);
+            Console.WriteLine($"Cleaning temp directory: {tempBaseDir}");
+            try
+            {
+                Directory.Delete(tempBaseDir, recursive: true);
+                await Task.Delay(500);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"  ⚠ Warning: Could not fully clean temp directory: {ex.Message}");
+            }
         }
 
         // Create temp project
-        Console.WriteLine($"Creating temp project: {tempProjectName}");
+        Console.WriteLine($"Creating temp project: {tempProjectDir}");
         Directory.CreateDirectory(tempProjectDir);
-
-        // Delete default Class1.cs
-        var class1Path = Path.Combine(tempProjectDir, "Class1.cs");
-        if (File.Exists(class1Path))
-        {
-            File.Delete(class1Path);
-        }
 
         // Step 2: Generate raw NSwag code to temp directory
         Console.WriteLine($"Generating raw NSwag code to temp directory...");
         await TestNSwagGenerator(specPath, tempProjectDir);
 
-        // Step 3: Apply NSwag-specific post-generation fixes to temp
+        // Step 3: Create temp project file
+        Console.WriteLine($"Creating temp project file...");
+        var tempCsprojContent = @"<Project Sdk=""Microsoft.NET.Sdk"">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include=""Newtonsoft.Json"" Version=""13.0.4"" />
+  </ItemGroup>
+</Project>";
+        await File.WriteAllTextAsync(tempProjectFile, tempCsprojContent);
+
+        // Step 4: Apply NSwag-specific post-generation fixes to temp
+        Console.WriteLine($"Applying NSwag fixes...");
         var projectFixer = new NSwagProjectFixer(tempProjectDir, tempProjectFile);
         await projectFixer.ApplyAllFixes();
 
-        // Step 4: Build the temp project
+        // Step 5: Build the temp project
         Console.WriteLine($"\nBuilding temp project...");
         var buildResult = await RunCommand("dotnet", $"build \"{tempProjectFile}\"", solutionDir);
         Console.WriteLine(buildResult);
@@ -239,8 +262,16 @@ class Program
 
         // Step 6: Clean up temp directory
         Console.WriteLine($"\nCleaning up temp directory...");
-        Directory.Delete(tempProjectDir, recursive: true);
-        Console.WriteLine($"  ✓ Deleted {tempProjectDir}");
+        try
+        {
+            Directory.Delete(tempBaseDir, recursive: true);
+            Console.WriteLine($"  ✓ Deleted {tempBaseDir}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"  ⚠ Warning: Could not delete temp directory: {ex.Message}");
+            Console.WriteLine($"  You can manually delete: {tempBaseDir}");
+        }
 
         // Step 7: Add final project to solution if not already there
         var finalProjectFile = Path.Combine(finalProjectDir, $"{projectName}.csproj");
