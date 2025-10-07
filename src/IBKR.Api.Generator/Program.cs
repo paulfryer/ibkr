@@ -78,7 +78,7 @@ class Program
         // Output to src/Kiota/ subfolder to match NSwag structure
         var projectDir = Path.Combine(solutionDir, "src", generatorName, projectName);
         var projectFile = Path.Combine(projectDir, $"{projectName}.csproj");
-        var solutionFile = Path.Combine(solutionDir, "IBKR.Api.sln");
+        var solutionFile = Path.Combine(solutionDir, "src", "IBKR.Api.sln");
 
         // Step 1: Remove from solution if exists
         if (File.Exists(projectFile))
@@ -193,7 +193,7 @@ class Program
         var solutionDir = GetSolutionDirectory();
         // Output to src/{GeneratorName}/ subfolder (e.g., src/NSwag/, src/Kiota/)
         var finalProjectDir = Path.Combine(solutionDir, "src", generatorName, projectName);
-        var solutionFile = Path.Combine(solutionDir, "IBKR.Api.sln");
+        var solutionFile = Path.Combine(solutionDir, "src", "IBKR.Api.sln");
 
         // Step 1: Generate raw NSwag code to temp directory (in bin/temp/ to avoid source control)
         var tempProjectName = $"{projectName}.Temp";
