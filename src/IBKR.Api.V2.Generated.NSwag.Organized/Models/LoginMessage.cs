@@ -1,6 +1,4 @@
-using System;
 using System.CodeDom.Compiler;
-using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace IBKR.Api.V2.Generated.NSwag;
@@ -8,42 +6,36 @@ namespace IBKR.Api.V2.Generated.NSwag;
 [GeneratedCode("NJsonSchema", "14.0.3.0 (NJsonSchema v11.0.0.0 (Newtonsoft.Json v13.0.0.0))")]
 public class LoginMessage
 {
-	private IDictionary<string, object>? _additionalProperties;
+    private IDictionary<string, object>? _additionalProperties;
 
-	[JsonProperty("recordDate", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-	public DateTimeOffset RecordDate { get; set; } = default(DateTimeOffset);
+    [JsonProperty("recordDate", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+    public DateTimeOffset RecordDate { get; set; } = default;
 
-	[JsonProperty("id", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-	public int Id { get; set; } = 0;
+    [JsonProperty("id", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+    public int Id { get; set; }
 
-	[JsonProperty("username", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-	public string Username { get; set; } = null;
+    [JsonProperty("username", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+    public string Username { get; set; }
 
-	[JsonProperty("messageType", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-	public string MessageType { get; set; } = null;
+    [JsonProperty("messageType", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+    public string MessageType { get; set; }
 
-	[JsonProperty("contentId", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-	public int ContentId { get; set; } = 0;
+    [JsonProperty("contentId", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+    public int ContentId { get; set; }
 
-	[JsonProperty("state", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-	public string State { get; set; } = null;
+    [JsonProperty("state", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+    public string State { get; set; }
 
-	[JsonProperty("description", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-	public string Description { get; set; } = null;
+    [JsonProperty("description", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+    public string Description { get; set; }
 
-	[JsonProperty("tasks", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-	public ICollection<int> Tasks { get; set; } = null;
+    [JsonProperty("tasks", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+    public ICollection<int> Tasks { get; set; }
 
-	[JsonExtensionData]
-	public IDictionary<string, object> AdditionalProperties
-	{
-		get
-		{
-			return _additionalProperties ?? (_additionalProperties = new Dictionary<string, object>());
-		}
-		set
-		{
-			_additionalProperties = value;
-		}
-	}
+    [JsonExtensionData]
+    public IDictionary<string, object> AdditionalProperties
+    {
+        get => _additionalProperties ?? (_additionalProperties = new Dictionary<string, object>());
+        set => _additionalProperties = value;
+    }
 }

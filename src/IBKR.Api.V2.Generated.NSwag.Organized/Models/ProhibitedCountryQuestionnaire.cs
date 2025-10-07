@@ -1,5 +1,4 @@
 using System.CodeDom.Compiler;
-using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace IBKR.Api.V2.Generated.NSwag;
@@ -7,30 +6,25 @@ namespace IBKR.Api.V2.Generated.NSwag;
 [GeneratedCode("NJsonSchema", "14.0.3.0 (NJsonSchema v11.0.0.0 (Newtonsoft.Json v13.0.0.0))")]
 public class ProhibitedCountryQuestionnaire
 {
-	private IDictionary<string, object>? _additionalProperties;
+    private IDictionary<string, object>? _additionalProperties;
 
-	[JsonProperty("prohibitedQuestionnaireDetails", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-	public ICollection<ProhibitedQuestionnaireDetail> ProhibitedQuestionnaireDetails { get; set; } = null;
+    [JsonProperty("prohibitedQuestionnaireDetails", Required = Required.DisallowNull,
+        NullValueHandling = NullValueHandling.Ignore)]
+    public ICollection<ProhibitedQuestionnaireDetail> ProhibitedQuestionnaireDetails { get; set; }
 
-	[JsonProperty("accountId", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-	public string AccountId { get; set; } = null;
+    [JsonProperty("accountId", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+    public string AccountId { get; set; }
 
-	[JsonProperty("externalId", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-	public string ExternalId { get; set; } = null;
+    [JsonProperty("externalId", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+    public string ExternalId { get; set; }
 
-	[JsonProperty("entityId", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-	public string EntityId { get; set; } = null;
+    [JsonProperty("entityId", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+    public string EntityId { get; set; }
 
-	[JsonExtensionData]
-	public IDictionary<string, object> AdditionalProperties
-	{
-		get
-		{
-			return _additionalProperties ?? (_additionalProperties = new Dictionary<string, object>());
-		}
-		set
-		{
-			_additionalProperties = value;
-		}
-	}
+    [JsonExtensionData]
+    public IDictionary<string, object> AdditionalProperties
+    {
+        get => _additionalProperties ?? (_additionalProperties = new Dictionary<string, object>());
+        set => _additionalProperties = value;
+    }
 }

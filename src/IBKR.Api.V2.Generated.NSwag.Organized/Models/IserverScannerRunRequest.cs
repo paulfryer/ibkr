@@ -1,5 +1,4 @@
 using System.CodeDom.Compiler;
-using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace IBKR.Api.V2.Generated.NSwag;
@@ -7,30 +6,24 @@ namespace IBKR.Api.V2.Generated.NSwag;
 [GeneratedCode("NJsonSchema", "14.0.3.0 (NJsonSchema v11.0.0.0 (Newtonsoft.Json v13.0.0.0))")]
 public class IserverScannerRunRequest
 {
-	private IDictionary<string, object>? _additionalProperties;
+    private IDictionary<string, object>? _additionalProperties;
 
-	[JsonProperty("instrument", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-	public string Instrument { get; set; } = null;
+    [JsonProperty("instrument", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+    public string Instrument { get; set; }
 
-	[JsonProperty("type", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-	public string Type { get; set; } = null;
+    [JsonProperty("type", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+    public string Type { get; set; }
 
-	[JsonProperty("location", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-	public string Location { get; set; } = null;
+    [JsonProperty("location", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+    public string Location { get; set; }
 
-	[JsonProperty("filter", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-	public ICollection<Filter> Filter { get; set; } = null;
+    [JsonProperty("filter", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+    public ICollection<Filter> Filter { get; set; }
 
-	[JsonExtensionData]
-	public IDictionary<string, object> AdditionalProperties
-	{
-		get
-		{
-			return _additionalProperties ?? (_additionalProperties = new Dictionary<string, object>());
-		}
-		set
-		{
-			_additionalProperties = value;
-		}
-	}
+    [JsonExtensionData]
+    public IDictionary<string, object> AdditionalProperties
+    {
+        get => _additionalProperties ?? (_additionalProperties = new Dictionary<string, object>());
+        set => _additionalProperties = value;
+    }
 }

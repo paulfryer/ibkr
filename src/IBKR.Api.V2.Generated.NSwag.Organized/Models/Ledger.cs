@@ -1,5 +1,4 @@
 using System.CodeDom.Compiler;
-using System.Collections.Generic;
 
 namespace IBKR.Api.V2.Generated.NSwag;
 
