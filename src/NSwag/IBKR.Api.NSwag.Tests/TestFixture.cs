@@ -80,8 +80,7 @@ public class TestFixture : IDisposable
 
             // Register mock service implementations
             services.AddTransient<IFyiService, MockFyiService>();
-            // TODO: MockIserverService needs all interface methods implemented
-            // services.AddTransient<IIserverService, MockIserverService>();
+            services.AddTransient<IIserverService, MockIserverService>();
             services.AddTransient<IMdService, MockMdService>();
             // TODO: Add more mock services as needed:
             // services.AddTransient<IGwService, MockGwService>();

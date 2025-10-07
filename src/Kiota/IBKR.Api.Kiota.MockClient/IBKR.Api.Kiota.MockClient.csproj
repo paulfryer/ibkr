@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\IBKR.Api.Kiota.Contract\IBKR.Api.Kiota.Contract.csproj" />
+    <ProjectReference Include="..\IBKR.Api.Kiota.Client\IBKR.Api.Kiota.Client.csproj" />
   </ItemGroup>
 
 </Project>
