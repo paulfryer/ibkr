@@ -131,12 +131,21 @@ class Program
             Console.WriteLine($"  • Helpers: {helpersCount} files");
             Console.WriteLine($"  • Skipped: {skipped} types\n");
 
-            // Step 5: Create project file
+            // Step 6: Create project file
             Console.WriteLine("Creating project file...");
             await CreateProjectFile(outputProjectDir);
 
+            // Step 7: Split interfaces into service-based interfaces
+            Console.WriteLine("\nSplitting monolithic interface into service interfaces...");
+            var interfacesDir = Path.Combine(outputProjectDir, "Interfaces");
+            var sourceInterface = Path.Combine(solutionDir, "src", "IBKR.Api.V2.Generated.NSwag.Organized", "Clients", "IIBKRClient.cs");
+
+            var splitter = new InterfaceSplitter(sourceInterface, interfacesDir);
+            await splitter.SplitInterfaces();
+
             Console.WriteLine($"\n✅ Success! Organized project created at:");
             Console.WriteLine($"   {outputProjectDir}");
+            Console.WriteLine($"   Interfaces: {interfacesDir}");
 
             return 0;
         }
