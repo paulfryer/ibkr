@@ -1,5 +1,10 @@
+using IBKR.Api.Client.Core;
+using IBKR.Api.Client.Http.Infrastructure;
+using IBKR.Api.Client.Http.Infrastructure.Handlers;
+using IBKR.Api.Client.Infrastructure.RateLimiter;
 using IBKR.Api.Client.Mock.Services;
 using IBKR.Api.Client.Services;
+using Microsoft.Extensions.Options;
 
 namespace IBKR.Api.Client.Tests.Infrastructure;
 
@@ -11,6 +16,7 @@ namespace IBKR.Api.Client.Tests.Infrastructure;
 public class InstrumentServiceFixture : IDisposable
 {
     private readonly TestConfiguration _config;
+    private HttpClient? _httpClient;
 
     /// <summary>
     /// The service instance used by all tests.
@@ -25,16 +31,8 @@ public class InstrumentServiceFixture : IDisposable
 
         if (_config.UseRealApi)
         {
-            // TODO: When HTTP implementation is ready, create real service here
-            // Service = new InstrumentApiService(new IBKRClientOptions
-            // {
-            //     BaseUrl = _config.RealApiBaseUrl,
-            //     BearerToken = _config.AuthToken
-            // });
-
-            throw new NotImplementedException(
-                "Real HTTP API implementation is not yet available. " +
-                "Set USE_REAL_IBKR_API=false or remove the environment variable to use mock implementation.");
+            // Create real HTTP implementation
+            Service = CreateRealHttpService();
         }
         else
         {
@@ -45,12 +43,59 @@ public class InstrumentServiceFixture : IDisposable
         }
     }
 
+    /// <summary>
+    /// Creates a real HTTP-based implementation of IInstrumentApiService.
+    /// </summary>
+    private IInstrumentApiService CreateRealHttpService()
+    {
+        // Create options
+        var options = new IBKRClientOptions
+        {
+            BaseUrl = _config.RealApiBaseUrl,
+            BearerToken = _config.AuthToken,
+            RateLimitPerSecond = 50,
+            EnableRetry = true,
+            MaxRetryAttempts = 3,
+            RetryDelayMilliseconds = 1000,
+            TimeoutSeconds = 30,
+            EnableLogging = true
+        };
+
+        var optionsWrapper = Options.Create(options);
+
+        // Create rate limiter
+        var rateLimiter = new TokenBucketRateLimiter(options.RateLimitPerSecond);
+
+        // Create delegating handlers
+        var authHandler = new AuthenticationHandler(optionsWrapper);
+        var rateLimitHandler = new RateLimitHandler(rateLimiter);
+        var retryHandler = new RetryHandler(optionsWrapper);
+        var loggingHandler = new LoggingHandler(optionsWrapper);
+
+        // Build handler pipeline (innermost to outermost)
+        retryHandler.InnerHandler = new HttpClientHandler();
+        rateLimitHandler.InnerHandler = retryHandler;
+        authHandler.InnerHandler = rateLimitHandler;
+        loggingHandler.InnerHandler = authHandler;
+
+        // Create HttpClient with handler pipeline
+        _httpClient = new HttpClient(loggingHandler)
+        {
+            BaseAddress = new Uri(options.BaseUrl),
+            Timeout = TimeSpan.FromSeconds(options.TimeoutSeconds)
+        };
+
+        _httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
+        _httpClient.DefaultRequestHeaders.Add("User-Agent", "IBKR.Api.Client.Tests/1.0");
+
+        // Create IBKRHttpClient and service
+        var ibkrHttpClient = new IBKRHttpClient(_httpClient);
+        return new Http.Services.InstrumentApiService(ibkrHttpClient);
+    }
+
     public void Dispose()
     {
-        // Cleanup if needed (e.g., dispose HTTP client)
-        if (Service is IDisposable disposable)
-        {
-            disposable.Dispose();
-        }
+        // Cleanup HTTP client if created
+        _httpClient?.Dispose();
     }
 }

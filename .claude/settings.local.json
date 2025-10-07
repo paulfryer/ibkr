@@ -4,7 +4,10 @@
       "WebFetch(domain:ibkrcampus.com)",
       "WebSearch",
       "WebFetch(domain:interactivebrokers.github.io)",
-      "WebFetch(domain:api.ibkr.com)"
+      "WebFetch(domain:api.ibkr.com)",
+      "WebFetch(domain:github.com)",
+      "Bash(kiota:*)",
+      "Bash(python3:*)"
     ],
     "deny": [],
     "ask": []
