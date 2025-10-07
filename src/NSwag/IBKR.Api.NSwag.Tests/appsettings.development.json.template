@@ -6,6 +6,6 @@
   "IBKR": {
     "BaseUrl": "https://api.ibkr.com",
     "ApiKey": "your-api-key-here",
-    "Comments": "Add your IBKR API credentials here for local integration testing"
+    "Comments": "Copy this file to appsettings.development.json and add your IBKR API credentials for local integration testing"
   }
 }

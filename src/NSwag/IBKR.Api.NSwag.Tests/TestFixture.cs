@@ -1,3 +1,5 @@
+using IBKR.Api.Authentication;
+using IBKR.Api.NSwag.Authentication;
 using IBKR.Api.NSwag.Contract.Interfaces;
 using IBKR.Api.NSwag.Client.Services;
 using IBKR.Api.NSwag.MockClient.Services;
@@ -39,7 +41,39 @@ public class TestFixture : IDisposable
 
         // Determine which implementation to use
         var useMockClient = Configuration.GetValue<bool>("Testing:UseMockClient", defaultValue: true);
+        var useRealAuthentication = Configuration.GetValue<bool>("Testing:UseRealAuthentication", defaultValue: false);
 
+        // Configure authentication
+        if (useRealAuthentication && !useMockClient)
+        {
+            Console.WriteLine("[Test Setup] Using REAL IBKR authentication");
+
+            // Load authentication options from configuration
+            var authOptions = new IBKRAuthenticationOptions
+            {
+                ClientId = Configuration["IBKR:ClientId"] ?? throw new InvalidOperationException("IBKR:ClientId not configured"),
+                Credential = Configuration["IBKR:Credential"] ?? throw new InvalidOperationException("IBKR:Credential not configured"),
+                ClientKeyId = Configuration["IBKR:ClientKeyId"] ?? throw new InvalidOperationException("IBKR:ClientKeyId not configured"),
+                ClientPemPath = Configuration["IBKR:ClientPemPath"] ?? throw new InvalidOperationException("IBKR:ClientPemPath not configured"),
+                BaseUrl = Configuration["IBKR:BaseUrl"] ?? "https://api.ibkr.com"
+            };
+
+            // Register authenticated services
+            services.AddIBKRAuthenticatedClient<IFyiService, FyiService>(authOptions, client =>
+            {
+                client.BaseAddress = new Uri(authOptions.BaseUrl);
+            });
+            // TODO: Add more authenticated services as needed
+        }
+        else
+        {
+            Console.WriteLine($"[Test Setup] Using MOCK authentication (UseRealAuth={useRealAuthentication})");
+
+            // Register mock authentication provider
+            services.AddSingleton<IIBKRAuthenticationProvider>(new MockAuthenticationProvider());
+        }
+
+        // Configure client implementations
         if (useMockClient)
         {
             Console.WriteLine("[Test Setup] Using MOCK client implementations");
@@ -54,14 +88,14 @@ public class TestFixture : IDisposable
         {
             Console.WriteLine("[Test Setup] Using REAL client implementations");
 
-            // Register real service implementations
-            // Configure HttpClient for real services
-            services.AddHttpClient();
-
-            services.AddTransient<IFyiService, FyiService>();
-            // TODO: Add more real services as needed:
-            // services.AddTransient<IGwService, GwService>();
-            // services.AddTransient<IPortfolioService, PortfolioService>();
+            // Real services are registered above with authentication if UseRealAuthentication is true
+            // If UseRealAuthentication is false, register them without authentication
+            if (!useRealAuthentication)
+            {
+                services.AddHttpClient();
+                services.AddTransient<IFyiService, FyiService>();
+                // TODO: Add more real services as needed
+            }
         }
     }
 

@@ -7,6 +7,7 @@ Welcome to the comprehensive documentation for the IBKR REST API SDKs for .NET.
 ### Getting Started
 - **[Getting Started Guide](GETTING-STARTED.md)** - Installation, prerequisites, and your first API call
 - **[SDK Comparison](SDK-COMPARISON.md)** - NSwag vs Kiota: Which should you choose?
+- **[Authentication Guide](AUTHENTICATION.md)** - OAuth2 setup, JWT signing, and token management
 
 ### SDK Guides
 - **[NSwag SDK Guide](NSWAG-SDK.md)** - Service-oriented architecture with dependency injection
@@ -26,6 +27,9 @@ Welcome to the comprehensive documentation for the IBKR REST API SDKs for .NET.
 
 **Install and use the SDK**
 → Start with [Getting Started](GETTING-STARTED.md)
+
+**Set up OAuth2 authentication**
+→ Read the [Authentication Guide](AUTHENTICATION.md)
 
 **Choose between NSwag and Kiota**
 → Read the [SDK Comparison](SDK-COMPARISON.md)

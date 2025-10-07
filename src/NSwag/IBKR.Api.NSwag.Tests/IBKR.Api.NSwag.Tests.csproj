@@ -24,6 +24,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\IBKR.Api.Authentication\IBKR.Api.Authentication.csproj" />
+    <ProjectReference Include="..\IBKR.Api.NSwag.Authentication\IBKR.Api.NSwag.Authentication.csproj" />
     <ProjectReference Include="..\IBKR.Api.NSwag.Contract\IBKR.Api.NSwag.Contract.csproj" />
     <ProjectReference Include="..\IBKR.Api.NSwag.Client\IBKR.Api.NSwag.Client.csproj" />
     <ProjectReference Include="..\IBKR.Api.NSwag.MockClient\IBKR.Api.NSwag.MockClient.csproj" />

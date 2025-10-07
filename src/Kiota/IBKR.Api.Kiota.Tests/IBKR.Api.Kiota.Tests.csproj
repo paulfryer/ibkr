@@ -24,6 +24,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\IBKR.Api.Authentication\IBKR.Api.Authentication.csproj" />
+    <ProjectReference Include="..\IBKR.Api.Kiota.Authentication\IBKR.Api.Kiota.Authentication.csproj" />
     <ProjectReference Include="..\IBKR.Api.Kiota.Contract\IBKR.Api.Kiota.Contract.csproj" />
     <ProjectReference Include="..\IBKR.Api.Kiota.Client\IBKR.Api.Kiota.Client.csproj" />
     <ProjectReference Include="..\IBKR.Api.Kiota.MockClient\IBKR.Api.Kiota.MockClient.csproj" />
