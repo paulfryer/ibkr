@@ -10,13 +10,10 @@ public class ErrorResponse
 	private IDictionary<string, object>? _additionalProperties;
 
 	[JsonProperty("error", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-	public ErrorResponse Error { get; set; } = null;
+	public string Error { get; set; } = null;
 
-	[JsonProperty("hasError", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-	public bool HasError { get; set; } = false;
-
-	[JsonProperty("errorDescription", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-	public string ErrorDescription { get; set; } = null;
+	[JsonProperty("statusCode", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+	public string StatusCode { get; set; } = null;
 
 	[JsonExtensionData]
 	public IDictionary<string, object> AdditionalProperties

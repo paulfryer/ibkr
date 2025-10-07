@@ -9,23 +9,23 @@ public class Data3
 {
 	private IDictionary<string, object>? _additionalProperties;
 
-	[JsonProperty("dataType", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-	public string DataType { get; set; } = null;
+	[JsonProperty("idType", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+	public string IdType { get; set; } = null;
 
-	[JsonProperty("encoding", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-	public string Encoding { get; set; } = null;
+	[JsonProperty("start", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+	public string Start { get; set; } = null;
 
-	[JsonProperty("value", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-	public string Value { get; set; } = null;
+	[JsonProperty("end", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+	public string End { get; set; } = null;
 
-	[JsonProperty("mimeType", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-	public string MimeType { get; set; } = null;
+	[JsonProperty("returns", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+	public ICollection<object> Returns { get; set; } = null;
 
-	[JsonProperty("gzip", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-	public bool Gzip { get; set; } = false;
+	[JsonProperty("id", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+	public string Id { get; set; } = null;
 
-	[JsonProperty("accept", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-	public string Accept { get; set; } = null;
+	[JsonProperty("baseCurrency", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
+	public string BaseCurrency { get; set; } = null;
 
 	[JsonExtensionData]
 	public IDictionary<string, object> AdditionalProperties
