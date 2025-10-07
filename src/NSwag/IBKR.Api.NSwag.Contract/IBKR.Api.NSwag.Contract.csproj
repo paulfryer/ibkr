@@ -4,6 +4,10 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+
+    <!-- NuGet Package Metadata -->
+    <PackageId>IBKR.Api.NSwag.Contract</PackageId>
+    <Description>Contract library for Interactive Brokers REST API - Contains models, interfaces, and service contracts for the NSwag-generated SDK.</Description>
   </PropertyGroup>
 
   <ItemGroup>

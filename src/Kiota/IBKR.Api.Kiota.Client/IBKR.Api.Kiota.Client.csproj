@@ -4,6 +4,10 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+
+    <!-- NuGet Package Metadata -->
+    <PackageId>IBKR.Api.Kiota.Client</PackageId>
+    <Description>Fluent API client for Interactive Brokers REST API - Modern request builder pattern with built-in testing support via IRequestAdapter mocking. Generated using Microsoft Kiota.</Description>
   </PropertyGroup>
 
   <ItemGroup>

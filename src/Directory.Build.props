@@ -1,0 +1,38 @@
+<Project>
+  <!--
+    Directory.Build.props - Shared properties for all SDK projects
+    Automatically imported by all .csproj files in this directory and subdirectories
+  -->
+
+  <PropertyGroup>
+    <!-- Common Package Metadata -->
+    <Authors>Paul Fryer</Authors>
+    <Company>IBKR SDK Contributors</Company>
+    <Copyright>Copyright © 2025 IBKR SDK Contributors</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/paulfryer/ibkr</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/paulfryer/ibkr.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>ibkr;interactive-brokers;trading;api;rest;sdk</PackageTags>
+
+    <!-- Documentation -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);CS1591</NoWarn> <!-- Suppress missing XML comment warnings for now -->
+
+    <!-- Source Link Support (for debugging) -->
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+
+    <!-- Build Settings -->
+    <LangVersion>latest</LangVersion>
+    <TreatWarningsAsErrors Condition="'$(Configuration)' == 'Release'">true</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <!-- Source Link Package (for debugging into SDK source) -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All"/>
+  </ItemGroup>
+
+</Project>

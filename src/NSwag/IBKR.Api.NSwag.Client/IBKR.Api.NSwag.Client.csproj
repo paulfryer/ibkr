@@ -4,6 +4,10 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+
+    <!-- NuGet Package Metadata -->
+    <PackageId>IBKR.Api.NSwag.Client</PackageId>
+    <Description>HTTP client implementation for Interactive Brokers REST API - Service-oriented architecture with dependency injection support. Generated using NSwag.</Description>
   </PropertyGroup>
 
   <ItemGroup>

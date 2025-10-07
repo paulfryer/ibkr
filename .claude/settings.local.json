@@ -7,7 +7,8 @@
       "WebFetch(domain:api.ibkr.com)",
       "WebFetch(domain:github.com)",
       "Bash(kiota:*)",
-      "Bash(python3:*)"
+      "Bash(python3:*)",
+      "Bash(git remote get-url:*)"
     ],
     "deny": [],
     "ask": []

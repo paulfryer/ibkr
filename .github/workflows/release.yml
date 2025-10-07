@@ -1,0 +1,452 @@
+name: Build and Release SDK Packages
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (semver format, e.g., 1.0.0 or 1.0.0-beta.1)'
+        required: true
+        type: string
+      create_github_release:
+        description: 'Create GitHub Release with packages'
+        required: false
+        type: boolean
+        default: false
+      prerelease:
+        description: 'Mark as pre-release'
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: write  # Required for creating releases
+  packages: write  # Required for publishing packages
+
+env:
+  DOTNET_VERSION: '8.0.x'
+  CONFIGURATION: Release
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+
+jobs:
+  #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # JOB 1: Validate Input
+  #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  validate:
+    name: 🔍 Validate Version
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.validate.outputs.version }}
+      version_tag: ${{ steps.validate.outputs.version_tag }}
+
+    steps:
+      - name: Validate semver format
+        id: validate
+        run: |
+          VERSION="${{ inputs.version }}"
+
+          # Validate semver format (major.minor.patch with optional prerelease and build metadata)
+          if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9.-]+)?(\+[a-zA-Z0-9.-]+)?$ ]]; then
+            echo "::error::❌ Invalid version format: $VERSION"
+            echo "::error::Must follow semver (e.g., 1.0.0, 1.0.0-beta.1, 1.0.0+build.123)"
+            exit 1
+          fi
+
+          echo "✅ Version $VERSION is valid semver"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "version_tag=v$VERSION" >> $GITHUB_OUTPUT
+
+  #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # JOB 2: Generate SDKs
+  #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  generate-sdks:
+    name: 🔧 Generate SDKs
+    needs: validate
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🔨 Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: 📦 Install Kiota CLI
+        run: dotnet tool install -g Microsoft.OpenApi.Kiota
+
+      - name: 🔄 Restore generator dependencies
+        working-directory: src/IBKR.Api.Generator
+        run: dotnet restore
+
+      - name: 🏗️ Build generator
+        working-directory: src/IBKR.Api.Generator
+        run: dotnet build --configuration ${{ env.CONFIGURATION }} --no-restore
+
+      - name: ⚙️ Generate both SDKs (NSwag + Kiota)
+        working-directory: src/IBKR.Api.Generator
+        run: |
+          echo "Generating both NSwag and Kiota SDKs..."
+          echo "0" | dotnet run --configuration ${{ env.CONFIGURATION }} --no-build
+          echo "✅ SDK generation complete"
+
+      - name: ✅ Verify generated projects
+        run: |
+          echo "🔍 Verifying all expected projects were generated..."
+
+          EXPECTED_PROJECTS=(
+            "src/NSwag/IBKR.Api.NSwag.Contract/IBKR.Api.NSwag.Contract.csproj"
+            "src/NSwag/IBKR.Api.NSwag.Client/IBKR.Api.NSwag.Client.csproj"
+            "src/Kiota/IBKR.Api.Kiota.Contract/IBKR.Api.Kiota.Contract.csproj"
+            "src/Kiota/IBKR.Api.Kiota.Client/IBKR.Api.Kiota.Client.csproj"
+          )
+
+          ALL_FOUND=true
+          for proj in "${EXPECTED_PROJECTS[@]}"; do
+            if [ ! -f "$proj" ]; then
+              echo "::error::❌ Missing expected project: $proj"
+              ALL_FOUND=false
+            else
+              echo "  ✅ $proj"
+            fi
+          done
+
+          if [ "$ALL_FOUND" = false ]; then
+            exit 1
+          fi
+
+          echo "✅ All expected projects found"
+
+      - name: 📤 Upload generated SDKs
+        uses: actions/upload-artifact@v4
+        with:
+          name: generated-sdks
+          path: |
+            src/NSwag/
+            src/Kiota/
+            src/Directory.Build.props
+          retention-days: 1
+          if-no-files-found: error
+
+  #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # JOB 3: Build and Package NSwag SDK (Parallel)
+  #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  build-nswag:
+    name: 📦 Build NSwag SDK
+    needs: [validate, generate-sdks]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 📥 Download generated SDKs
+        uses: actions/download-artifact@v4
+        with:
+          name: generated-sdks
+          path: src/
+
+      - name: 🔨 Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: 💾 Cache NuGet packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: 🔄 Restore NSwag dependencies
+        working-directory: src/NSwag
+        run: |
+          dotnet restore IBKR.Api.NSwag.Contract/IBKR.Api.NSwag.Contract.csproj
+          dotnet restore IBKR.Api.NSwag.Client/IBKR.Api.NSwag.Client.csproj
+
+      - name: 🏗️ Build NSwag Contract
+        working-directory: src/NSwag
+        run: |
+          dotnet build IBKR.Api.NSwag.Contract/IBKR.Api.NSwag.Contract.csproj \
+            --configuration ${{ env.CONFIGURATION }} \
+            --no-restore \
+            /p:Version=${{ needs.validate.outputs.version }}
+
+      - name: 🏗️ Build NSwag Client
+        working-directory: src/NSwag
+        run: |
+          dotnet build IBKR.Api.NSwag.Client/IBKR.Api.NSwag.Client.csproj \
+            --configuration ${{ env.CONFIGURATION }} \
+            --no-restore \
+            /p:Version=${{ needs.validate.outputs.version }}
+
+      - name: 📦 Pack NuGet packages
+        working-directory: src/NSwag
+        run: |
+          mkdir -p ../../packages/NSwag
+
+          echo "📦 Packing NSwag.Contract..."
+          dotnet pack IBKR.Api.NSwag.Contract/IBKR.Api.NSwag.Contract.csproj \
+            --configuration ${{ env.CONFIGURATION }} \
+            --no-build \
+            --output ../../packages/NSwag \
+            /p:PackageVersion=${{ needs.validate.outputs.version }}
+
+          echo "📦 Packing NSwag.Client..."
+          dotnet pack IBKR.Api.NSwag.Client/IBKR.Api.NSwag.Client.csproj \
+            --configuration ${{ env.CONFIGURATION }} \
+            --no-build \
+            --output ../../packages/NSwag \
+            /p:PackageVersion=${{ needs.validate.outputs.version }}
+
+      - name: 📋 List generated packages
+        working-directory: packages/NSwag
+        run: |
+          echo "📦 NSwag packages created:"
+          ls -lh *.nupkg
+
+      - name: 📤 Upload NSwag packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: NSwag-SDK-v${{ needs.validate.outputs.version }}
+          path: packages/NSwag/*.nupkg
+          retention-days: 90
+          if-no-files-found: error
+
+  #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # JOB 4: Build and Package Kiota SDK (Parallel)
+  #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  build-kiota:
+    name: 📦 Build Kiota SDK
+    needs: [validate, generate-sdks]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 📥 Download generated SDKs
+        uses: actions/download-artifact@v4
+        with:
+          name: generated-sdks
+          path: src/
+
+      - name: 🔨 Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: 💾 Cache NuGet packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: 🔄 Restore Kiota dependencies
+        working-directory: src/Kiota
+        run: |
+          dotnet restore IBKR.Api.Kiota.Contract/IBKR.Api.Kiota.Contract.csproj
+          dotnet restore IBKR.Api.Kiota.Client/IBKR.Api.Kiota.Client.csproj
+
+      - name: 🏗️ Build Kiota Contract
+        working-directory: src/Kiota
+        run: |
+          dotnet build IBKR.Api.Kiota.Contract/IBKR.Api.Kiota.Contract.csproj \
+            --configuration ${{ env.CONFIGURATION }} \
+            --no-restore \
+            /p:Version=${{ needs.validate.outputs.version }}
+
+      - name: 🏗️ Build Kiota Client
+        working-directory: src/Kiota
+        run: |
+          dotnet build IBKR.Api.Kiota.Client/IBKR.Api.Kiota.Client.csproj \
+            --configuration ${{ env.CONFIGURATION }} \
+            --no-restore \
+            /p:Version=${{ needs.validate.outputs.version }}
+
+      - name: 📦 Pack NuGet packages
+        working-directory: src/Kiota
+        run: |
+          mkdir -p ../../packages/Kiota
+
+          echo "📦 Packing Kiota.Contract..."
+          dotnet pack IBKR.Api.Kiota.Contract/IBKR.Api.Kiota.Contract.csproj \
+            --configuration ${{ env.CONFIGURATION }} \
+            --no-build \
+            --output ../../packages/Kiota \
+            /p:PackageVersion=${{ needs.validate.outputs.version }}
+
+          echo "📦 Packing Kiota.Client..."
+          dotnet pack IBKR.Api.Kiota.Client/IBKR.Api.Kiota.Client.csproj \
+            --configuration ${{ env.CONFIGURATION }} \
+            --no-build \
+            --output ../../packages/Kiota \
+            /p:PackageVersion=${{ needs.validate.outputs.version }}
+
+      - name: 📋 List generated packages
+        working-directory: packages/Kiota
+        run: |
+          echo "📦 Kiota packages created:"
+          ls -lh *.nupkg
+
+      - name: 📤 Upload Kiota packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: Kiota-SDK-v${{ needs.validate.outputs.version }}
+          path: packages/Kiota/*.nupkg
+          retention-days: 90
+          if-no-files-found: error
+
+  #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # JOB 5: Create Release Summary
+  #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  create-summary:
+    name: 📊 Create Release Summary
+    needs: [validate, build-nswag, build-kiota]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Download all SDK packages
+        uses: actions/download-artifact@v4
+        with:
+          pattern: '*-SDK-v*'
+          path: all-packages
+
+      - name: 📊 Generate summary
+        run: |
+          echo "# 🎉 IBKR SDK Release v${{ needs.validate.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Successfully built and packaged both NSwag and Kiota SDKs." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          echo "## 📦 Generated Packages" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          for sdk_dir in all-packages/*/; do
+            sdk_name=$(basename "$sdk_dir")
+            echo "### ${sdk_name}" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "| Package | Size | Symbols |" >> $GITHUB_STEP_SUMMARY
+            echo "|---------|------|---------|" >> $GITHUB_STEP_SUMMARY
+
+            for pkg in "$sdk_dir"*.nupkg; do
+              if [ -f "$pkg" ]; then
+                name=$(basename "$pkg")
+                size=$(du -h "$pkg" | cut -f1)
+
+                # Check if symbols package exists
+                snupkg="${pkg%.nupkg}.snupkg"
+                if [ -f "$snupkg" ]; then
+                  symbols_size=$(du -h "$snupkg" | cut -f1)
+                  symbols="✅ ($symbols_size)"
+                else
+                  symbols="➖"
+                fi
+
+                echo "| \`$name\` | $size | $symbols |" >> $GITHUB_STEP_SUMMARY
+              fi
+            done
+            echo "" >> $GITHUB_STEP_SUMMARY
+          done
+
+          echo "## 🚀 Installation" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**NSwag SDK:**" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`bash" >> $GITHUB_STEP_SUMMARY
+          echo "dotnet add package IBKR.Api.NSwag.Contract --version ${{ needs.validate.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "dotnet add package IBKR.Api.NSwag.Client --version ${{ needs.validate.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Kiota SDK:**" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`bash" >> $GITHUB_STEP_SUMMARY
+          echo "dotnet add package IBKR.Api.Kiota.Contract --version ${{ needs.validate.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "dotnet add package IBKR.Api.Kiota.Client --version ${{ needs.validate.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          echo "## 📥 Download Artifacts" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "1. Navigate to the **Actions** tab" >> $GITHUB_STEP_SUMMARY
+          echo "2. Click on this workflow run" >> $GITHUB_STEP_SUMMARY
+          echo "3. Scroll to the **Artifacts** section" >> $GITHUB_STEP_SUMMARY
+          echo "4. Download the SDK packages (90-day retention)" >> $GITHUB_STEP_SUMMARY
+
+  #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # JOB 6: Create GitHub Release (Optional)
+  #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  create-release:
+    name: 🚀 Create GitHub Release
+    needs: [validate, build-nswag, build-kiota]
+    if: inputs.create_github_release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 📥 Download all packages
+        uses: actions/download-artifact@v4
+        with:
+          pattern: '*-SDK-v*'
+          path: release-artifacts
+
+      - name: 📦 Prepare release files
+        run: |
+          mkdir -p release-files
+          find release-artifacts -name "*.nupkg" -exec cp {} release-files/ \;
+          find release-artifacts -name "*.snupkg" -exec cp {} release-files/ \;
+
+          echo "📦 Release files:"
+          ls -lh release-files/
+
+      - name: 🚀 Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ needs.validate.outputs.version_tag }}
+          name: IBKR API SDK ${{ needs.validate.outputs.version_tag }}
+          draft: false
+          prerelease: ${{ inputs.prerelease }}
+          generate_release_notes: true
+          body: |
+            # IBKR API SDK ${{ needs.validate.outputs.version_tag }}
+
+            Auto-generated C# SDKs for the Interactive Brokers REST API.
+
+            ## 📦 Packages Included
+
+            ### NSwag SDK (Service-Oriented Architecture)
+            - **IBKR.Api.NSwag.Contract** - Models and service interfaces
+            - **IBKR.Api.NSwag.Client** - HTTP client implementations
+
+            ### Kiota SDK (Fluent API Architecture)
+            - **IBKR.Api.Kiota.Contract** - Model classes (POCOs)
+            - **IBKR.Api.Kiota.Client** - Fluent request builders
+
+            ## 🚀 Installation
+
+            **NSwag SDK:**
+            ```bash
+            dotnet add package IBKR.Api.NSwag.Contract --version ${{ needs.validate.outputs.version }}
+            dotnet add package IBKR.Api.NSwag.Client --version ${{ needs.validate.outputs.version }}
+            ```
+
+            **Kiota SDK:**
+            ```bash
+            dotnet add package IBKR.Api.Kiota.Contract --version ${{ needs.validate.outputs.version }}
+            dotnet add package IBKR.Api.Kiota.Client --version ${{ needs.validate.outputs.version }}
+            ```
+
+            ## 📖 Documentation
+
+            See the [repository README](https://github.com/paulfryer/ibkr) for usage examples and API documentation.
+
+            ## 🔍 Testing
+
+            Both SDKs include MockClient packages for testing purposes (available as separate downloads).
+          files: |
+            release-files/*.nupkg
+            release-files/*.snupkg
