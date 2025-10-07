@@ -58,12 +58,15 @@ public class TestFixture : IDisposable
                 BaseUrl = Configuration["IBKR:BaseUrl"] ?? "https://api.ibkr.com"
             };
 
-            // Register authenticated services
-            services.AddIBKRAuthenticatedClient<IFyiService, FyiService>(authOptions, client =>
+            // Register authenticated services for stock/option testing
+            services.AddIBKRAuthenticatedClient<IIserverService, IserverService>(authOptions, client =>
             {
                 client.BaseAddress = new Uri(authOptions.BaseUrl);
             });
-            // TODO: Add more authenticated services as needed
+            services.AddIBKRAuthenticatedClient<IMdService, MdService>(authOptions, client =>
+            {
+                client.BaseAddress = new Uri(authOptions.BaseUrl);
+            });
         }
         else
         {
@@ -78,13 +81,9 @@ public class TestFixture : IDisposable
         {
             Console.WriteLine("[Test Setup] Using MOCK client implementations");
 
-            // Register mock service implementations
-            services.AddTransient<IFyiService, MockFyiService>();
+            // Register mock service implementations for stock and option testing
             services.AddTransient<IIserverService, MockIserverService>();
             services.AddTransient<IMdService, MockMdService>();
-            // TODO: Add more mock services as needed:
-            // services.AddTransient<IGwService, MockGwService>();
-            // services.AddTransient<IPortfolioService, MockPortfolioService>();
         }
         else
         {
@@ -95,8 +94,8 @@ public class TestFixture : IDisposable
             if (!useRealAuthentication)
             {
                 services.AddHttpClient();
-                services.AddTransient<IFyiService, FyiService>();
-                // TODO: Add more real services as needed
+                services.AddTransient<IIserverService, IserverService>();
+                services.AddTransient<IMdService, MdService>();
             }
         }
     }
