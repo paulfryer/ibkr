@@ -51,6 +51,13 @@ public class TestFixture : IDisposable
 
             // Register mock request adapter
             services.AddSingleton<IRequestAdapter>(sp => new MockRequestAdapter());
+
+            // Register IBKRClient with mock adapter
+            services.AddTransient<IBKRClient>(sp =>
+            {
+                var adapter = sp.GetRequiredService<IRequestAdapter>();
+                return new IBKRClient(adapter);
+            });
         }
         else if (useRealAuthentication)
         {
