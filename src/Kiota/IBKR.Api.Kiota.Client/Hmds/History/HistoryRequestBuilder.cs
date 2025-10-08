@@ -9,7 +9,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Threading;
 using System;
-namespace IBKR.Api.Kiota.Client.Client.Client.Hmds.History
+namespace IBKR.Api.Kiota.Client.Client.Client.Client.Hmds.History
 {
     /// <summary>
     /// Builds and executes requests for operations under \hmds\history
@@ -18,7 +18,7 @@ namespace IBKR.Api.Kiota.Client.Client.Client.Hmds.History
     public partial class HistoryRequestBuilder : BaseRequestBuilder
     {
         /// <summary>
-        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Hmds.History.HistoryRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Client.Hmds.History.HistoryRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -26,7 +26,7 @@ namespace IBKR.Api.Kiota.Client.Client.Client.Hmds.History
         {
         }
         /// <summary>
-        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Hmds.History.HistoryRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Client.Hmds.History.HistoryRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -44,11 +44,11 @@ namespace IBKR.Api.Kiota.Client.Client.Client.Hmds.History
         /// <exception cref="global::IBKR.Api.Kiota.Contract.Models.ErrorResponse">When receiving a 503 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<global::IBKR.Api.Kiota.Contract.Models.HmdsHistoryResponse?> GetAsync(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Hmds.History.HistoryRequestBuilder.HistoryRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::IBKR.Api.Kiota.Contract.Models.HmdsHistoryResponse?> GetAsync(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Client.Hmds.History.HistoryRequestBuilder.HistoryRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<global::IBKR.Api.Kiota.Contract.Models.HmdsHistoryResponse> GetAsync(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Hmds.History.HistoryRequestBuilder.HistoryRequestBuilderGetQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::IBKR.Api.Kiota.Contract.Models.HmdsHistoryResponse> GetAsync(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Client.Hmds.History.HistoryRequestBuilder.HistoryRequestBuilderGetQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             var requestInfo = ToGetRequestInformation(requestConfiguration);
@@ -67,11 +67,11 @@ namespace IBKR.Api.Kiota.Client.Client.Client.Hmds.History
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Hmds.History.HistoryRequestBuilder.HistoryRequestBuilderGetQueryParameters>>? requestConfiguration = default)
+        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Client.Hmds.History.HistoryRequestBuilder.HistoryRequestBuilderGetQueryParameters>>? requestConfiguration = default)
         {
 #nullable restore
 #else
-        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Hmds.History.HistoryRequestBuilder.HistoryRequestBuilderGetQueryParameters>> requestConfiguration = default)
+        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Client.Hmds.History.HistoryRequestBuilder.HistoryRequestBuilderGetQueryParameters>> requestConfiguration = default)
         {
 #endif
             var requestInfo = new RequestInformation(Method.GET, UrlTemplate, PathParameters);
@@ -82,11 +82,11 @@ namespace IBKR.Api.Kiota.Client.Client.Client.Hmds.History
         /// <summary>
         /// Returns a request builder with the provided arbitrary URL. Using this method means any other path or query parameters are ignored.
         /// </summary>
-        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Hmds.History.HistoryRequestBuilder"/></returns>
+        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Client.Hmds.History.HistoryRequestBuilder"/></returns>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
-        public global::IBKR.Api.Kiota.Client.Client.Client.Hmds.History.HistoryRequestBuilder WithUrl(string rawUrl)
+        public global::IBKR.Api.Kiota.Client.Client.Client.Client.Hmds.History.HistoryRequestBuilder WithUrl(string rawUrl)
         {
-            return new global::IBKR.Api.Kiota.Client.Client.Client.Hmds.History.HistoryRequestBuilder(rawUrl, RequestAdapter);
+            return new global::IBKR.Api.Kiota.Client.Client.Client.Client.Hmds.History.HistoryRequestBuilder(rawUrl, RequestAdapter);
         }
         /// <summary>
         /// Request historical data for an instrument in the form of OHLC bars.
@@ -117,7 +117,7 @@ namespace IBKR.Api.Kiota.Client.Client.Client.Hmds.History
 #endif
             /// <summary>The requested historical data type. If omitted, Last Trade data is queried.</summary>
             [QueryParameter("barType")]
-            public global::IBKR.Api.Kiota.Client.Client.Client.Hmds.History.GetBarTypeQueryParameterType? BarTypeAsGetBarTypeQueryParameterType { get; set; }
+            public global::IBKR.Api.Kiota.Client.Client.Client.Client.Hmds.History.GetBarTypeQueryParameterType? BarTypeAsGetBarTypeQueryParameterType { get; set; }
             /// <summary>IB contract ID of the requested instrument.</summary>
             [QueryParameter("conid")]
             public int? Conid { get; set; }
@@ -153,7 +153,7 @@ namespace IBKR.Api.Kiota.Client.Client.Client.Hmds.History
         /// </summary>
         [Obsolete("This class is deprecated. Please use the generic RequestConfiguration class generated by the generator.")]
         [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
-        public partial class HistoryRequestBuilderGetRequestConfiguration : RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Hmds.History.HistoryRequestBuilder.HistoryRequestBuilderGetQueryParameters>
+        public partial class HistoryRequestBuilderGetRequestConfiguration : RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Client.Hmds.History.HistoryRequestBuilder.HistoryRequestBuilderGetQueryParameters>
         {
         }
     }

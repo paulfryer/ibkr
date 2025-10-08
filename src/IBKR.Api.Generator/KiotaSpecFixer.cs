@@ -28,6 +28,8 @@ public class KiotaSpecFixer
         AddDiscriminatorsToPolymorphicTypes();
         Fix401ErrorResponses();
         FixTypeFormatMismatches();
+        FixContractInfoRequiredFields();
+        FixSecDefInfoRequiredFields();
 
         Console.WriteLine($"\n✓ Applied {_fixesApplied} Kiota-specific fixes total\n");
     }
@@ -445,6 +447,105 @@ public class KiotaSpecFixer
         if (fixes > 0)
         {
             Console.WriteLine($"  ✓ Fixed {fixes} type/format mismatches");
+        }
+
+        _fixesApplied += fixes;
+    }
+
+    /// <summary>
+    /// Make cusip and other optional fields in ContractInfo schema.
+    ///
+    /// IBKR's /iserver/contract/{conid}/info API returns contract details where
+    /// many fields can be null depending on the security type.
+    /// </summary>
+    private void FixContractInfoRequiredFields()
+    {
+        Console.WriteLine("Making cusip and related fields optional in ContractInfo...");
+        int fixes = 0;
+
+        if (_document.Components?.Schemas != null)
+        {
+            foreach (var schemaEntry in _document.Components.Schemas)
+            {
+                var schema = schemaEntry.Value;
+
+                if (schema.Properties?.ContainsKey("cusip") == true)
+                {
+                    var fieldsToMakeOptional = new[] {
+                        "cusip", "expiry_full", "maturity_date",
+                        "contract_clarification_type", "classifier",
+                        "text", "multiplier", "underlying_issuer", "contract_month"
+                    };
+
+                    foreach (var field in fieldsToMakeOptional)
+                    {
+                        if (schema.Required?.Contains(field) == true)
+                        {
+                            schema.Required.Remove(field);
+                            fixes++;
+                        }
+
+                        if (schema.Properties?.ContainsKey(field) == true)
+                        {
+                            schema.Properties[field].Nullable = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (fixes > 0)
+        {
+            Console.WriteLine($"  ✓ Made {fixes} fields optional in ContractInfo");
+        }
+
+        _fixesApplied += fixes;
+    }
+
+    /// <summary>
+    /// Make listingExchange and other fields optional in SecDefInfoResponse.
+    ///
+    /// IBKR's option contract detail API returns option contracts where many fields can be null.
+    /// </summary>
+    private void FixSecDefInfoRequiredFields()
+    {
+        Console.WriteLine("Making listingExchange/companyName optional in SecDefInfoResponse...");
+        int fixes = 0;
+
+        if (_document.Components?.Schemas != null)
+        {
+            var schemaKey = _document.Components.Schemas.Keys
+                .FirstOrDefault(k => k.Replace("-", "").Replace("_", "")
+                    .Equals("secdefInforesponse", StringComparison.OrdinalIgnoreCase));
+
+            if (schemaKey != null)
+            {
+                var schema = _document.Components.Schemas[schemaKey];
+
+                var fieldsToMakeOptional = new[] {
+                    "listingExchange",
+                    "companyName"
+                };
+
+                foreach (var field in fieldsToMakeOptional)
+                {
+                    if (schema.Required?.Contains(field) == true)
+                    {
+                        schema.Required.Remove(field);
+                        fixes++;
+                    }
+
+                    if (schema.Properties?.ContainsKey(field) == true)
+                    {
+                        schema.Properties[field].Nullable = true;
+                    }
+                }
+            }
+        }
+
+        if (fixes > 0)
+        {
+            Console.WriteLine($"  ✓ Made {fixes} fields optional in SecDefInfoResponse");
         }
 
         _fixesApplied += fixes;

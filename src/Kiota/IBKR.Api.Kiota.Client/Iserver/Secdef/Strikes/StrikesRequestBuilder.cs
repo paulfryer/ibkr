@@ -9,7 +9,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Threading;
 using System;
-namespace IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Strikes
+namespace IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Secdef.Strikes
 {
     /// <summary>
     /// Builds and executes requests for operations under \iserver\secdef\strikes
@@ -18,7 +18,7 @@ namespace IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Strikes
     public partial class StrikesRequestBuilder : BaseRequestBuilder
     {
         /// <summary>
-        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Strikes.StrikesRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Secdef.Strikes.StrikesRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -26,7 +26,7 @@ namespace IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Strikes
         {
         }
         /// <summary>
-        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Strikes.StrikesRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Secdef.Strikes.StrikesRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -36,7 +36,7 @@ namespace IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Strikes
         /// <summary>
         /// strikes
         /// </summary>
-        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Strikes.StrikesGetResponse"/></returns>
+        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Secdef.Strikes.StrikesGetResponse"/></returns>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
         /// <exception cref="global::IBKR.Api.Kiota.Contract.Models.ErrorResponse">When receiving a 400 status code</exception>
@@ -44,11 +44,11 @@ namespace IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Strikes
         /// <exception cref="global::IBKR.Api.Kiota.Contract.Models.ErrorResponse">When receiving a 503 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Strikes.StrikesGetResponse?> GetAsStrikesGetResponseAsync(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Strikes.StrikesRequestBuilder.StrikesRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Secdef.Strikes.StrikesGetResponse?> GetAsStrikesGetResponseAsync(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Secdef.Strikes.StrikesRequestBuilder.StrikesRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Strikes.StrikesGetResponse> GetAsStrikesGetResponseAsync(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Strikes.StrikesRequestBuilder.StrikesRequestBuilderGetQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Secdef.Strikes.StrikesGetResponse> GetAsStrikesGetResponseAsync(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Secdef.Strikes.StrikesRequestBuilder.StrikesRequestBuilderGetQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             var requestInfo = ToGetRequestInformation(requestConfiguration);
@@ -58,12 +58,12 @@ namespace IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Strikes
                 { "500", global::IBKR.Api.Kiota.Contract.Models.ErrorOnlyResponse.CreateFromDiscriminatorValue },
                 { "503", global::IBKR.Api.Kiota.Contract.Models.ErrorResponse.CreateFromDiscriminatorValue },
             };
-            return await RequestAdapter.SendAsync<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Strikes.StrikesGetResponse>(requestInfo, global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Strikes.StrikesGetResponse.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
+            return await RequestAdapter.SendAsync<global::IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Secdef.Strikes.StrikesGetResponse>(requestInfo, global::IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Secdef.Strikes.StrikesGetResponse.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
         }
         /// <summary>
         /// strikes
         /// </summary>
-        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Strikes.StrikesResponse"/></returns>
+        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Secdef.Strikes.StrikesResponse"/></returns>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
         /// <exception cref="global::IBKR.Api.Kiota.Contract.Models.ErrorResponse">When receiving a 400 status code</exception>
@@ -72,11 +72,11 @@ namespace IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Strikes
         [Obsolete("This method is obsolete. Use GetAsStrikesGetResponseAsync instead.")]
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Strikes.StrikesResponse?> GetAsync(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Strikes.StrikesRequestBuilder.StrikesRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Secdef.Strikes.StrikesResponse?> GetAsync(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Secdef.Strikes.StrikesRequestBuilder.StrikesRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Strikes.StrikesResponse> GetAsync(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Strikes.StrikesRequestBuilder.StrikesRequestBuilderGetQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Secdef.Strikes.StrikesResponse> GetAsync(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Secdef.Strikes.StrikesRequestBuilder.StrikesRequestBuilderGetQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             var requestInfo = ToGetRequestInformation(requestConfiguration);
@@ -86,7 +86,7 @@ namespace IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Strikes
                 { "500", global::IBKR.Api.Kiota.Contract.Models.ErrorOnlyResponse.CreateFromDiscriminatorValue },
                 { "503", global::IBKR.Api.Kiota.Contract.Models.ErrorResponse.CreateFromDiscriminatorValue },
             };
-            return await RequestAdapter.SendAsync<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Strikes.StrikesResponse>(requestInfo, global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Strikes.StrikesResponse.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
+            return await RequestAdapter.SendAsync<global::IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Secdef.Strikes.StrikesResponse>(requestInfo, global::IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Secdef.Strikes.StrikesResponse.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
         }
         /// <summary>
         /// strikes
@@ -95,11 +95,11 @@ namespace IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Strikes
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Strikes.StrikesRequestBuilder.StrikesRequestBuilderGetQueryParameters>>? requestConfiguration = default)
+        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Secdef.Strikes.StrikesRequestBuilder.StrikesRequestBuilderGetQueryParameters>>? requestConfiguration = default)
         {
 #nullable restore
 #else
-        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Strikes.StrikesRequestBuilder.StrikesRequestBuilderGetQueryParameters>> requestConfiguration = default)
+        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Secdef.Strikes.StrikesRequestBuilder.StrikesRequestBuilderGetQueryParameters>> requestConfiguration = default)
         {
 #endif
             var requestInfo = new RequestInformation(Method.GET, UrlTemplate, PathParameters);
@@ -110,11 +110,11 @@ namespace IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Strikes
         /// <summary>
         /// Returns a request builder with the provided arbitrary URL. Using this method means any other path or query parameters are ignored.
         /// </summary>
-        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Strikes.StrikesRequestBuilder"/></returns>
+        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Secdef.Strikes.StrikesRequestBuilder"/></returns>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
-        public global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Strikes.StrikesRequestBuilder WithUrl(string rawUrl)
+        public global::IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Secdef.Strikes.StrikesRequestBuilder WithUrl(string rawUrl)
         {
-            return new global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Strikes.StrikesRequestBuilder(rawUrl, RequestAdapter);
+            return new global::IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Secdef.Strikes.StrikesRequestBuilder(rawUrl, RequestAdapter);
         }
         /// <summary>
         /// strikes
@@ -164,7 +164,7 @@ namespace IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Strikes
         /// </summary>
         [Obsolete("This class is deprecated. Please use the generic RequestConfiguration class generated by the generator.")]
         [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
-        public partial class StrikesRequestBuilderGetRequestConfiguration : RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Strikes.StrikesRequestBuilder.StrikesRequestBuilderGetQueryParameters>
+        public partial class StrikesRequestBuilderGetRequestConfiguration : RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Secdef.Strikes.StrikesRequestBuilder.StrikesRequestBuilderGetQueryParameters>
         {
         }
     }

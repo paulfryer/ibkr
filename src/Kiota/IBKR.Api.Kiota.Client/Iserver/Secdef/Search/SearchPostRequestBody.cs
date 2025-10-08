@@ -5,7 +5,7 @@ using Microsoft.Kiota.Abstractions.Serialization;
 using System.Collections.Generic;
 using System.IO;
 using System;
-namespace IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Search
+namespace IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Secdef.Search
 {
     [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
     #pragma warning disable CS1591
@@ -39,7 +39,7 @@ namespace IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Search
         public string Referrer { get; set; }
 #endif
         /// <summary>Available underlying security types:  * `STK` - Represents an underlying as a Stock security type.  * `IND` - Represents an underlying as an Index security type.  * `BOND` - Represents an underlying as a Bond security type.</summary>
-        public global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Search.SearchPostRequestBody_secType? SecType { get; set; }
+        public global::IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Secdef.Search.SearchPostRequestBody_secType? SecType { get; set; }
         /// <summary>The ticker symbol, bond issuer type, or company name of the equity you are looking to trade.</summary>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
@@ -49,22 +49,22 @@ namespace IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Search
         public string Symbol { get; set; }
 #endif
         /// <summary>
-        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Search.SearchPostRequestBody"/> and sets the default values.
+        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Secdef.Search.SearchPostRequestBody"/> and sets the default values.
         /// </summary>
         public SearchPostRequestBody()
         {
             AdditionalData = new Dictionary<string, object>();
-            SecType = global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Search.SearchPostRequestBody_secType.STK;
+            SecType = global::IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Secdef.Search.SearchPostRequestBody_secType.STK;
         }
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Search.SearchPostRequestBody"/></returns>
+        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Secdef.Search.SearchPostRequestBody"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Search.SearchPostRequestBody CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static global::IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Secdef.Search.SearchPostRequestBody CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            return new global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Search.SearchPostRequestBody();
+            return new global::IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Secdef.Search.SearchPostRequestBody();
         }
         /// <summary>
         /// The deserialization information for the current model
@@ -80,7 +80,7 @@ namespace IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Search
                 { "name", n => { Name = n.GetBoolValue(); } },
                 { "pattern", n => { Pattern = n.GetBoolValue(); } },
                 { "referrer", n => { Referrer = n.GetStringValue(); } },
-                { "secType", n => { SecType = n.GetEnumValue<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Search.SearchPostRequestBody_secType>(); } },
+                { "secType", n => { SecType = n.GetEnumValue<global::IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Secdef.Search.SearchPostRequestBody_secType>(); } },
                 { "symbol", n => { Symbol = n.GetStringValue(); } },
             };
         }
@@ -97,7 +97,7 @@ namespace IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Search
             writer.WriteBoolValue("name", Name);
             writer.WriteBoolValue("pattern", Pattern);
             writer.WriteStringValue("referrer", Referrer);
-            writer.WriteEnumValue<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Search.SearchPostRequestBody_secType>("secType", SecType);
+            writer.WriteEnumValue<global::IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Secdef.Search.SearchPostRequestBody_secType>("secType", SecType);
             writer.WriteStringValue("symbol", Symbol);
             writer.WriteAdditionalData(AdditionalData);
         }

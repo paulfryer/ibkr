@@ -5,13 +5,12 @@ using Microsoft.Kiota.Abstractions.Authentication;
 namespace IBKR.Api.Kiota.Authentication;
 
 /// <summary>
-/// Kiota authentication provider that adds IBKR bearer token to requests
+/// Kiota authentication provider that adds IBKR bearer token to requests.
+/// Thread-safe: relies on IIBKRAuthenticationProvider's thread-safe session initialization.
 /// </summary>
 public class IBKRKiotaAuthenticationProvider : IAuthenticationProvider
 {
     private readonly IIBKRAuthenticationProvider _authProvider;
-    private bool _sessionInitialized;
-    private readonly SemaphoreSlim _initLock = new(1, 1);
 
     public IBKRKiotaAuthenticationProvider(IIBKRAuthenticationProvider authProvider)
     {
@@ -26,23 +25,8 @@ public class IBKRKiotaAuthenticationProvider : IAuthenticationProvider
         Dictionary<string, object>? additionalAuthenticationContext = null,
         CancellationToken cancellationToken = default)
     {
-        // Ensure session is initialized (only once)
-        if (!_sessionInitialized)
-        {
-            await _initLock.WaitAsync(cancellationToken);
-            try
-            {
-                if (!_sessionInitialized)
-                {
-                    await _authProvider.InitializeSessionAsync(cancellationToken);
-                    _sessionInitialized = true;
-                }
-            }
-            finally
-            {
-                _initLock.Release();
-            }
-        }
+        // Ensure session is initialized (provider handles thread-safety and idempotency)
+        await _authProvider.InitializeSessionAsync(cancellationToken);
 
         // Get bearer token
         var bearerToken = await _authProvider.GetBearerTokenAsync(cancellationToken);

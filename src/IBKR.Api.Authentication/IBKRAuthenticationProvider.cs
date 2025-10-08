@@ -10,13 +10,14 @@ namespace IBKR.Api.Authentication;
 /// 2. Request Bearer Token (SSO session with signed JWT)
 /// 3. Initialize Brokerage Session
 /// </summary>
-public class IBKRAuthenticationProvider : IIBKRAuthenticationProvider
+public class IBKRAuthenticationProvider : IIBKRAuthenticationProvider, IDisposable
 {
     private readonly IBKRAuthenticationOptions _options;
     private readonly HttpClient _httpClient;
     private readonly JwtSigner _jwtSigner;
     private readonly TokenCache _tokenCache;
     private bool _sessionInitialized;
+    private readonly SemaphoreSlim _sessionInitLock = new(1, 1);
 
     public IBKRAuthenticationProvider(IBKRAuthenticationOptions options, HttpClient? httpClient = null)
     {
@@ -50,40 +51,57 @@ public class IBKRAuthenticationProvider : IIBKRAuthenticationProvider
     }
 
     /// <summary>
-    /// Initialize brokerage session (must be called after authentication)
+    /// Initialize brokerage session (must be called after authentication).
+    /// Thread-safe: Multiple simultaneous calls will result in only one initialization.
     /// </summary>
     public async Task<bool> InitializeSessionAsync(CancellationToken cancellationToken = default)
     {
+        // Fast path: if already initialized, return immediately without locking
         if (_sessionInitialized)
         {
             return true;
         }
 
-        var bearerToken = await GetBearerTokenAsync(cancellationToken);
-
-        var endpoint = $"{_options.BaseUrl}/v1/api/iserver/auth/ssodh/init";
-        var request = new HttpRequestMessage(HttpMethod.Post, endpoint);
-
-        AddStandardHeaders(request);
-        request.Headers.Add("Authorization", $"Bearer {bearerToken}");
-
-        var content = JsonConvert.SerializeObject(new { compete = true, publish = true });
-        request.Content = new StringContent(content, System.Text.Encoding.UTF8, "application/json");
-
-        var response = await _httpClient.SendAsync(request, cancellationToken);
-        response.EnsureSuccessStatusCode();
-
-        var responseContent = await response.Content.ReadAsStringAsync(cancellationToken);
-        var session = JsonConvert.DeserializeObject<SessionResponse>(responseContent);
-
-        _sessionInitialized = session?.Authenticated == true && session?.Connected == true;
-
-        if (!_sessionInitialized)
+        // Thread-safe initialization: only one thread will initialize
+        await _sessionInitLock.WaitAsync(cancellationToken);
+        try
         {
-            throw new InvalidOperationException("Session not authenticated or connected");
-        }
+            // Double-check after acquiring lock (another thread may have initialized)
+            if (_sessionInitialized)
+            {
+                return true;
+            }
 
-        return _sessionInitialized;
+            var bearerToken = await GetBearerTokenAsync(cancellationToken);
+
+            var endpoint = $"{_options.BaseUrl}/v1/api/iserver/auth/ssodh/init";
+            var request = new HttpRequestMessage(HttpMethod.Post, endpoint);
+
+            AddStandardHeaders(request);
+            request.Headers.Add("Authorization", $"Bearer {bearerToken}");
+
+            var content = JsonConvert.SerializeObject(new { compete = true, publish = true });
+            request.Content = new StringContent(content, System.Text.Encoding.UTF8, "application/json");
+
+            var response = await _httpClient.SendAsync(request, cancellationToken);
+            response.EnsureSuccessStatusCode();
+
+            var responseContent = await response.Content.ReadAsStringAsync(cancellationToken);
+            var session = JsonConvert.DeserializeObject<SessionResponse>(responseContent);
+
+            _sessionInitialized = session?.Authenticated == true && session?.Connected == true;
+
+            if (!_sessionInitialized)
+            {
+                throw new InvalidOperationException("Session not authenticated or connected");
+            }
+
+            return _sessionInitialized;
+        }
+        finally
+        {
+            _sessionInitLock.Release();
+        }
     }
 
     /// <summary>
@@ -223,5 +241,13 @@ public class IBKRAuthenticationProvider : IIBKRAuthenticationProvider
         public bool Connected { get; set; }
         public bool Competing { get; set; }
         public string? Message { get; set; }
+    }
+
+    /// <summary>
+    /// Dispose pattern to clean up semaphore
+    /// </summary>
+    public void Dispose()
+    {
+        _sessionInitLock?.Dispose();
     }
 }

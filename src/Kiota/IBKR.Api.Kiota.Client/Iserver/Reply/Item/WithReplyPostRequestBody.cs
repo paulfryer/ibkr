@@ -5,7 +5,7 @@ using Microsoft.Kiota.Abstractions.Serialization;
 using System.Collections.Generic;
 using System.IO;
 using System;
-namespace IBKR.Api.Kiota.Client.Client.Client.Iserver.Reply.Item
+namespace IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Reply.Item
 {
     [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
     #pragma warning disable CS1591
@@ -17,7 +17,7 @@ namespace IBKR.Api.Kiota.Client.Client.Client.Iserver.Reply.Item
         /// <summary>Value of true answers the question in the affirmative and proceeds with order submission.</summary>
         public bool? Confirmed { get; set; }
         /// <summary>
-        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Reply.Item.WithReplyPostRequestBody"/> and sets the default values.
+        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Reply.Item.WithReplyPostRequestBody"/> and sets the default values.
         /// </summary>
         public WithReplyPostRequestBody()
         {
@@ -26,12 +26,12 @@ namespace IBKR.Api.Kiota.Client.Client.Client.Iserver.Reply.Item
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Reply.Item.WithReplyPostRequestBody"/></returns>
+        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Reply.Item.WithReplyPostRequestBody"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Reply.Item.WithReplyPostRequestBody CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static global::IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Reply.Item.WithReplyPostRequestBody CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            return new global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Reply.Item.WithReplyPostRequestBody();
+            return new global::IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Reply.Item.WithReplyPostRequestBody();
         }
         /// <summary>
         /// The deserialization information for the current model

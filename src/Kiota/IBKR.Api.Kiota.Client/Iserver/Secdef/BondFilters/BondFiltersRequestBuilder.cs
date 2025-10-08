@@ -9,7 +9,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Threading;
 using System;
-namespace IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.BondFilters
+namespace IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Secdef.BondFilters
 {
     /// <summary>
     /// Builds and executes requests for operations under \iserver\secdef\bond-filters
@@ -18,7 +18,7 @@ namespace IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.BondFilters
     public partial class BondFiltersRequestBuilder : BaseRequestBuilder
     {
         /// <summary>
-        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.BondFilters.BondFiltersRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Secdef.BondFilters.BondFiltersRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -26,7 +26,7 @@ namespace IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.BondFilters
         {
         }
         /// <summary>
-        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.BondFilters.BondFiltersRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Secdef.BondFilters.BondFiltersRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -43,11 +43,11 @@ namespace IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.BondFilters
         /// <exception cref="global::IBKR.Api.Kiota.Contract.Models.ErrorResponse">When receiving a 503 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<global::IBKR.Api.Kiota.Contract.Models.BondFiltersResponse?> GetAsync(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.BondFilters.BondFiltersRequestBuilder.BondFiltersRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::IBKR.Api.Kiota.Contract.Models.BondFiltersResponse?> GetAsync(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Secdef.BondFilters.BondFiltersRequestBuilder.BondFiltersRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<global::IBKR.Api.Kiota.Contract.Models.BondFiltersResponse> GetAsync(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.BondFilters.BondFiltersRequestBuilder.BondFiltersRequestBuilderGetQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::IBKR.Api.Kiota.Contract.Models.BondFiltersResponse> GetAsync(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Secdef.BondFilters.BondFiltersRequestBuilder.BondFiltersRequestBuilderGetQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             var requestInfo = ToGetRequestInformation(requestConfiguration);
@@ -65,11 +65,11 @@ namespace IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.BondFilters
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.BondFilters.BondFiltersRequestBuilder.BondFiltersRequestBuilderGetQueryParameters>>? requestConfiguration = default)
+        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Secdef.BondFilters.BondFiltersRequestBuilder.BondFiltersRequestBuilderGetQueryParameters>>? requestConfiguration = default)
         {
 #nullable restore
 #else
-        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.BondFilters.BondFiltersRequestBuilder.BondFiltersRequestBuilderGetQueryParameters>> requestConfiguration = default)
+        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Secdef.BondFilters.BondFiltersRequestBuilder.BondFiltersRequestBuilderGetQueryParameters>> requestConfiguration = default)
         {
 #endif
             var requestInfo = new RequestInformation(Method.GET, UrlTemplate, PathParameters);
@@ -80,11 +80,11 @@ namespace IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.BondFilters
         /// <summary>
         /// Returns a request builder with the provided arbitrary URL. Using this method means any other path or query parameters are ignored.
         /// </summary>
-        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.BondFilters.BondFiltersRequestBuilder"/></returns>
+        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Secdef.BondFilters.BondFiltersRequestBuilder"/></returns>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
-        public global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.BondFilters.BondFiltersRequestBuilder WithUrl(string rawUrl)
+        public global::IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Secdef.BondFilters.BondFiltersRequestBuilder WithUrl(string rawUrl)
         {
-            return new global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.BondFilters.BondFiltersRequestBuilder(rawUrl, RequestAdapter);
+            return new global::IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Secdef.BondFilters.BondFiltersRequestBuilder(rawUrl, RequestAdapter);
         }
         /// <summary>
         /// Request a list of filters relating to a given Bond issuerID. The issuerId is retrieved from /iserver/secdef/search and can be used in /iserver/secdef/info?issuerId={issuerId} for retrieving conIds.
@@ -116,7 +116,7 @@ namespace IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.BondFilters
         /// </summary>
         [Obsolete("This class is deprecated. Please use the generic RequestConfiguration class generated by the generator.")]
         [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
-        public partial class BondFiltersRequestBuilderGetRequestConfiguration : RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.BondFilters.BondFiltersRequestBuilder.BondFiltersRequestBuilderGetQueryParameters>
+        public partial class BondFiltersRequestBuilderGetRequestConfiguration : RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Secdef.BondFilters.BondFiltersRequestBuilder.BondFiltersRequestBuilderGetQueryParameters>
         {
         }
     }

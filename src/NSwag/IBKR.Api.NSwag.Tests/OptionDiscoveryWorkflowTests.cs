@@ -9,6 +9,7 @@ namespace IBKR.Api.NSwag.Tests;
 /// Workflow tests for discovering option contracts within a configurable date range.
 /// Tests the complete flow: Search stock → Get contract info → Find option expirations → Get strikes → Get contract details
 /// </summary>
+[Collection("IBKR API Sequential")]
 public class OptionDiscoveryWorkflowTests : IClassFixture<TestFixture>
 {
     private readonly IIserverService _iserverService;

@@ -6,7 +6,7 @@ using Microsoft.Kiota.Abstractions.Serialization;
 using System.Collections.Generic;
 using System.IO;
 using System;
-namespace IBKR.Api.Kiota.Client.Client.Client.Iserver.Contract.Item.InfoAndRules
+namespace IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Contract.Item.InfoAndRules
 {
     [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
     #pragma warning disable CS1591
@@ -24,12 +24,12 @@ namespace IBKR.Api.Kiota.Client.Client.Client.Iserver.Contract.Item.InfoAndRules
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Contract.Item.InfoAndRules.InfoAndRulesGetResponse"/></returns>
+        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Contract.Item.InfoAndRules.InfoAndRulesGetResponse"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static new global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Contract.Item.InfoAndRules.InfoAndRulesGetResponse CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static new global::IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Contract.Item.InfoAndRules.InfoAndRulesGetResponse CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            return new global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Contract.Item.InfoAndRules.InfoAndRulesGetResponse();
+            return new global::IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Contract.Item.InfoAndRules.InfoAndRulesGetResponse();
         }
         /// <summary>
         /// The deserialization information for the current model

@@ -9,7 +9,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Threading;
 using System;
-namespace IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Info
+namespace IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Secdef.Info
 {
     /// <summary>
     /// Builds and executes requests for operations under \iserver\secdef\info
@@ -18,7 +18,7 @@ namespace IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Info
     public partial class InfoRequestBuilder : BaseRequestBuilder
     {
         /// <summary>
-        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Info.InfoRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Secdef.Info.InfoRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -26,7 +26,7 @@ namespace IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Info
         {
         }
         /// <summary>
-        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Info.InfoRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Secdef.Info.InfoRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -44,11 +44,11 @@ namespace IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Info
         /// <exception cref="global::IBKR.Api.Kiota.Contract.Models.ErrorResponse">When receiving a 503 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<global::IBKR.Api.Kiota.Contract.Models.SecDefInfoResponse?> GetAsync(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Info.InfoRequestBuilder.InfoRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::IBKR.Api.Kiota.Contract.Models.SecDefInfoResponse?> GetAsync(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Secdef.Info.InfoRequestBuilder.InfoRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<global::IBKR.Api.Kiota.Contract.Models.SecDefInfoResponse> GetAsync(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Info.InfoRequestBuilder.InfoRequestBuilderGetQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::IBKR.Api.Kiota.Contract.Models.SecDefInfoResponse> GetAsync(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Secdef.Info.InfoRequestBuilder.InfoRequestBuilderGetQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             var requestInfo = ToGetRequestInformation(requestConfiguration);
@@ -67,11 +67,11 @@ namespace IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Info
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Info.InfoRequestBuilder.InfoRequestBuilderGetQueryParameters>>? requestConfiguration = default)
+        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Secdef.Info.InfoRequestBuilder.InfoRequestBuilderGetQueryParameters>>? requestConfiguration = default)
         {
 #nullable restore
 #else
-        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Info.InfoRequestBuilder.InfoRequestBuilderGetQueryParameters>> requestConfiguration = default)
+        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Secdef.Info.InfoRequestBuilder.InfoRequestBuilderGetQueryParameters>> requestConfiguration = default)
         {
 #endif
             var requestInfo = new RequestInformation(Method.GET, UrlTemplate, PathParameters);
@@ -82,11 +82,11 @@ namespace IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Info
         /// <summary>
         /// Returns a request builder with the provided arbitrary URL. Using this method means any other path or query parameters are ignored.
         /// </summary>
-        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Info.InfoRequestBuilder"/></returns>
+        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Secdef.Info.InfoRequestBuilder"/></returns>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
-        public global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Info.InfoRequestBuilder WithUrl(string rawUrl)
+        public global::IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Secdef.Info.InfoRequestBuilder WithUrl(string rawUrl)
         {
-            return new global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Info.InfoRequestBuilder(rawUrl, RequestAdapter);
+            return new global::IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Secdef.Info.InfoRequestBuilder(rawUrl, RequestAdapter);
         }
         /// <summary>
         /// SecDef info
@@ -150,7 +150,7 @@ namespace IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Info
             public string Right { get; set; }
 #endif
             [QueryParameter("right")]
-            public global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Info.GetRightQueryParameterType? RightAsGetRightQueryParameterType { get; set; }
+            public global::IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Secdef.Info.GetRightQueryParameterType? RightAsGetRightQueryParameterType { get; set; }
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
             [QueryParameter("sectype")]
@@ -175,7 +175,7 @@ namespace IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Info
         /// </summary>
         [Obsolete("This class is deprecated. Please use the generic RequestConfiguration class generated by the generator.")]
         [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
-        public partial class InfoRequestBuilderGetRequestConfiguration : RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Secdef.Info.InfoRequestBuilder.InfoRequestBuilderGetQueryParameters>
+        public partial class InfoRequestBuilderGetRequestConfiguration : RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Client.Iserver.Secdef.Info.InfoRequestBuilder.InfoRequestBuilderGetQueryParameters>
         {
         }
     }

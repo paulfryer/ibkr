@@ -9,7 +9,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Threading;
 using System;
-namespace IBKR.Api.Kiota.Client.Client.Client.Oauth.Live_session_token
+namespace IBKR.Api.Kiota.Client.Client.Client.Client.Oauth.Live_session_token
 {
     /// <summary>
     /// Builds and executes requests for operations under \oauth\live_session_token
@@ -18,7 +18,7 @@ namespace IBKR.Api.Kiota.Client.Client.Client.Oauth.Live_session_token
     public partial class Live_session_tokenRequestBuilder : BaseRequestBuilder
     {
         /// <summary>
-        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Oauth.Live_session_token.Live_session_tokenRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Client.Oauth.Live_session_token.Live_session_tokenRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -26,7 +26,7 @@ namespace IBKR.Api.Kiota.Client.Client.Client.Oauth.Live_session_token
         {
         }
         /// <summary>
-        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Oauth.Live_session_token.Live_session_tokenRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Client.Oauth.Live_session_token.Live_session_tokenRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -36,17 +36,17 @@ namespace IBKR.Api.Kiota.Client.Client.Client.Oauth.Live_session_token
         /// <summary>
         /// Generate a Live Session Token shared secret and gain access to Web API.
         /// </summary>
-        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Oauth.Live_session_token.Live_session_tokenPostResponse"/></returns>
+        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Client.Oauth.Live_session_token.Live_session_tokenPostResponse"/></returns>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
         /// <exception cref="global::IBKR.Api.Kiota.Contract.Models.ErrorResponse">When receiving a 503 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<global::IBKR.Api.Kiota.Client.Client.Client.Oauth.Live_session_token.Live_session_tokenPostResponse?> PostAsLive_session_tokenPostResponseAsync(Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::IBKR.Api.Kiota.Client.Client.Client.Client.Oauth.Live_session_token.Live_session_tokenPostResponse?> PostAsLive_session_tokenPostResponseAsync(Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<global::IBKR.Api.Kiota.Client.Client.Client.Oauth.Live_session_token.Live_session_tokenPostResponse> PostAsLive_session_tokenPostResponseAsync(Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::IBKR.Api.Kiota.Client.Client.Client.Client.Oauth.Live_session_token.Live_session_tokenPostResponse> PostAsLive_session_tokenPostResponseAsync(Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             var requestInfo = ToPostRequestInformation(requestConfiguration);
@@ -54,23 +54,23 @@ namespace IBKR.Api.Kiota.Client.Client.Client.Oauth.Live_session_token
             {
                 { "503", global::IBKR.Api.Kiota.Contract.Models.ErrorResponse.CreateFromDiscriminatorValue },
             };
-            return await RequestAdapter.SendAsync<global::IBKR.Api.Kiota.Client.Client.Client.Oauth.Live_session_token.Live_session_tokenPostResponse>(requestInfo, global::IBKR.Api.Kiota.Client.Client.Client.Oauth.Live_session_token.Live_session_tokenPostResponse.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
+            return await RequestAdapter.SendAsync<global::IBKR.Api.Kiota.Client.Client.Client.Client.Oauth.Live_session_token.Live_session_tokenPostResponse>(requestInfo, global::IBKR.Api.Kiota.Client.Client.Client.Client.Oauth.Live_session_token.Live_session_tokenPostResponse.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
         }
         /// <summary>
         /// Generate a Live Session Token shared secret and gain access to Web API.
         /// </summary>
-        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Oauth.Live_session_token.Live_session_tokenResponse"/></returns>
+        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Client.Oauth.Live_session_token.Live_session_tokenResponse"/></returns>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
         /// <exception cref="global::IBKR.Api.Kiota.Contract.Models.ErrorResponse">When receiving a 503 status code</exception>
         [Obsolete("This method is obsolete. Use PostAsLive_session_tokenPostResponseAsync instead.")]
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<global::IBKR.Api.Kiota.Client.Client.Client.Oauth.Live_session_token.Live_session_tokenResponse?> PostAsync(Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::IBKR.Api.Kiota.Client.Client.Client.Client.Oauth.Live_session_token.Live_session_tokenResponse?> PostAsync(Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<global::IBKR.Api.Kiota.Client.Client.Client.Oauth.Live_session_token.Live_session_tokenResponse> PostAsync(Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::IBKR.Api.Kiota.Client.Client.Client.Client.Oauth.Live_session_token.Live_session_tokenResponse> PostAsync(Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             var requestInfo = ToPostRequestInformation(requestConfiguration);
@@ -78,7 +78,7 @@ namespace IBKR.Api.Kiota.Client.Client.Client.Oauth.Live_session_token
             {
                 { "503", global::IBKR.Api.Kiota.Contract.Models.ErrorResponse.CreateFromDiscriminatorValue },
             };
-            return await RequestAdapter.SendAsync<global::IBKR.Api.Kiota.Client.Client.Client.Oauth.Live_session_token.Live_session_tokenResponse>(requestInfo, global::IBKR.Api.Kiota.Client.Client.Client.Oauth.Live_session_token.Live_session_tokenResponse.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
+            return await RequestAdapter.SendAsync<global::IBKR.Api.Kiota.Client.Client.Client.Client.Oauth.Live_session_token.Live_session_tokenResponse>(requestInfo, global::IBKR.Api.Kiota.Client.Client.Client.Client.Oauth.Live_session_token.Live_session_tokenResponse.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
         }
         /// <summary>
         /// Generate a Live Session Token shared secret and gain access to Web API.
@@ -102,11 +102,11 @@ namespace IBKR.Api.Kiota.Client.Client.Client.Oauth.Live_session_token
         /// <summary>
         /// Returns a request builder with the provided arbitrary URL. Using this method means any other path or query parameters are ignored.
         /// </summary>
-        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Oauth.Live_session_token.Live_session_tokenRequestBuilder"/></returns>
+        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Client.Oauth.Live_session_token.Live_session_tokenRequestBuilder"/></returns>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
-        public global::IBKR.Api.Kiota.Client.Client.Client.Oauth.Live_session_token.Live_session_tokenRequestBuilder WithUrl(string rawUrl)
+        public global::IBKR.Api.Kiota.Client.Client.Client.Client.Oauth.Live_session_token.Live_session_tokenRequestBuilder WithUrl(string rawUrl)
         {
-            return new global::IBKR.Api.Kiota.Client.Client.Client.Oauth.Live_session_token.Live_session_tokenRequestBuilder(rawUrl, RequestAdapter);
+            return new global::IBKR.Api.Kiota.Client.Client.Client.Client.Oauth.Live_session_token.Live_session_tokenRequestBuilder(rawUrl, RequestAdapter);
         }
         /// <summary>
         /// Configuration for the request such as headers, query parameters, and middleware options.

@@ -9,7 +9,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Threading;
 using System;
-namespace IBKR.Api.Kiota.Client.Client.Client.Trsrv.Secdef.Schedule
+namespace IBKR.Api.Kiota.Client.Client.Client.Client.Trsrv.Secdef.Schedule
 {
     /// <summary>
     /// Builds and executes requests for operations under \trsrv\secdef\schedule
@@ -18,7 +18,7 @@ namespace IBKR.Api.Kiota.Client.Client.Client.Trsrv.Secdef.Schedule
     public partial class ScheduleRequestBuilder : BaseRequestBuilder
     {
         /// <summary>
-        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Trsrv.Secdef.Schedule.ScheduleRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Client.Trsrv.Secdef.Schedule.ScheduleRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -26,7 +26,7 @@ namespace IBKR.Api.Kiota.Client.Client.Client.Trsrv.Secdef.Schedule
         {
         }
         /// <summary>
-        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Trsrv.Secdef.Schedule.ScheduleRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Client.Trsrv.Secdef.Schedule.ScheduleRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -44,11 +44,11 @@ namespace IBKR.Api.Kiota.Client.Client.Client.Trsrv.Secdef.Schedule
         /// <exception cref="global::IBKR.Api.Kiota.Contract.Models.ErrorResponse">When receiving a 503 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<List<global::IBKR.Api.Kiota.Contract.Models.TradingSchedule>?> GetAsync(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Trsrv.Secdef.Schedule.ScheduleRequestBuilder.ScheduleRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<List<global::IBKR.Api.Kiota.Contract.Models.TradingSchedule>?> GetAsync(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Client.Trsrv.Secdef.Schedule.ScheduleRequestBuilder.ScheduleRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<List<global::IBKR.Api.Kiota.Contract.Models.TradingSchedule>> GetAsync(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Trsrv.Secdef.Schedule.ScheduleRequestBuilder.ScheduleRequestBuilderGetQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<List<global::IBKR.Api.Kiota.Contract.Models.TradingSchedule>> GetAsync(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Client.Trsrv.Secdef.Schedule.ScheduleRequestBuilder.ScheduleRequestBuilderGetQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             var requestInfo = ToGetRequestInformation(requestConfiguration);
@@ -68,11 +68,11 @@ namespace IBKR.Api.Kiota.Client.Client.Client.Trsrv.Secdef.Schedule
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Trsrv.Secdef.Schedule.ScheduleRequestBuilder.ScheduleRequestBuilderGetQueryParameters>>? requestConfiguration = default)
+        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Client.Trsrv.Secdef.Schedule.ScheduleRequestBuilder.ScheduleRequestBuilderGetQueryParameters>>? requestConfiguration = default)
         {
 #nullable restore
 #else
-        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Trsrv.Secdef.Schedule.ScheduleRequestBuilder.ScheduleRequestBuilderGetQueryParameters>> requestConfiguration = default)
+        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Client.Trsrv.Secdef.Schedule.ScheduleRequestBuilder.ScheduleRequestBuilderGetQueryParameters>> requestConfiguration = default)
         {
 #endif
             var requestInfo = new RequestInformation(Method.GET, UrlTemplate, PathParameters);
@@ -83,11 +83,11 @@ namespace IBKR.Api.Kiota.Client.Client.Client.Trsrv.Secdef.Schedule
         /// <summary>
         /// Returns a request builder with the provided arbitrary URL. Using this method means any other path or query parameters are ignored.
         /// </summary>
-        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Trsrv.Secdef.Schedule.ScheduleRequestBuilder"/></returns>
+        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Client.Trsrv.Secdef.Schedule.ScheduleRequestBuilder"/></returns>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
-        public global::IBKR.Api.Kiota.Client.Client.Client.Trsrv.Secdef.Schedule.ScheduleRequestBuilder WithUrl(string rawUrl)
+        public global::IBKR.Api.Kiota.Client.Client.Client.Client.Trsrv.Secdef.Schedule.ScheduleRequestBuilder WithUrl(string rawUrl)
         {
-            return new global::IBKR.Api.Kiota.Client.Client.Client.Trsrv.Secdef.Schedule.ScheduleRequestBuilder(rawUrl, RequestAdapter);
+            return new global::IBKR.Api.Kiota.Client.Client.Client.Client.Trsrv.Secdef.Schedule.ScheduleRequestBuilder(rawUrl, RequestAdapter);
         }
         /// <summary>
         /// Returns the trading schedule up to a month for the requested contract.
@@ -106,7 +106,7 @@ namespace IBKR.Api.Kiota.Client.Client.Client.Trsrv.Secdef.Schedule
             public string AssetClass { get; set; }
 #endif
             [QueryParameter("assetClass")]
-            public global::IBKR.Api.Kiota.Client.Client.Client.Trsrv.Secdef.Schedule.GetAssetClassQueryParameterType? AssetClassAsGetAssetClassQueryParameterType { get; set; }
+            public global::IBKR.Api.Kiota.Client.Client.Client.Client.Trsrv.Secdef.Schedule.GetAssetClassQueryParameterType? AssetClassAsGetAssetClassQueryParameterType { get; set; }
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
             [QueryParameter("exchange")]
@@ -140,7 +140,7 @@ namespace IBKR.Api.Kiota.Client.Client.Client.Trsrv.Secdef.Schedule
         /// </summary>
         [Obsolete("This class is deprecated. Please use the generic RequestConfiguration class generated by the generator.")]
         [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
-        public partial class ScheduleRequestBuilderGetRequestConfiguration : RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Trsrv.Secdef.Schedule.ScheduleRequestBuilder.ScheduleRequestBuilderGetQueryParameters>
+        public partial class ScheduleRequestBuilderGetRequestConfiguration : RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Client.Trsrv.Secdef.Schedule.ScheduleRequestBuilder.ScheduleRequestBuilderGetQueryParameters>
         {
         }
     }

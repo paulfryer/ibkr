@@ -3,13 +3,12 @@ using IBKR.Api.Authentication;
 namespace IBKR.Api.NSwag.Authentication;
 
 /// <summary>
-/// HTTP message handler that adds IBKR authentication to outgoing requests
+/// HTTP message handler that adds IBKR authentication to outgoing requests.
+/// Thread-safe: relies on IIBKRAuthenticationProvider's thread-safe session initialization.
 /// </summary>
 public class IBKRAuthenticationHandler : DelegatingHandler
 {
     private readonly IIBKRAuthenticationProvider _authProvider;
-    private bool _sessionInitialized;
-    private readonly SemaphoreSlim _initLock = new(1, 1);
 
     public IBKRAuthenticationHandler(IIBKRAuthenticationProvider authProvider)
     {
@@ -23,25 +22,8 @@ public class IBKRAuthenticationHandler : DelegatingHandler
     {
         Console.WriteLine($"[IBKRAuthenticationHandler] SendAsync called for: {request.RequestUri}");
 
-        // Ensure session is initialized (only once)
-        if (!_sessionInitialized)
-        {
-            Console.WriteLine("[IBKRAuthenticationHandler] Initializing session...");
-            await _initLock.WaitAsync(cancellationToken);
-            try
-            {
-                if (!_sessionInitialized)
-                {
-                    await _authProvider.InitializeSessionAsync(cancellationToken);
-                    _sessionInitialized = true;
-                    Console.WriteLine("[IBKRAuthenticationHandler] Session initialized successfully");
-                }
-            }
-            finally
-            {
-                _initLock.Release();
-            }
-        }
+        // Ensure session is initialized (provider handles thread-safety and idempotency)
+        await _authProvider.InitializeSessionAsync(cancellationToken);
 
         // Get bearer token
         var bearerToken = await _authProvider.GetBearerTokenAsync(cancellationToken);
