@@ -84,26 +84,23 @@ The test projects use `appsettings.json` to switch between mock and real impleme
 {
   "Testing": {
     "UseMockClient": true
-  }
-}
-
-// appsettings.test.json (CI/CD - forces mocks)
-{
-  "Testing": {
-    "UseMockClient": true
-  }
-}
-
-// appsettings.development.json (Local - optionally use real API)
-{
-  "Testing": {
-    "UseMockClient": false
   },
   "IBKR": {
-    "BaseUrl": "https://localhost:5000"
+    "ClientId": "",
+    "Credential": "",
+    "ClientKeyId": "",
+    "ClientPemPath": "",
+    "BaseUrl": "https://api.ibkr.com"
   }
 }
 ```
+
+**Environment variables override config files:**
+- `Testing__UseMockClient=false` - Use real API instead of mocks
+- `IBKR__ClientId` - Your IBKR OAuth2 Client ID
+- `IBKR__Credential` - Your IBKR username
+- `IBKR__ClientKeyId` - OAuth2 Key ID
+- `IBKR__ClientPemPath` - Path to RSA private key PEM file
 
 ### Test Fixture with DI
 
@@ -138,17 +135,35 @@ public class TestFixture : IDisposable
 
         if (useMockClient)
         {
-            Console.WriteLine("[Test Setup] Using MOCK client implementations");
-            services.AddTransient<IFyiService, MockFyiService>();
+            Console.WriteLine("[Test Setup] Using MOCK client - no credentials required");
+
+            // Register mock authentication provider
+            services.AddSingleton<IIBKRAuthenticationProvider>(new MockAuthenticationProvider());
+
+            // Register mock service implementations
+            services.AddTransient<IIserverService, MockIserverService>();
+            services.AddTransient<IMdService, MockMdService>();
         }
         else
         {
-            Console.WriteLine("[Test Setup] Using REAL client implementations");
-            var baseUrl = Configuration["IBKR:BaseUrl"] ?? "https://localhost:5000";
-            services.AddHttpClient<IFyiService, FyiService>(client =>
+            Console.WriteLine("[Test Setup] Using REAL IBKR API - credentials required");
+
+            // Load authentication options from configuration or environment variables
+            var authOptions = new IBKRAuthenticationOptions
             {
-                client.BaseAddress = new Uri(baseUrl);
-            });
+                ClientId = Configuration["IBKR:ClientId"] ?? throw new InvalidOperationException("IBKR:ClientId not configured"),
+                Credential = Configuration["IBKR:Credential"] ?? throw new InvalidOperationException("IBKR:Credential not configured"),
+                ClientKeyId = Configuration["IBKR:ClientKeyId"] ?? throw new InvalidOperationException("IBKR:ClientKeyId not configured"),
+                ClientPemPath = Configuration["IBKR:ClientPemPath"] ?? throw new InvalidOperationException("IBKR:ClientPemPath not configured"),
+                BaseUrl = Configuration["IBKR:BaseUrl"] ?? "https://api.ibkr.com"
+            };
+
+            // Validate credentials are complete
+            authOptions.Validate();
+
+            // Register authenticated services
+            services.AddIBKRAuthenticatedClient<IIserverService, IserverService>(authOptions);
+            services.AddIBKRAuthenticatedClient<IMdService, MdService>(authOptions);
         }
     }
 
@@ -196,27 +211,37 @@ public class TestFixture : IDisposable
 
         if (useMockClient)
         {
-            Console.WriteLine("[Test Setup] Using MOCK request adapter");
-            services.AddSingleton<IRequestAdapter, MockRequestAdapter>();
+            Console.WriteLine("[Test Setup] Using MOCK client - no credentials required");
+
+            // Register mock request adapter
+            services.AddSingleton<IRequestAdapter>(sp => new MockRequestAdapter());
+
+            // Register IBKRClient with mock adapter
+            services.AddTransient<IBKRClient>(sp =>
+            {
+                var adapter = sp.GetRequiredService<IRequestAdapter>();
+                return new IBKRClient(adapter);
+            });
         }
         else
         {
-            Console.WriteLine("[Test Setup] Using REAL request adapter");
-            var baseUrl = Configuration["IBKR:BaseUrl"] ?? "https://localhost:5000";
+            Console.WriteLine("[Test Setup] Using REAL IBKR API - credentials required");
 
-            services.AddSingleton<IAuthenticationProvider>(new AnonymousAuthenticationProvider());
-            services.AddHttpClient("IBKRClient");
-            services.AddSingleton<IRequestAdapter>(sp =>
+            // Load authentication options from configuration or environment variables
+            var authOptions = new IBKRAuthenticationOptions
             {
-                var authProvider = sp.GetRequiredService<IAuthenticationProvider>();
-                var httpClientFactory = sp.GetRequiredService<IHttpClientFactory>();
-                var httpClient = httpClientFactory.CreateClient("IBKRClient");
+                ClientId = Configuration["IBKR:ClientId"] ?? throw new InvalidOperationException("IBKR:ClientId not configured"),
+                Credential = Configuration["IBKR:Credential"] ?? throw new InvalidOperationException("IBKR:Credential not configured"),
+                ClientKeyId = Configuration["IBKR:ClientKeyId"] ?? throw new InvalidOperationException("IBKR:ClientKeyId not configured"),
+                ClientPemPath = Configuration["IBKR:ClientPemPath"] ?? throw new InvalidOperationException("IBKR:ClientPemPath not configured"),
+                BaseUrl = Configuration["IBKR:BaseUrl"] ?? "https://api.ibkr.com"
+            };
 
-                return new HttpClientRequestAdapter(authProvider, httpClient: httpClient)
-                {
-                    BaseUrl = baseUrl
-                };
-            });
+            // Validate credentials are complete
+            authOptions.Validate();
+
+            // Use extension method to register authenticated Kiota client
+            services.AddIBKRAuthenticatedKiotaClient(authOptions);
         }
     }
 
@@ -363,21 +388,37 @@ dotnet test
 
 ### Run with Real API (Integration Tests)
 
+**Using Environment Variables (Recommended):**
+
 ```bash
-# Create appsettings.development.json locally
-cat > appsettings.development.json <<EOF
+# Windows PowerShell
+$env:Testing__UseMockClient="false"
+$env:IBKR__ClientId="YOUR_CLIENT_ID"
+$env:IBKR__Credential="YOUR_USERNAME"
+$env:IBKR__ClientKeyId="YOUR_KEY_ID"
+$env:IBKR__ClientPemPath="C:\path\to\your\key.pem"
+dotnet test
+
+# Linux/macOS
+export Testing__UseMockClient=false
+export IBKR__ClientId=YOUR_CLIENT_ID
+export IBKR__Credential=YOUR_USERNAME
+export IBKR__ClientKeyId=YOUR_KEY_ID
+export IBKR__ClientPemPath=/path/to/your/key.pem
+dotnet test
+```
+
+**Or update appsettings.json (not recommended for security):**
+```json
 {
-  "Testing": {
-    "UseMockClient": false
-  },
+  "Testing": { "UseMockClient": false },
   "IBKR": {
-    "BaseUrl": "https://localhost:5000"
+    "ClientId": "YOUR_CLIENT_ID",
+    "Credential": "YOUR_USERNAME",
+    "ClientKeyId": "YOUR_KEY_ID",
+    "ClientPemPath": "C:\\path\\to\\your\\key.pem"
   }
 }
-EOF
-
-# Run tests
-dotnet test
 ```
 
 ### Run Specific Tests
@@ -394,25 +435,30 @@ dotnet test --filter "FullyQualifiedName~UnreadNumber_ShouldReturnData"
 
 ### GitHub Actions Configuration
 
-The workflow uses `appsettings.test.json` to force mock usage:
+The CI/CD workflow uses mocks by default (no environment variables set):
 
 ```yaml
-- name: 🧪 Run tests (with mocks)
+- name: 🧪 Run NSwag tests (with mocks)
+  working-directory: src/NSwag
   run: |
-    dotnet test --configuration Release \
+    dotnet test IBKR.Api.NSwag.Tests/IBKR.Api.NSwag.Tests.csproj \
+      --configuration Release \
       --logger "trx;LogFileName=test-results.trx" \
-      --no-build
+      --logger "console;verbosity=detailed"
 ```
 
-Tests automatically use mocks because `appsettings.test.json` takes precedence.
+Tests automatically use mocks because:
+1. `appsettings.json` has `UseMockClient: true` by default
+2. No environment variables are set in CI to override this
+3. Empty credentials in config trigger mock mode
 
 ### Local Integration Testing
 
-For local development with real API:
+For local development with real API, use environment variables:
 
-1. Create `appsettings.development.json` (gitignored)
-2. Set `UseMockClient: false`
-3. Start Client Portal Gateway
+1. Set `Testing__UseMockClient=false`
+2. Set all IBKR credentials as environment variables
+3. Ensure Client Portal Gateway is running (if needed)
 4. Run tests
 
 ## Best Practices
@@ -421,12 +467,14 @@ For local development with real API:
 - Use mocks in CI/CD for speed and reliability
 - Implement only the mock methods you actually test
 - Use realistic test data in mocks
+- Use environment variables for credentials (not config files)
 - Keep integration tests separate (use test categories)
 - Add `[Fact(Skip = "...")]` for tests needing mock implementation
 
 ❌ **Don't:**
-- Commit real API credentials
+- Commit real API credentials to source control
 - Run integration tests in CI/CD by default
+- Store credentials in appsettings.json (use environment variables)
 - Implement all mock methods at once (do it incrementally)
 - Forget to handle null cases in tests
 
