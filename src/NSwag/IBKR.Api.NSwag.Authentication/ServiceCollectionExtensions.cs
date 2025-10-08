@@ -49,10 +49,17 @@ public static class ServiceCollectionExtensions
             services.AddTransient<IBKRAuthenticationHandler>();
         }
 
+        // Register the logging handler as Transient
+        if (!services.Any(x => x.ServiceType == typeof(LoggingHttpHandler)))
+        {
+            services.AddTransient<LoggingHttpHandler>();
+        }
+
         // Configure the named HttpClient with authentication
         var builder = services.AddHttpClient(typeof(TInterface).Name)
             .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler())
-            .AddHttpMessageHandler<IBKRAuthenticationHandler>();  // Use typed registration
+            .AddHttpMessageHandler<IBKRAuthenticationHandler>()  // Auth handler adds the token
+            .AddHttpMessageHandler<LoggingHttpHandler>();  // Logging handler logs everything
 
         // Register service factory that uses the baseUrl constructor
         services.AddTransient<TInterface>(sp =>
@@ -97,10 +104,17 @@ public static class ServiceCollectionExtensions
             services.AddTransient<IBKRAuthenticationHandler>();
         }
 
+        // Register the logging handler as Transient
+        if (!services.Any(x => x.ServiceType == typeof(LoggingHttpHandler)))
+        {
+            services.AddTransient<LoggingHttpHandler>();
+        }
+
         // Configure the named HttpClient with authentication
         var builder = services.AddHttpClient(typeof(TInterface).Name)
             .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler())
-            .AddHttpMessageHandler<IBKRAuthenticationHandler>();  // Use typed registration
+            .AddHttpMessageHandler<IBKRAuthenticationHandler>()  // Auth handler adds the token
+            .AddHttpMessageHandler<LoggingHttpHandler>();  // Logging handler logs everything
 
         if (configureClient != null)
         {
