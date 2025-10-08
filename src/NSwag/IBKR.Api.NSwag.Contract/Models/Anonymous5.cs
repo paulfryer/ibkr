@@ -17,20 +17,20 @@ public class Anonymous5
 	public string Conid { get; set; } = null;
 
 
-	[JsonProperty("companyHeader", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-	public string CompanyHeader { get; set; } = null;
+	[JsonProperty("companyHeader", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
+	public string? CompanyHeader { get; set; } = null;
 
 
-	[JsonProperty("companyName", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-	public string CompanyName { get; set; } = null;
+	[JsonProperty("companyName", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
+	public string? CompanyName { get; set; } = null;
 
 
-	[JsonProperty("symbol", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-	public string Symbol { get; set; } = null;
+	[JsonProperty("symbol", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
+	public string? Symbol { get; set; } = null;
 
 
-	[JsonProperty("description", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-	public string Description { get; set; } = null;
+	[JsonProperty("description", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
+	public string? Description { get; set; } = null;
 
 
 	[JsonProperty("restricted", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]

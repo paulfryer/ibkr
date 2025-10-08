@@ -22,16 +22,16 @@ public class SecDefInfoResponse
 	public string SecType { get; set; } = null;
 
 
-	[JsonProperty("listingExchange", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-	public string ListingExchange { get; set; } = null;
+	[JsonProperty("listingExchange", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
+	public string? ListingExchange { get; set; } = null;
 
 
 	[JsonProperty("exchange", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
 	public string Exchange { get; set; } = null;
 
 
-	[JsonProperty("companyName", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-	public string CompanyName { get; set; } = null;
+	[JsonProperty("companyName", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
+	public string? CompanyName { get; set; } = null;
 
 
 	[JsonProperty("currency", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]

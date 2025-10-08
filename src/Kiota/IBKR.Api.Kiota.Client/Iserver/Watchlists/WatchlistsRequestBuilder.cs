@@ -9,7 +9,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Threading;
 using System;
-namespace IBKR.Api.Kiota.Client.Client.Iserver.Watchlists
+namespace IBKR.Api.Kiota.Client.Client.Client.Iserver.Watchlists
 {
     /// <summary>
     /// Builds and executes requests for operations under \iserver\watchlists
@@ -18,7 +18,7 @@ namespace IBKR.Api.Kiota.Client.Client.Iserver.Watchlists
     public partial class WatchlistsRequestBuilder : BaseRequestBuilder
     {
         /// <summary>
-        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Iserver.Watchlists.WatchlistsRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Watchlists.WatchlistsRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -26,7 +26,7 @@ namespace IBKR.Api.Kiota.Client.Client.Iserver.Watchlists
         {
         }
         /// <summary>
-        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Iserver.Watchlists.WatchlistsRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Watchlists.WatchlistsRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -43,11 +43,11 @@ namespace IBKR.Api.Kiota.Client.Client.Iserver.Watchlists
         /// <exception cref="global::IBKR.Api.Kiota.Contract.Models.ErrorResponse">When receiving a 503 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<global::IBKR.Api.Kiota.Contract.Models.WatchlistsResponse?> GetAsync(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Iserver.Watchlists.WatchlistsRequestBuilder.WatchlistsRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::IBKR.Api.Kiota.Contract.Models.WatchlistsResponse?> GetAsync(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Watchlists.WatchlistsRequestBuilder.WatchlistsRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<global::IBKR.Api.Kiota.Contract.Models.WatchlistsResponse> GetAsync(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Iserver.Watchlists.WatchlistsRequestBuilder.WatchlistsRequestBuilderGetQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::IBKR.Api.Kiota.Contract.Models.WatchlistsResponse> GetAsync(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Watchlists.WatchlistsRequestBuilder.WatchlistsRequestBuilderGetQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             var requestInfo = ToGetRequestInformation(requestConfiguration);
@@ -65,11 +65,11 @@ namespace IBKR.Api.Kiota.Client.Client.Iserver.Watchlists
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Iserver.Watchlists.WatchlistsRequestBuilder.WatchlistsRequestBuilderGetQueryParameters>>? requestConfiguration = default)
+        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Watchlists.WatchlistsRequestBuilder.WatchlistsRequestBuilderGetQueryParameters>>? requestConfiguration = default)
         {
 #nullable restore
 #else
-        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Iserver.Watchlists.WatchlistsRequestBuilder.WatchlistsRequestBuilderGetQueryParameters>> requestConfiguration = default)
+        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Watchlists.WatchlistsRequestBuilder.WatchlistsRequestBuilderGetQueryParameters>> requestConfiguration = default)
         {
 #endif
             var requestInfo = new RequestInformation(Method.GET, UrlTemplate, PathParameters);
@@ -80,11 +80,11 @@ namespace IBKR.Api.Kiota.Client.Client.Iserver.Watchlists
         /// <summary>
         /// Returns a request builder with the provided arbitrary URL. Using this method means any other path or query parameters are ignored.
         /// </summary>
-        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Iserver.Watchlists.WatchlistsRequestBuilder"/></returns>
+        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Watchlists.WatchlistsRequestBuilder"/></returns>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
-        public global::IBKR.Api.Kiota.Client.Client.Iserver.Watchlists.WatchlistsRequestBuilder WithUrl(string rawUrl)
+        public global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Watchlists.WatchlistsRequestBuilder WithUrl(string rawUrl)
         {
-            return new global::IBKR.Api.Kiota.Client.Client.Iserver.Watchlists.WatchlistsRequestBuilder(rawUrl, RequestAdapter);
+            return new global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Watchlists.WatchlistsRequestBuilder(rawUrl, RequestAdapter);
         }
         /// <summary>
         /// Retrieve all saved watchlists stored on IB backend for the username in use in the current Web API session.
@@ -103,14 +103,14 @@ namespace IBKR.Api.Kiota.Client.Client.Iserver.Watchlists
 #endif
             /// <summary>Can only be used with value USER_WATCHLIST, which returns only user-created watchlists and excludes those created by IB.</summary>
             [QueryParameter("SC")]
-            public global::IBKR.Api.Kiota.Client.Client.Iserver.Watchlists.GetSCQueryParameterType? SCAsGetSCQueryParameterType { get; set; }
+            public global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Watchlists.GetSCQueryParameterType? SCAsGetSCQueryParameterType { get; set; }
         }
         /// <summary>
         /// Configuration for the request such as headers, query parameters, and middleware options.
         /// </summary>
         [Obsolete("This class is deprecated. Please use the generic RequestConfiguration class generated by the generator.")]
         [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
-        public partial class WatchlistsRequestBuilderGetRequestConfiguration : RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Iserver.Watchlists.WatchlistsRequestBuilder.WatchlistsRequestBuilderGetQueryParameters>
+        public partial class WatchlistsRequestBuilderGetRequestConfiguration : RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Watchlists.WatchlistsRequestBuilder.WatchlistsRequestBuilderGetQueryParameters>
         {
         }
     }

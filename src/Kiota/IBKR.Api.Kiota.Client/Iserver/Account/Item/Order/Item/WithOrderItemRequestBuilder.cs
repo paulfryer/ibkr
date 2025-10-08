@@ -9,7 +9,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Threading;
 using System;
-namespace IBKR.Api.Kiota.Client.Client.Iserver.Account.Item.Order.Item
+namespace IBKR.Api.Kiota.Client.Client.Client.Iserver.Account.Item.Order.Item
 {
     /// <summary>
     /// Builds and executes requests for operations under \iserver\account\{accountId}\order\{orderId}
@@ -18,7 +18,7 @@ namespace IBKR.Api.Kiota.Client.Client.Iserver.Account.Item.Order.Item
     public partial class WithOrderItemRequestBuilder : BaseRequestBuilder
     {
         /// <summary>
-        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -26,7 +26,7 @@ namespace IBKR.Api.Kiota.Client.Client.Iserver.Account.Item.Order.Item
         {
         }
         /// <summary>
-        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -36,7 +36,7 @@ namespace IBKR.Api.Kiota.Client.Client.Iserver.Account.Item.Order.Item
         /// <summary>
         /// Cancel an existing, unfilled order.
         /// </summary>
-        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder.WithOrderDeleteResponse"/></returns>
+        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder.WithOrderDeleteResponse"/></returns>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
         /// <exception cref="global::IBKR.Api.Kiota.Contract.Models.ErrorResponse">When receiving a 400 status code</exception>
@@ -44,11 +44,11 @@ namespace IBKR.Api.Kiota.Client.Client.Iserver.Account.Item.Order.Item
         /// <exception cref="global::IBKR.Api.Kiota.Contract.Models.ErrorResponse">When receiving a 503 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<global::IBKR.Api.Kiota.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder.WithOrderDeleteResponse?> DeleteAsWithOrderDeleteResponseAsync(Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder.WithOrderDeleteResponse?> DeleteAsWithOrderDeleteResponseAsync(Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<global::IBKR.Api.Kiota.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder.WithOrderDeleteResponse> DeleteAsWithOrderDeleteResponseAsync(Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder.WithOrderDeleteResponse> DeleteAsWithOrderDeleteResponseAsync(Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             var requestInfo = ToDeleteRequestInformation(requestConfiguration);
@@ -58,12 +58,12 @@ namespace IBKR.Api.Kiota.Client.Client.Iserver.Account.Item.Order.Item
                 { "500", global::IBKR.Api.Kiota.Contract.Models.ErrorOnlyResponse.CreateFromDiscriminatorValue },
                 { "503", global::IBKR.Api.Kiota.Contract.Models.ErrorResponse.CreateFromDiscriminatorValue },
             };
-            return await RequestAdapter.SendAsync<global::IBKR.Api.Kiota.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder.WithOrderDeleteResponse>(requestInfo, global::IBKR.Api.Kiota.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder.WithOrderDeleteResponse.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
+            return await RequestAdapter.SendAsync<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder.WithOrderDeleteResponse>(requestInfo, global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder.WithOrderDeleteResponse.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
         }
         /// <summary>
         /// Cancel an existing, unfilled order.
         /// </summary>
-        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder.WithOrderResponse"/></returns>
+        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder.WithOrderResponse"/></returns>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
         /// <exception cref="global::IBKR.Api.Kiota.Contract.Models.ErrorResponse">When receiving a 400 status code</exception>
@@ -72,11 +72,11 @@ namespace IBKR.Api.Kiota.Client.Client.Iserver.Account.Item.Order.Item
         [Obsolete("This method is obsolete. Use DeleteAsWithOrderDeleteResponseAsync instead.")]
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<global::IBKR.Api.Kiota.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder.WithOrderResponse?> DeleteAsync(Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder.WithOrderResponse?> DeleteAsync(Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<global::IBKR.Api.Kiota.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder.WithOrderResponse> DeleteAsync(Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder.WithOrderResponse> DeleteAsync(Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             var requestInfo = ToDeleteRequestInformation(requestConfiguration);
@@ -86,12 +86,12 @@ namespace IBKR.Api.Kiota.Client.Client.Iserver.Account.Item.Order.Item
                 { "500", global::IBKR.Api.Kiota.Contract.Models.ErrorOnlyResponse.CreateFromDiscriminatorValue },
                 { "503", global::IBKR.Api.Kiota.Contract.Models.ErrorResponse.CreateFromDiscriminatorValue },
             };
-            return await RequestAdapter.SendAsync<global::IBKR.Api.Kiota.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder.WithOrderResponse>(requestInfo, global::IBKR.Api.Kiota.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder.WithOrderResponse.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
+            return await RequestAdapter.SendAsync<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder.WithOrderResponse>(requestInfo, global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder.WithOrderResponse.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
         }
         /// <summary>
         /// Modify an existing, unfilled order.
         /// </summary>
-        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder.WithOrderPostResponse"/></returns>
+        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder.WithOrderPostResponse"/></returns>
         /// <param name="body">A single order ticket.</param>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
@@ -100,11 +100,11 @@ namespace IBKR.Api.Kiota.Client.Client.Iserver.Account.Item.Order.Item
         /// <exception cref="global::IBKR.Api.Kiota.Contract.Models.ErrorResponse">When receiving a 503 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<global::IBKR.Api.Kiota.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder.WithOrderPostResponse?> PostAsWithOrderPostResponseAsync(global::IBKR.Api.Kiota.Contract.Models.SingleOrderSubmissionRequest body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder.WithOrderPostResponse?> PostAsWithOrderPostResponseAsync(global::IBKR.Api.Kiota.Contract.Models.SingleOrderSubmissionRequest body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<global::IBKR.Api.Kiota.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder.WithOrderPostResponse> PostAsWithOrderPostResponseAsync(global::IBKR.Api.Kiota.Contract.Models.SingleOrderSubmissionRequest body, Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder.WithOrderPostResponse> PostAsWithOrderPostResponseAsync(global::IBKR.Api.Kiota.Contract.Models.SingleOrderSubmissionRequest body, Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));
@@ -115,12 +115,12 @@ namespace IBKR.Api.Kiota.Client.Client.Iserver.Account.Item.Order.Item
                 { "500", global::IBKR.Api.Kiota.Contract.Models.ErrorOnlyResponse.CreateFromDiscriminatorValue },
                 { "503", global::IBKR.Api.Kiota.Contract.Models.ErrorResponse.CreateFromDiscriminatorValue },
             };
-            return await RequestAdapter.SendAsync<global::IBKR.Api.Kiota.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder.WithOrderPostResponse>(requestInfo, global::IBKR.Api.Kiota.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder.WithOrderPostResponse.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
+            return await RequestAdapter.SendAsync<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder.WithOrderPostResponse>(requestInfo, global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder.WithOrderPostResponse.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
         }
         /// <summary>
         /// Modify an existing, unfilled order.
         /// </summary>
-        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder.WithOrderResponse"/></returns>
+        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder.WithOrderResponse"/></returns>
         /// <param name="body">A single order ticket.</param>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
@@ -130,11 +130,11 @@ namespace IBKR.Api.Kiota.Client.Client.Iserver.Account.Item.Order.Item
         [Obsolete("This method is obsolete. Use PostAsWithOrderPostResponseAsync instead.")]
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<global::IBKR.Api.Kiota.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder.WithOrderResponse?> PostAsync(global::IBKR.Api.Kiota.Contract.Models.SingleOrderSubmissionRequest body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder.WithOrderResponse?> PostAsync(global::IBKR.Api.Kiota.Contract.Models.SingleOrderSubmissionRequest body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<global::IBKR.Api.Kiota.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder.WithOrderResponse> PostAsync(global::IBKR.Api.Kiota.Contract.Models.SingleOrderSubmissionRequest body, Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder.WithOrderResponse> PostAsync(global::IBKR.Api.Kiota.Contract.Models.SingleOrderSubmissionRequest body, Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));
@@ -145,7 +145,7 @@ namespace IBKR.Api.Kiota.Client.Client.Iserver.Account.Item.Order.Item
                 { "500", global::IBKR.Api.Kiota.Contract.Models.ErrorOnlyResponse.CreateFromDiscriminatorValue },
                 { "503", global::IBKR.Api.Kiota.Contract.Models.ErrorResponse.CreateFromDiscriminatorValue },
             };
-            return await RequestAdapter.SendAsync<global::IBKR.Api.Kiota.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder.WithOrderResponse>(requestInfo, global::IBKR.Api.Kiota.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder.WithOrderResponse.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
+            return await RequestAdapter.SendAsync<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder.WithOrderResponse>(requestInfo, global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder.WithOrderResponse.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
         }
         /// <summary>
         /// Cancel an existing, unfilled order.
@@ -191,11 +191,11 @@ namespace IBKR.Api.Kiota.Client.Client.Iserver.Account.Item.Order.Item
         /// <summary>
         /// Returns a request builder with the provided arbitrary URL. Using this method means any other path or query parameters are ignored.
         /// </summary>
-        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder"/></returns>
+        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder"/></returns>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
-        public global::IBKR.Api.Kiota.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder WithUrl(string rawUrl)
+        public global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder WithUrl(string rawUrl)
         {
-            return new global::IBKR.Api.Kiota.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder(rawUrl, RequestAdapter);
+            return new global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder(rawUrl, RequestAdapter);
         }
         /// <summary>
         /// Composed type wrapper for classes <see cref="global::IBKR.Api.Kiota.Contract.Models.OrderCancelSuccess"/>, <see cref="global::IBKR.Api.Kiota.Contract.Models.OrderSubmitError"/>
@@ -222,13 +222,13 @@ namespace IBKR.Api.Kiota.Client.Client.Iserver.Account.Item.Order.Item
             /// <summary>
             /// Creates a new instance of the appropriate class based on discriminator value
             /// </summary>
-            /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder.WithOrderDeleteResponse"/></returns>
+            /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder.WithOrderDeleteResponse"/></returns>
             /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-            public static global::IBKR.Api.Kiota.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder.WithOrderDeleteResponse CreateFromDiscriminatorValue(IParseNode parseNode)
+            public static global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder.WithOrderDeleteResponse CreateFromDiscriminatorValue(IParseNode parseNode)
             {
                 _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
                 var mappingValue = parseNode.GetChildNode("")?.GetStringValue();
-                var result = new global::IBKR.Api.Kiota.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder.WithOrderDeleteResponse();
+                var result = new global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder.WithOrderDeleteResponse();
                 if("orderCancelSuccess".Equals(mappingValue, StringComparison.OrdinalIgnoreCase))
                 {
                     result.OrderCancelSuccess = new global::IBKR.Api.Kiota.Contract.Models.OrderCancelSuccess();
@@ -329,13 +329,13 @@ namespace IBKR.Api.Kiota.Client.Client.Iserver.Account.Item.Order.Item
             /// <summary>
             /// Creates a new instance of the appropriate class based on discriminator value
             /// </summary>
-            /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder.WithOrderPostResponse"/></returns>
+            /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder.WithOrderPostResponse"/></returns>
             /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-            public static global::IBKR.Api.Kiota.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder.WithOrderPostResponse CreateFromDiscriminatorValue(IParseNode parseNode)
+            public static global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder.WithOrderPostResponse CreateFromDiscriminatorValue(IParseNode parseNode)
             {
                 _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
                 var mappingValue = parseNode.GetChildNode("")?.GetStringValue();
-                var result = new global::IBKR.Api.Kiota.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder.WithOrderPostResponse();
+                var result = new global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder.WithOrderPostResponse();
                 if("advancedOrderReject".Equals(mappingValue, StringComparison.OrdinalIgnoreCase))
                 {
                     result.AdvancedOrderReject = new global::IBKR.Api.Kiota.Contract.Models.AdvancedOrderReject();
@@ -420,13 +420,13 @@ namespace IBKR.Api.Kiota.Client.Client.Iserver.Account.Item.Order.Item
             /// <summary>
             /// Creates a new instance of the appropriate class based on discriminator value
             /// </summary>
-            /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder.WithOrderResponse"/></returns>
+            /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder.WithOrderResponse"/></returns>
             /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-            public static global::IBKR.Api.Kiota.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder.WithOrderResponse CreateFromDiscriminatorValue(IParseNode parseNode)
+            public static global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder.WithOrderResponse CreateFromDiscriminatorValue(IParseNode parseNode)
             {
                 _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
                 var mappingValue = parseNode.GetChildNode("")?.GetStringValue();
-                var result = new global::IBKR.Api.Kiota.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder.WithOrderResponse();
+                var result = new global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Account.Item.Order.Item.WithOrderItemRequestBuilder.WithOrderResponse();
                 if("orderCancelSuccess".Equals(mappingValue, StringComparison.OrdinalIgnoreCase))
                 {
                     result.OrderCancelSuccess = new global::IBKR.Api.Kiota.Contract.Models.OrderCancelSuccess();

@@ -9,7 +9,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Threading;
 using System;
-namespace IBKR.Api.Kiota.Client.Client.Trsrv.AllConids
+namespace IBKR.Api.Kiota.Client.Client.Client.Trsrv.AllConids
 {
     /// <summary>
     /// Builds and executes requests for operations under \trsrv\all-conids
@@ -18,7 +18,7 @@ namespace IBKR.Api.Kiota.Client.Client.Trsrv.AllConids
     public partial class AllConidsRequestBuilder : BaseRequestBuilder
     {
         /// <summary>
-        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Trsrv.AllConids.AllConidsRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Trsrv.AllConids.AllConidsRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -26,7 +26,7 @@ namespace IBKR.Api.Kiota.Client.Client.Trsrv.AllConids
         {
         }
         /// <summary>
-        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Trsrv.AllConids.AllConidsRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Trsrv.AllConids.AllConidsRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -36,18 +36,18 @@ namespace IBKR.Api.Kiota.Client.Client.Trsrv.AllConids
         /// <summary>
         /// Send out a request to retrieve all contracts made available on a requested exchange. This returns all contracts that are tradable on the exchange, even those that are not using the exchange as their primary listing.
         /// </summary>
-        /// <returns>A List&lt;global::IBKR.Api.Kiota.Client.Client.Trsrv.AllConids.AllConids&gt;</returns>
+        /// <returns>A List&lt;global::IBKR.Api.Kiota.Client.Client.Client.Trsrv.AllConids.AllConids&gt;</returns>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
         /// <exception cref="global::IBKR.Api.Kiota.Contract.Models.ErrorOnlyResponse">When receiving a 500 status code</exception>
         /// <exception cref="global::IBKR.Api.Kiota.Contract.Models.ErrorResponse">When receiving a 503 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<List<global::IBKR.Api.Kiota.Client.Client.Trsrv.AllConids.AllConids>?> GetAsync(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Trsrv.AllConids.AllConidsRequestBuilder.AllConidsRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<List<global::IBKR.Api.Kiota.Client.Client.Client.Trsrv.AllConids.AllConids>?> GetAsync(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Trsrv.AllConids.AllConidsRequestBuilder.AllConidsRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<List<global::IBKR.Api.Kiota.Client.Client.Trsrv.AllConids.AllConids>> GetAsync(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Trsrv.AllConids.AllConidsRequestBuilder.AllConidsRequestBuilderGetQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<List<global::IBKR.Api.Kiota.Client.Client.Client.Trsrv.AllConids.AllConids>> GetAsync(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Trsrv.AllConids.AllConidsRequestBuilder.AllConidsRequestBuilderGetQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             var requestInfo = ToGetRequestInformation(requestConfiguration);
@@ -56,7 +56,7 @@ namespace IBKR.Api.Kiota.Client.Client.Trsrv.AllConids
                 { "500", global::IBKR.Api.Kiota.Contract.Models.ErrorOnlyResponse.CreateFromDiscriminatorValue },
                 { "503", global::IBKR.Api.Kiota.Contract.Models.ErrorResponse.CreateFromDiscriminatorValue },
             };
-            var collectionResult = await RequestAdapter.SendCollectionAsync<global::IBKR.Api.Kiota.Client.Client.Trsrv.AllConids.AllConids>(requestInfo, global::IBKR.Api.Kiota.Client.Client.Trsrv.AllConids.AllConids.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
+            var collectionResult = await RequestAdapter.SendCollectionAsync<global::IBKR.Api.Kiota.Client.Client.Client.Trsrv.AllConids.AllConids>(requestInfo, global::IBKR.Api.Kiota.Client.Client.Client.Trsrv.AllConids.AllConids.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
             return collectionResult?.AsList();
         }
         /// <summary>
@@ -66,11 +66,11 @@ namespace IBKR.Api.Kiota.Client.Client.Trsrv.AllConids
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Trsrv.AllConids.AllConidsRequestBuilder.AllConidsRequestBuilderGetQueryParameters>>? requestConfiguration = default)
+        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Trsrv.AllConids.AllConidsRequestBuilder.AllConidsRequestBuilderGetQueryParameters>>? requestConfiguration = default)
         {
 #nullable restore
 #else
-        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Trsrv.AllConids.AllConidsRequestBuilder.AllConidsRequestBuilderGetQueryParameters>> requestConfiguration = default)
+        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Trsrv.AllConids.AllConidsRequestBuilder.AllConidsRequestBuilderGetQueryParameters>> requestConfiguration = default)
         {
 #endif
             var requestInfo = new RequestInformation(Method.GET, UrlTemplate, PathParameters);
@@ -81,11 +81,11 @@ namespace IBKR.Api.Kiota.Client.Client.Trsrv.AllConids
         /// <summary>
         /// Returns a request builder with the provided arbitrary URL. Using this method means any other path or query parameters are ignored.
         /// </summary>
-        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Trsrv.AllConids.AllConidsRequestBuilder"/></returns>
+        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Trsrv.AllConids.AllConidsRequestBuilder"/></returns>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
-        public global::IBKR.Api.Kiota.Client.Client.Trsrv.AllConids.AllConidsRequestBuilder WithUrl(string rawUrl)
+        public global::IBKR.Api.Kiota.Client.Client.Client.Trsrv.AllConids.AllConidsRequestBuilder WithUrl(string rawUrl)
         {
-            return new global::IBKR.Api.Kiota.Client.Client.Trsrv.AllConids.AllConidsRequestBuilder(rawUrl, RequestAdapter);
+            return new global::IBKR.Api.Kiota.Client.Client.Client.Trsrv.AllConids.AllConidsRequestBuilder(rawUrl, RequestAdapter);
         }
         /// <summary>
         /// Send out a request to retrieve all contracts made available on a requested exchange. This returns all contracts that are tradable on the exchange, even those that are not using the exchange as their primary listing.
@@ -117,7 +117,7 @@ namespace IBKR.Api.Kiota.Client.Client.Trsrv.AllConids
         /// </summary>
         [Obsolete("This class is deprecated. Please use the generic RequestConfiguration class generated by the generator.")]
         [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
-        public partial class AllConidsRequestBuilderGetRequestConfiguration : RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Trsrv.AllConids.AllConidsRequestBuilder.AllConidsRequestBuilderGetQueryParameters>
+        public partial class AllConidsRequestBuilderGetRequestConfiguration : RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Trsrv.AllConids.AllConidsRequestBuilder.AllConidsRequestBuilderGetQueryParameters>
         {
         }
     }

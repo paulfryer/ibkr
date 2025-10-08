@@ -84,31 +84,56 @@ public class OptionDiscoveryWorkflowTests : IClassFixture<TestFixture>
                     foreach (var strike in sampleStrikes)
                     {
                         // Step 5: Get full contract details
-                        var callInfo = await _iserverService.Info2Async(
-                            conid: conid,
-                            sectype: "OPT",
-                            month: month,
-                            strike: strike,
-                            right: Right.C
-                        );
+                        // Note: API returns an array but SDK expects single object,
+                        // so we need to handle ApiException and manually deserialize
+                        ICollection<SecDefInfoResponse>? callInfoArray = null;
 
-                        if (callInfo != null && !string.IsNullOrEmpty(callInfo.MaturityDate))
+                        try
                         {
-                            // Check if expiration is within our date range
-                            if (OptionDiscoveryHelper.IsExpirationWithinRange(callInfo.MaturityDate, daysAhead))
+                            var callInfo = await _iserverService.Info2Async(
+                                conid: conid,
+                                sectype: "OPT",
+                                month: month,
+                                strike: strike,
+                                right: Right.C
+                            );
+                            // If this succeeds (shouldn't), wrap in array
+                            callInfoArray = new List<SecDefInfoResponse> { callInfo };
+                        }
+                        catch (ApiException ex) when (ex.StatusCode == 200)
+                        {
+                            // API returned 200 OK but couldn't deserialize as single object
+                            // Extract the raw response body and deserialize as array
+                            var responseBody = ex.Response;
+                            if (!string.IsNullOrEmpty(responseBody))
                             {
-                                var daysUntilExp = OptionDiscoveryHelper.GetDaysUntilExpiration(callInfo.MaturityDate);
+                                callInfoArray = Newtonsoft.Json.JsonConvert.DeserializeObject<ICollection<SecDefInfoResponse>>(responseBody);
+                            }
+                        }
 
-                                allOptionContracts.Add(new OptionContractSummary
+                        if (callInfoArray != null)
+                        {
+                            foreach (var callInfo in callInfoArray)
+                            {
+                                if (callInfo != null && !string.IsNullOrEmpty(callInfo.MaturityDate))
                                 {
-                                    Symbol = symbol,
-                                    UnderlyingConid = conid,
-                                    OptionConid = callInfo.Conid.ToString(),
-                                    ExpirationDate = callInfo.MaturityDate,
-                                    Strike = strike,
-                                    Right = "C",
-                                    DaysUntilExpiration = daysUntilExp
-                                });
+                                    // Check if expiration is within our date range
+                                    if (OptionDiscoveryHelper.IsExpirationWithinRange(callInfo.MaturityDate, daysAhead))
+                                    {
+                                        var daysUntilExp = OptionDiscoveryHelper.GetDaysUntilExpiration(callInfo.MaturityDate);
+
+                                        allOptionContracts.Add(new OptionContractSummary
+                                        {
+                                            Symbol = symbol,
+                                            UnderlyingConid = conid,
+                                            OptionConid = callInfo.Conid.ToString(),
+                                            ExpirationDate = callInfo.MaturityDate,
+                                            Strike = strike,
+                                            Right = "C",
+                                            DaysUntilExpiration = daysUntilExp
+                                        });
+                                    }
+                                }
                             }
                         }
                     }

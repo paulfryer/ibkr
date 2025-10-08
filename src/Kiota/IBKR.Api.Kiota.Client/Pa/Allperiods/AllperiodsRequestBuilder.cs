@@ -9,7 +9,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Threading;
 using System;
-namespace IBKR.Api.Kiota.Client.Client.Pa.Allperiods
+namespace IBKR.Api.Kiota.Client.Client.Client.Pa.Allperiods
 {
     /// <summary>
     /// Builds and executes requests for operations under \pa\allperiods
@@ -18,7 +18,7 @@ namespace IBKR.Api.Kiota.Client.Client.Pa.Allperiods
     public partial class AllperiodsRequestBuilder : BaseRequestBuilder
     {
         /// <summary>
-        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Pa.Allperiods.AllperiodsRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Pa.Allperiods.AllperiodsRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -26,7 +26,7 @@ namespace IBKR.Api.Kiota.Client.Client.Pa.Allperiods
         {
         }
         /// <summary>
-        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Pa.Allperiods.AllperiodsRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Pa.Allperiods.AllperiodsRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -45,11 +45,11 @@ namespace IBKR.Api.Kiota.Client.Client.Pa.Allperiods
         /// <exception cref="global::IBKR.Api.Kiota.Contract.Models.ErrorResponse">When receiving a 503 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<global::IBKR.Api.Kiota.Contract.Models.DetailedContractInformation?> PostAsync(global::IBKR.Api.Kiota.Client.Client.Pa.Allperiods.AllperiodsPostRequestBody body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::IBKR.Api.Kiota.Contract.Models.DetailedContractInformation?> PostAsync(global::IBKR.Api.Kiota.Client.Client.Client.Pa.Allperiods.AllperiodsPostRequestBody body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<global::IBKR.Api.Kiota.Contract.Models.DetailedContractInformation> PostAsync(global::IBKR.Api.Kiota.Client.Client.Pa.Allperiods.AllperiodsPostRequestBody body, Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::IBKR.Api.Kiota.Contract.Models.DetailedContractInformation> PostAsync(global::IBKR.Api.Kiota.Client.Client.Client.Pa.Allperiods.AllperiodsPostRequestBody body, Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));
@@ -70,11 +70,11 @@ namespace IBKR.Api.Kiota.Client.Client.Pa.Allperiods
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToPostRequestInformation(global::IBKR.Api.Kiota.Client.Client.Pa.Allperiods.AllperiodsPostRequestBody body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default)
+        public RequestInformation ToPostRequestInformation(global::IBKR.Api.Kiota.Client.Client.Client.Pa.Allperiods.AllperiodsPostRequestBody body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default)
         {
 #nullable restore
 #else
-        public RequestInformation ToPostRequestInformation(global::IBKR.Api.Kiota.Client.Client.Pa.Allperiods.AllperiodsPostRequestBody body, Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default)
+        public RequestInformation ToPostRequestInformation(global::IBKR.Api.Kiota.Client.Client.Client.Pa.Allperiods.AllperiodsPostRequestBody body, Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default)
         {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));
@@ -87,11 +87,11 @@ namespace IBKR.Api.Kiota.Client.Client.Pa.Allperiods
         /// <summary>
         /// Returns a request builder with the provided arbitrary URL. Using this method means any other path or query parameters are ignored.
         /// </summary>
-        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Pa.Allperiods.AllperiodsRequestBuilder"/></returns>
+        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Pa.Allperiods.AllperiodsRequestBuilder"/></returns>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
-        public global::IBKR.Api.Kiota.Client.Client.Pa.Allperiods.AllperiodsRequestBuilder WithUrl(string rawUrl)
+        public global::IBKR.Api.Kiota.Client.Client.Client.Pa.Allperiods.AllperiodsRequestBuilder WithUrl(string rawUrl)
         {
-            return new global::IBKR.Api.Kiota.Client.Client.Pa.Allperiods.AllperiodsRequestBuilder(rawUrl, RequestAdapter);
+            return new global::IBKR.Api.Kiota.Client.Client.Client.Pa.Allperiods.AllperiodsRequestBuilder(rawUrl, RequestAdapter);
         }
         /// <summary>
         /// Configuration for the request such as headers, query parameters, and middleware options.

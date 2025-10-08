@@ -17,20 +17,20 @@ public class ContractInfo
 	public string Symbol { get; set; } = null;
 
 
-	[JsonProperty("cusip", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-	public string Cusip { get; set; } = null;
+	[JsonProperty("cusip", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
+	public string? Cusip { get; set; } = null;
 
 
-	[JsonProperty("expiry_full", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-	public string Expiry_full { get; set; } = null;
+	[JsonProperty("expiry_full", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
+	public string? Expiry_full { get; set; } = null;
 
 
 	[JsonProperty("con_id", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
 	public int Con_id { get; set; } = 0;
 
 
-	[JsonProperty("maturity_date", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-	public string Maturity_date { get; set; } = null;
+	[JsonProperty("maturity_date", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
+	public string? Maturity_date { get; set; } = null;
 
 
 	[JsonProperty("industry", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
@@ -61,20 +61,20 @@ public class ContractInfo
 	public string Local_symbol { get; set; } = null;
 
 
-	[JsonProperty("contract_clarification_type", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-	public string Contract_clarification_type { get; set; } = null;
+	[JsonProperty("contract_clarification_type", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
+	public string? Contract_clarification_type { get; set; } = null;
 
 
-	[JsonProperty("classifier", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-	public string Classifier { get; set; } = null;
+	[JsonProperty("classifier", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
+	public string? Classifier { get; set; } = null;
 
 
 	[JsonProperty("currency", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
 	public string Currency { get; set; } = null;
 
 
-	[JsonProperty("text", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-	public string Text { get; set; } = null;
+	[JsonProperty("text", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
+	public string? Text { get; set; } = null;
 
 
 	[JsonProperty("underlying_con_id", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
@@ -85,16 +85,16 @@ public class ContractInfo
 	public bool R_t_h { get; set; } = false;
 
 
-	[JsonProperty("multiplier", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-	public string Multiplier { get; set; } = null;
+	[JsonProperty("multiplier", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
+	public string? Multiplier { get; set; } = null;
 
 
-	[JsonProperty("underlying_issuer", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-	public string Underlying_issuer { get; set; } = null;
+	[JsonProperty("underlying_issuer", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
+	public string? Underlying_issuer { get; set; } = null;
 
 
-	[JsonProperty("contract_month", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]
-	public string Contract_month { get; set; } = null;
+	[JsonProperty("contract_month", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
+	public string? Contract_month { get; set; } = null;
 
 
 	[JsonProperty("company_name", Required = Required.DisallowNull, NullValueHandling = NullValueHandling.Ignore)]

@@ -9,7 +9,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Threading;
 using System;
-namespace IBKR.Api.Kiota.Client.Client.Iserver.Reply.Item
+namespace IBKR.Api.Kiota.Client.Client.Client.Iserver.Reply.Item
 {
     /// <summary>
     /// Builds and executes requests for operations under \iserver\reply\{replyId}
@@ -18,7 +18,7 @@ namespace IBKR.Api.Kiota.Client.Client.Iserver.Reply.Item
     public partial class WithReplyItemRequestBuilder : BaseRequestBuilder
     {
         /// <summary>
-        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Iserver.Reply.Item.WithReplyItemRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Reply.Item.WithReplyItemRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -26,7 +26,7 @@ namespace IBKR.Api.Kiota.Client.Client.Iserver.Reply.Item
         {
         }
         /// <summary>
-        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Iserver.Reply.Item.WithReplyItemRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Reply.Item.WithReplyItemRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -36,7 +36,7 @@ namespace IBKR.Api.Kiota.Client.Client.Iserver.Reply.Item
         /// <summary>
         /// Confirm an order reply message and continue with submission of order ticket.
         /// </summary>
-        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Iserver.Reply.Item.WithReplyItemRequestBuilder.WithReplyPostResponse"/></returns>
+        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Reply.Item.WithReplyItemRequestBuilder.WithReplyPostResponse"/></returns>
         /// <param name="body">The request body</param>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
@@ -44,11 +44,11 @@ namespace IBKR.Api.Kiota.Client.Client.Iserver.Reply.Item
         /// <exception cref="global::IBKR.Api.Kiota.Contract.Models.ErrorResponse">When receiving a 503 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<global::IBKR.Api.Kiota.Client.Client.Iserver.Reply.Item.WithReplyItemRequestBuilder.WithReplyPostResponse?> PostAsWithReplyPostResponseAsync(global::IBKR.Api.Kiota.Client.Client.Iserver.Reply.Item.WithReplyPostRequestBody body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Reply.Item.WithReplyItemRequestBuilder.WithReplyPostResponse?> PostAsWithReplyPostResponseAsync(global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Reply.Item.WithReplyPostRequestBody body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<global::IBKR.Api.Kiota.Client.Client.Iserver.Reply.Item.WithReplyItemRequestBuilder.WithReplyPostResponse> PostAsWithReplyPostResponseAsync(global::IBKR.Api.Kiota.Client.Client.Iserver.Reply.Item.WithReplyPostRequestBody body, Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Reply.Item.WithReplyItemRequestBuilder.WithReplyPostResponse> PostAsWithReplyPostResponseAsync(global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Reply.Item.WithReplyPostRequestBody body, Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));
@@ -58,12 +58,12 @@ namespace IBKR.Api.Kiota.Client.Client.Iserver.Reply.Item
                 { "500", global::IBKR.Api.Kiota.Contract.Models.ErrorOnlyResponse.CreateFromDiscriminatorValue },
                 { "503", global::IBKR.Api.Kiota.Contract.Models.ErrorResponse.CreateFromDiscriminatorValue },
             };
-            return await RequestAdapter.SendAsync<global::IBKR.Api.Kiota.Client.Client.Iserver.Reply.Item.WithReplyItemRequestBuilder.WithReplyPostResponse>(requestInfo, global::IBKR.Api.Kiota.Client.Client.Iserver.Reply.Item.WithReplyItemRequestBuilder.WithReplyPostResponse.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
+            return await RequestAdapter.SendAsync<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Reply.Item.WithReplyItemRequestBuilder.WithReplyPostResponse>(requestInfo, global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Reply.Item.WithReplyItemRequestBuilder.WithReplyPostResponse.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
         }
         /// <summary>
         /// Confirm an order reply message and continue with submission of order ticket.
         /// </summary>
-        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Iserver.Reply.Item.WithReplyItemRequestBuilder.WithReplyResponse"/></returns>
+        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Reply.Item.WithReplyItemRequestBuilder.WithReplyResponse"/></returns>
         /// <param name="body">The request body</param>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
@@ -72,11 +72,11 @@ namespace IBKR.Api.Kiota.Client.Client.Iserver.Reply.Item
         [Obsolete("This method is obsolete. Use PostAsWithReplyPostResponseAsync instead.")]
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<global::IBKR.Api.Kiota.Client.Client.Iserver.Reply.Item.WithReplyItemRequestBuilder.WithReplyResponse?> PostAsync(global::IBKR.Api.Kiota.Client.Client.Iserver.Reply.Item.WithReplyPostRequestBody body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Reply.Item.WithReplyItemRequestBuilder.WithReplyResponse?> PostAsync(global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Reply.Item.WithReplyPostRequestBody body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<global::IBKR.Api.Kiota.Client.Client.Iserver.Reply.Item.WithReplyItemRequestBuilder.WithReplyResponse> PostAsync(global::IBKR.Api.Kiota.Client.Client.Iserver.Reply.Item.WithReplyPostRequestBody body, Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Reply.Item.WithReplyItemRequestBuilder.WithReplyResponse> PostAsync(global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Reply.Item.WithReplyPostRequestBody body, Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));
@@ -86,7 +86,7 @@ namespace IBKR.Api.Kiota.Client.Client.Iserver.Reply.Item
                 { "500", global::IBKR.Api.Kiota.Contract.Models.ErrorOnlyResponse.CreateFromDiscriminatorValue },
                 { "503", global::IBKR.Api.Kiota.Contract.Models.ErrorResponse.CreateFromDiscriminatorValue },
             };
-            return await RequestAdapter.SendAsync<global::IBKR.Api.Kiota.Client.Client.Iserver.Reply.Item.WithReplyItemRequestBuilder.WithReplyResponse>(requestInfo, global::IBKR.Api.Kiota.Client.Client.Iserver.Reply.Item.WithReplyItemRequestBuilder.WithReplyResponse.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
+            return await RequestAdapter.SendAsync<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Reply.Item.WithReplyItemRequestBuilder.WithReplyResponse>(requestInfo, global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Reply.Item.WithReplyItemRequestBuilder.WithReplyResponse.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
         }
         /// <summary>
         /// Confirm an order reply message and continue with submission of order ticket.
@@ -96,11 +96,11 @@ namespace IBKR.Api.Kiota.Client.Client.Iserver.Reply.Item
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToPostRequestInformation(global::IBKR.Api.Kiota.Client.Client.Iserver.Reply.Item.WithReplyPostRequestBody body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default)
+        public RequestInformation ToPostRequestInformation(global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Reply.Item.WithReplyPostRequestBody body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default)
         {
 #nullable restore
 #else
-        public RequestInformation ToPostRequestInformation(global::IBKR.Api.Kiota.Client.Client.Iserver.Reply.Item.WithReplyPostRequestBody body, Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default)
+        public RequestInformation ToPostRequestInformation(global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Reply.Item.WithReplyPostRequestBody body, Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default)
         {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));
@@ -113,11 +113,11 @@ namespace IBKR.Api.Kiota.Client.Client.Iserver.Reply.Item
         /// <summary>
         /// Returns a request builder with the provided arbitrary URL. Using this method means any other path or query parameters are ignored.
         /// </summary>
-        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Iserver.Reply.Item.WithReplyItemRequestBuilder"/></returns>
+        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Reply.Item.WithReplyItemRequestBuilder"/></returns>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
-        public global::IBKR.Api.Kiota.Client.Client.Iserver.Reply.Item.WithReplyItemRequestBuilder WithUrl(string rawUrl)
+        public global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Reply.Item.WithReplyItemRequestBuilder WithUrl(string rawUrl)
         {
-            return new global::IBKR.Api.Kiota.Client.Client.Iserver.Reply.Item.WithReplyItemRequestBuilder(rawUrl, RequestAdapter);
+            return new global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Reply.Item.WithReplyItemRequestBuilder(rawUrl, RequestAdapter);
         }
         /// <summary>
         /// Configuration for the request such as headers, query parameters, and middleware options.
@@ -168,13 +168,13 @@ namespace IBKR.Api.Kiota.Client.Client.Iserver.Reply.Item
             /// <summary>
             /// Creates a new instance of the appropriate class based on discriminator value
             /// </summary>
-            /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Iserver.Reply.Item.WithReplyItemRequestBuilder.WithReplyPostResponse"/></returns>
+            /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Reply.Item.WithReplyItemRequestBuilder.WithReplyPostResponse"/></returns>
             /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-            public static global::IBKR.Api.Kiota.Client.Client.Iserver.Reply.Item.WithReplyItemRequestBuilder.WithReplyPostResponse CreateFromDiscriminatorValue(IParseNode parseNode)
+            public static global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Reply.Item.WithReplyItemRequestBuilder.WithReplyPostResponse CreateFromDiscriminatorValue(IParseNode parseNode)
             {
                 _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
                 var mappingValue = parseNode.GetChildNode("")?.GetStringValue();
-                var result = new global::IBKR.Api.Kiota.Client.Client.Iserver.Reply.Item.WithReplyItemRequestBuilder.WithReplyPostResponse();
+                var result = new global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Reply.Item.WithReplyItemRequestBuilder.WithReplyPostResponse();
                 if("advancedOrderReject".Equals(mappingValue, StringComparison.OrdinalIgnoreCase))
                 {
                     result.AdvancedOrderReject = new global::IBKR.Api.Kiota.Contract.Models.AdvancedOrderReject();
@@ -275,13 +275,13 @@ namespace IBKR.Api.Kiota.Client.Client.Iserver.Reply.Item
             /// <summary>
             /// Creates a new instance of the appropriate class based on discriminator value
             /// </summary>
-            /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Iserver.Reply.Item.WithReplyItemRequestBuilder.WithReplyResponse"/></returns>
+            /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Reply.Item.WithReplyItemRequestBuilder.WithReplyResponse"/></returns>
             /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-            public static global::IBKR.Api.Kiota.Client.Client.Iserver.Reply.Item.WithReplyItemRequestBuilder.WithReplyResponse CreateFromDiscriminatorValue(IParseNode parseNode)
+            public static global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Reply.Item.WithReplyItemRequestBuilder.WithReplyResponse CreateFromDiscriminatorValue(IParseNode parseNode)
             {
                 _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
                 var mappingValue = parseNode.GetChildNode("")?.GetStringValue();
-                var result = new global::IBKR.Api.Kiota.Client.Client.Iserver.Reply.Item.WithReplyItemRequestBuilder.WithReplyResponse();
+                var result = new global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Reply.Item.WithReplyItemRequestBuilder.WithReplyResponse();
                 if("advancedOrderReject".Equals(mappingValue, StringComparison.OrdinalIgnoreCase))
                 {
                     result.AdvancedOrderReject = new global::IBKR.Api.Kiota.Contract.Models.AdvancedOrderReject();

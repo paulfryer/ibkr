@@ -9,7 +9,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Threading;
 using System;
-namespace IBKR.Api.Kiota.Client.Client.Iserver.Marketdata.Snapshot
+namespace IBKR.Api.Kiota.Client.Client.Client.Iserver.Marketdata.Snapshot
 {
     /// <summary>
     /// Builds and executes requests for operations under \iserver\marketdata\snapshot
@@ -18,7 +18,7 @@ namespace IBKR.Api.Kiota.Client.Client.Iserver.Marketdata.Snapshot
     public partial class SnapshotRequestBuilder : BaseRequestBuilder
     {
         /// <summary>
-        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Iserver.Marketdata.Snapshot.SnapshotRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Marketdata.Snapshot.SnapshotRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -26,7 +26,7 @@ namespace IBKR.Api.Kiota.Client.Client.Iserver.Marketdata.Snapshot
         {
         }
         /// <summary>
-        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Iserver.Marketdata.Snapshot.SnapshotRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Marketdata.Snapshot.SnapshotRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -44,11 +44,11 @@ namespace IBKR.Api.Kiota.Client.Client.Iserver.Marketdata.Snapshot
         /// <exception cref="global::IBKR.Api.Kiota.Contract.Models.ErrorResponse">When receiving a 503 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<global::IBKR.Api.Kiota.Contract.Models.FyiVT?> GetAsync(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Iserver.Marketdata.Snapshot.SnapshotRequestBuilder.SnapshotRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::IBKR.Api.Kiota.Contract.Models.FyiVT?> GetAsync(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Marketdata.Snapshot.SnapshotRequestBuilder.SnapshotRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<global::IBKR.Api.Kiota.Contract.Models.FyiVT> GetAsync(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Iserver.Marketdata.Snapshot.SnapshotRequestBuilder.SnapshotRequestBuilderGetQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::IBKR.Api.Kiota.Contract.Models.FyiVT> GetAsync(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Marketdata.Snapshot.SnapshotRequestBuilder.SnapshotRequestBuilderGetQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             var requestInfo = ToGetRequestInformation(requestConfiguration);
@@ -67,11 +67,11 @@ namespace IBKR.Api.Kiota.Client.Client.Iserver.Marketdata.Snapshot
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Iserver.Marketdata.Snapshot.SnapshotRequestBuilder.SnapshotRequestBuilderGetQueryParameters>>? requestConfiguration = default)
+        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Marketdata.Snapshot.SnapshotRequestBuilder.SnapshotRequestBuilderGetQueryParameters>>? requestConfiguration = default)
         {
 #nullable restore
 #else
-        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Iserver.Marketdata.Snapshot.SnapshotRequestBuilder.SnapshotRequestBuilderGetQueryParameters>> requestConfiguration = default)
+        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Marketdata.Snapshot.SnapshotRequestBuilder.SnapshotRequestBuilderGetQueryParameters>> requestConfiguration = default)
         {
 #endif
             var requestInfo = new RequestInformation(Method.GET, UrlTemplate, PathParameters);
@@ -82,11 +82,11 @@ namespace IBKR.Api.Kiota.Client.Client.Iserver.Marketdata.Snapshot
         /// <summary>
         /// Returns a request builder with the provided arbitrary URL. Using this method means any other path or query parameters are ignored.
         /// </summary>
-        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Iserver.Marketdata.Snapshot.SnapshotRequestBuilder"/></returns>
+        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Marketdata.Snapshot.SnapshotRequestBuilder"/></returns>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
-        public global::IBKR.Api.Kiota.Client.Client.Iserver.Marketdata.Snapshot.SnapshotRequestBuilder WithUrl(string rawUrl)
+        public global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Marketdata.Snapshot.SnapshotRequestBuilder WithUrl(string rawUrl)
         {
-            return new global::IBKR.Api.Kiota.Client.Client.Iserver.Marketdata.Snapshot.SnapshotRequestBuilder(rawUrl, RequestAdapter);
+            return new global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Marketdata.Snapshot.SnapshotRequestBuilder(rawUrl, RequestAdapter);
         }
         /// <summary>
         /// Get Market Data for the given conid(s). A pre-flight request must be made prior to ever receiving data. For some fields, it may take more than a few moments to receive information. See response fields for a list of available fields that can be request via fields argument. The endpoint /iserver/accounts must be called prior to /iserver/marketdata/snapshot. For derivative contracts the endpoint /iserver/secdef/search must be called first.
@@ -114,7 +114,7 @@ namespace IBKR.Api.Kiota.Client.Client.Iserver.Marketdata.Snapshot
         /// </summary>
         [Obsolete("This class is deprecated. Please use the generic RequestConfiguration class generated by the generator.")]
         [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
-        public partial class SnapshotRequestBuilderGetRequestConfiguration : RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Iserver.Marketdata.Snapshot.SnapshotRequestBuilder.SnapshotRequestBuilderGetQueryParameters>
+        public partial class SnapshotRequestBuilderGetRequestConfiguration : RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Marketdata.Snapshot.SnapshotRequestBuilder.SnapshotRequestBuilderGetQueryParameters>
         {
         }
     }

@@ -9,7 +9,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Threading;
 using System;
-namespace IBKR.Api.Kiota.Client.Client.Iserver.Account.Alert.Item
+namespace IBKR.Api.Kiota.Client.Client.Client.Iserver.Account.Alert.Item
 {
     /// <summary>
     /// Builds and executes requests for operations under \iserver\account\alert\{alertId}
@@ -18,7 +18,7 @@ namespace IBKR.Api.Kiota.Client.Client.Iserver.Account.Alert.Item
     public partial class WithAlertItemRequestBuilder : BaseRequestBuilder
     {
         /// <summary>
-        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Iserver.Account.Alert.Item.WithAlertItemRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Account.Alert.Item.WithAlertItemRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -26,7 +26,7 @@ namespace IBKR.Api.Kiota.Client.Client.Iserver.Account.Alert.Item
         {
         }
         /// <summary>
-        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Iserver.Account.Alert.Item.WithAlertItemRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Account.Alert.Item.WithAlertItemRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -44,11 +44,11 @@ namespace IBKR.Api.Kiota.Client.Client.Iserver.Account.Alert.Item
         /// <exception cref="global::IBKR.Api.Kiota.Contract.Models.ErrorResponse">When receiving a 503 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<global::IBKR.Api.Kiota.Contract.Models.AlertDetails?> GetAsync(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Iserver.Account.Alert.Item.WithAlertItemRequestBuilder.WithAlertItemRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::IBKR.Api.Kiota.Contract.Models.AlertDetails?> GetAsync(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Account.Alert.Item.WithAlertItemRequestBuilder.WithAlertItemRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<global::IBKR.Api.Kiota.Contract.Models.AlertDetails> GetAsync(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Iserver.Account.Alert.Item.WithAlertItemRequestBuilder.WithAlertItemRequestBuilderGetQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::IBKR.Api.Kiota.Contract.Models.AlertDetails> GetAsync(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Account.Alert.Item.WithAlertItemRequestBuilder.WithAlertItemRequestBuilderGetQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             var requestInfo = ToGetRequestInformation(requestConfiguration);
@@ -67,11 +67,11 @@ namespace IBKR.Api.Kiota.Client.Client.Iserver.Account.Alert.Item
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Iserver.Account.Alert.Item.WithAlertItemRequestBuilder.WithAlertItemRequestBuilderGetQueryParameters>>? requestConfiguration = default)
+        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Account.Alert.Item.WithAlertItemRequestBuilder.WithAlertItemRequestBuilderGetQueryParameters>>? requestConfiguration = default)
         {
 #nullable restore
 #else
-        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Iserver.Account.Alert.Item.WithAlertItemRequestBuilder.WithAlertItemRequestBuilderGetQueryParameters>> requestConfiguration = default)
+        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Account.Alert.Item.WithAlertItemRequestBuilder.WithAlertItemRequestBuilderGetQueryParameters>> requestConfiguration = default)
         {
 #endif
             var requestInfo = new RequestInformation(Method.GET, UrlTemplate, PathParameters);
@@ -82,11 +82,11 @@ namespace IBKR.Api.Kiota.Client.Client.Iserver.Account.Alert.Item
         /// <summary>
         /// Returns a request builder with the provided arbitrary URL. Using this method means any other path or query parameters are ignored.
         /// </summary>
-        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Iserver.Account.Alert.Item.WithAlertItemRequestBuilder"/></returns>
+        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Account.Alert.Item.WithAlertItemRequestBuilder"/></returns>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
-        public global::IBKR.Api.Kiota.Client.Client.Iserver.Account.Alert.Item.WithAlertItemRequestBuilder WithUrl(string rawUrl)
+        public global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Account.Alert.Item.WithAlertItemRequestBuilder WithUrl(string rawUrl)
         {
-            return new global::IBKR.Api.Kiota.Client.Client.Iserver.Account.Alert.Item.WithAlertItemRequestBuilder(rawUrl, RequestAdapter);
+            return new global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Account.Alert.Item.WithAlertItemRequestBuilder(rawUrl, RequestAdapter);
         }
         /// <summary>
         /// Request details of a specific alert by providing the assigned alertId Id.
@@ -105,14 +105,14 @@ namespace IBKR.Api.Kiota.Client.Client.Iserver.Account.Alert.Item
             public string Type { get; set; }
 #endif
             [QueryParameter("type")]
-            public global::IBKR.Api.Kiota.Client.Client.Iserver.Account.Alert.Item.GetTypeQueryParameterType? TypeAsGetTypeQueryParameterType { get; set; }
+            public global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Account.Alert.Item.GetTypeQueryParameterType? TypeAsGetTypeQueryParameterType { get; set; }
         }
         /// <summary>
         /// Configuration for the request such as headers, query parameters, and middleware options.
         /// </summary>
         [Obsolete("This class is deprecated. Please use the generic RequestConfiguration class generated by the generator.")]
         [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
-        public partial class WithAlertItemRequestBuilderGetRequestConfiguration : RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Iserver.Account.Alert.Item.WithAlertItemRequestBuilder.WithAlertItemRequestBuilderGetQueryParameters>
+        public partial class WithAlertItemRequestBuilderGetRequestConfiguration : RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Account.Alert.Item.WithAlertItemRequestBuilder.WithAlertItemRequestBuilderGetQueryParameters>
         {
         }
     }

@@ -9,7 +9,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Threading;
 using System;
-namespace IBKR.Api.Kiota.Client.Client.Iserver.Contract.Item.InfoAndRules
+namespace IBKR.Api.Kiota.Client.Client.Client.Iserver.Contract.Item.InfoAndRules
 {
     /// <summary>
     /// Builds and executes requests for operations under \iserver\contract\{conid}\info-and-rules
@@ -18,7 +18,7 @@ namespace IBKR.Api.Kiota.Client.Client.Iserver.Contract.Item.InfoAndRules
     public partial class InfoAndRulesRequestBuilder : BaseRequestBuilder
     {
         /// <summary>
-        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Iserver.Contract.Item.InfoAndRules.InfoAndRulesRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Contract.Item.InfoAndRules.InfoAndRulesRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -26,7 +26,7 @@ namespace IBKR.Api.Kiota.Client.Client.Iserver.Contract.Item.InfoAndRules
         {
         }
         /// <summary>
-        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Iserver.Contract.Item.InfoAndRules.InfoAndRulesRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Contract.Item.InfoAndRules.InfoAndRulesRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -36,18 +36,18 @@ namespace IBKR.Api.Kiota.Client.Client.Iserver.Contract.Item.InfoAndRules
         /// <summary>
         /// Requests full contract details for the given conid.
         /// </summary>
-        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Iserver.Contract.Item.InfoAndRules.InfoAndRulesGetResponse"/></returns>
+        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Contract.Item.InfoAndRules.InfoAndRulesGetResponse"/></returns>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
         /// <exception cref="global::IBKR.Api.Kiota.Contract.Models.ErrorOnlyResponse">When receiving a 500 status code</exception>
         /// <exception cref="global::IBKR.Api.Kiota.Contract.Models.ErrorResponse">When receiving a 503 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<global::IBKR.Api.Kiota.Client.Client.Iserver.Contract.Item.InfoAndRules.InfoAndRulesGetResponse?> GetAsInfoAndRulesGetResponseAsync(Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Contract.Item.InfoAndRules.InfoAndRulesGetResponse?> GetAsInfoAndRulesGetResponseAsync(Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<global::IBKR.Api.Kiota.Client.Client.Iserver.Contract.Item.InfoAndRules.InfoAndRulesGetResponse> GetAsInfoAndRulesGetResponseAsync(Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Contract.Item.InfoAndRules.InfoAndRulesGetResponse> GetAsInfoAndRulesGetResponseAsync(Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             var requestInfo = ToGetRequestInformation(requestConfiguration);
@@ -56,12 +56,12 @@ namespace IBKR.Api.Kiota.Client.Client.Iserver.Contract.Item.InfoAndRules
                 { "500", global::IBKR.Api.Kiota.Contract.Models.ErrorOnlyResponse.CreateFromDiscriminatorValue },
                 { "503", global::IBKR.Api.Kiota.Contract.Models.ErrorResponse.CreateFromDiscriminatorValue },
             };
-            return await RequestAdapter.SendAsync<global::IBKR.Api.Kiota.Client.Client.Iserver.Contract.Item.InfoAndRules.InfoAndRulesGetResponse>(requestInfo, global::IBKR.Api.Kiota.Client.Client.Iserver.Contract.Item.InfoAndRules.InfoAndRulesGetResponse.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
+            return await RequestAdapter.SendAsync<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Contract.Item.InfoAndRules.InfoAndRulesGetResponse>(requestInfo, global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Contract.Item.InfoAndRules.InfoAndRulesGetResponse.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
         }
         /// <summary>
         /// Requests full contract details for the given conid.
         /// </summary>
-        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Iserver.Contract.Item.InfoAndRules.InfoAndRulesResponse"/></returns>
+        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Contract.Item.InfoAndRules.InfoAndRulesResponse"/></returns>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
         /// <exception cref="global::IBKR.Api.Kiota.Contract.Models.ErrorOnlyResponse">When receiving a 500 status code</exception>
@@ -69,11 +69,11 @@ namespace IBKR.Api.Kiota.Client.Client.Iserver.Contract.Item.InfoAndRules
         [Obsolete("This method is obsolete. Use GetAsInfoAndRulesGetResponseAsync instead.")]
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<global::IBKR.Api.Kiota.Client.Client.Iserver.Contract.Item.InfoAndRules.InfoAndRulesResponse?> GetAsync(Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Contract.Item.InfoAndRules.InfoAndRulesResponse?> GetAsync(Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<global::IBKR.Api.Kiota.Client.Client.Iserver.Contract.Item.InfoAndRules.InfoAndRulesResponse> GetAsync(Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Contract.Item.InfoAndRules.InfoAndRulesResponse> GetAsync(Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             var requestInfo = ToGetRequestInformation(requestConfiguration);
@@ -82,7 +82,7 @@ namespace IBKR.Api.Kiota.Client.Client.Iserver.Contract.Item.InfoAndRules
                 { "500", global::IBKR.Api.Kiota.Contract.Models.ErrorOnlyResponse.CreateFromDiscriminatorValue },
                 { "503", global::IBKR.Api.Kiota.Contract.Models.ErrorResponse.CreateFromDiscriminatorValue },
             };
-            return await RequestAdapter.SendAsync<global::IBKR.Api.Kiota.Client.Client.Iserver.Contract.Item.InfoAndRules.InfoAndRulesResponse>(requestInfo, global::IBKR.Api.Kiota.Client.Client.Iserver.Contract.Item.InfoAndRules.InfoAndRulesResponse.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
+            return await RequestAdapter.SendAsync<global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Contract.Item.InfoAndRules.InfoAndRulesResponse>(requestInfo, global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Contract.Item.InfoAndRules.InfoAndRulesResponse.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
         }
         /// <summary>
         /// Requests full contract details for the given conid.
@@ -106,11 +106,11 @@ namespace IBKR.Api.Kiota.Client.Client.Iserver.Contract.Item.InfoAndRules
         /// <summary>
         /// Returns a request builder with the provided arbitrary URL. Using this method means any other path or query parameters are ignored.
         /// </summary>
-        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Iserver.Contract.Item.InfoAndRules.InfoAndRulesRequestBuilder"/></returns>
+        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Contract.Item.InfoAndRules.InfoAndRulesRequestBuilder"/></returns>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
-        public global::IBKR.Api.Kiota.Client.Client.Iserver.Contract.Item.InfoAndRules.InfoAndRulesRequestBuilder WithUrl(string rawUrl)
+        public global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Contract.Item.InfoAndRules.InfoAndRulesRequestBuilder WithUrl(string rawUrl)
         {
-            return new global::IBKR.Api.Kiota.Client.Client.Iserver.Contract.Item.InfoAndRules.InfoAndRulesRequestBuilder(rawUrl, RequestAdapter);
+            return new global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Contract.Item.InfoAndRules.InfoAndRulesRequestBuilder(rawUrl, RequestAdapter);
         }
         /// <summary>
         /// Configuration for the request such as headers, query parameters, and middleware options.

@@ -9,7 +9,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Threading;
 using System;
-namespace IBKR.Api.Kiota.Client.Client.Portfolio.Positions.Item
+namespace IBKR.Api.Kiota.Client.Client.Client.Portfolio.Positions.Item
 {
     /// <summary>
     /// Builds and executes requests for operations under \portfolio\positions\{conid}
@@ -18,7 +18,7 @@ namespace IBKR.Api.Kiota.Client.Client.Portfolio.Positions.Item
     public partial class WithConItemRequestBuilder : BaseRequestBuilder
     {
         /// <summary>
-        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Portfolio.Positions.Item.WithConItemRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Portfolio.Positions.Item.WithConItemRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -26,7 +26,7 @@ namespace IBKR.Api.Kiota.Client.Client.Portfolio.Positions.Item
         {
         }
         /// <summary>
-        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Portfolio.Positions.Item.WithConItemRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Portfolio.Positions.Item.WithConItemRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -36,7 +36,7 @@ namespace IBKR.Api.Kiota.Client.Client.Portfolio.Positions.Item
         /// <summary>
         /// Get positions in accounts for a given instrument (no secDef await control)
         /// </summary>
-        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Portfolio.Positions.Item.WithConGetResponse"/></returns>
+        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Portfolio.Positions.Item.WithConGetResponse"/></returns>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
         /// <exception cref="global::IBKR.Api.Kiota.Contract.Models.ErrorResponse">When receiving a 400 status code</exception>
@@ -44,11 +44,11 @@ namespace IBKR.Api.Kiota.Client.Client.Portfolio.Positions.Item
         /// <exception cref="global::IBKR.Api.Kiota.Contract.Models.ErrorResponse">When receiving a 503 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<global::IBKR.Api.Kiota.Client.Client.Portfolio.Positions.Item.WithConGetResponse?> GetAsWithConGetResponseAsync(Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::IBKR.Api.Kiota.Client.Client.Client.Portfolio.Positions.Item.WithConGetResponse?> GetAsWithConGetResponseAsync(Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<global::IBKR.Api.Kiota.Client.Client.Portfolio.Positions.Item.WithConGetResponse> GetAsWithConGetResponseAsync(Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::IBKR.Api.Kiota.Client.Client.Client.Portfolio.Positions.Item.WithConGetResponse> GetAsWithConGetResponseAsync(Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             var requestInfo = ToGetRequestInformation(requestConfiguration);
@@ -58,12 +58,12 @@ namespace IBKR.Api.Kiota.Client.Client.Portfolio.Positions.Item
                 { "500", global::IBKR.Api.Kiota.Contract.Models.ErrorOnlyResponse.CreateFromDiscriminatorValue },
                 { "503", global::IBKR.Api.Kiota.Contract.Models.ErrorResponse.CreateFromDiscriminatorValue },
             };
-            return await RequestAdapter.SendAsync<global::IBKR.Api.Kiota.Client.Client.Portfolio.Positions.Item.WithConGetResponse>(requestInfo, global::IBKR.Api.Kiota.Client.Client.Portfolio.Positions.Item.WithConGetResponse.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
+            return await RequestAdapter.SendAsync<global::IBKR.Api.Kiota.Client.Client.Client.Portfolio.Positions.Item.WithConGetResponse>(requestInfo, global::IBKR.Api.Kiota.Client.Client.Client.Portfolio.Positions.Item.WithConGetResponse.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
         }
         /// <summary>
         /// Get positions in accounts for a given instrument (no secDef await control)
         /// </summary>
-        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Portfolio.Positions.Item.WithConResponse"/></returns>
+        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Portfolio.Positions.Item.WithConResponse"/></returns>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
         /// <exception cref="global::IBKR.Api.Kiota.Contract.Models.ErrorResponse">When receiving a 400 status code</exception>
@@ -72,11 +72,11 @@ namespace IBKR.Api.Kiota.Client.Client.Portfolio.Positions.Item
         [Obsolete("This method is obsolete. Use GetAsWithConGetResponseAsync instead.")]
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<global::IBKR.Api.Kiota.Client.Client.Portfolio.Positions.Item.WithConResponse?> GetAsync(Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::IBKR.Api.Kiota.Client.Client.Client.Portfolio.Positions.Item.WithConResponse?> GetAsync(Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<global::IBKR.Api.Kiota.Client.Client.Portfolio.Positions.Item.WithConResponse> GetAsync(Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::IBKR.Api.Kiota.Client.Client.Client.Portfolio.Positions.Item.WithConResponse> GetAsync(Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             var requestInfo = ToGetRequestInformation(requestConfiguration);
@@ -86,7 +86,7 @@ namespace IBKR.Api.Kiota.Client.Client.Portfolio.Positions.Item
                 { "500", global::IBKR.Api.Kiota.Contract.Models.ErrorOnlyResponse.CreateFromDiscriminatorValue },
                 { "503", global::IBKR.Api.Kiota.Contract.Models.ErrorResponse.CreateFromDiscriminatorValue },
             };
-            return await RequestAdapter.SendAsync<global::IBKR.Api.Kiota.Client.Client.Portfolio.Positions.Item.WithConResponse>(requestInfo, global::IBKR.Api.Kiota.Client.Client.Portfolio.Positions.Item.WithConResponse.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
+            return await RequestAdapter.SendAsync<global::IBKR.Api.Kiota.Client.Client.Client.Portfolio.Positions.Item.WithConResponse>(requestInfo, global::IBKR.Api.Kiota.Client.Client.Client.Portfolio.Positions.Item.WithConResponse.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
         }
         /// <summary>
         /// Get positions in accounts for a given instrument (no secDef await control)
@@ -110,11 +110,11 @@ namespace IBKR.Api.Kiota.Client.Client.Portfolio.Positions.Item
         /// <summary>
         /// Returns a request builder with the provided arbitrary URL. Using this method means any other path or query parameters are ignored.
         /// </summary>
-        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Portfolio.Positions.Item.WithConItemRequestBuilder"/></returns>
+        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Portfolio.Positions.Item.WithConItemRequestBuilder"/></returns>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
-        public global::IBKR.Api.Kiota.Client.Client.Portfolio.Positions.Item.WithConItemRequestBuilder WithUrl(string rawUrl)
+        public global::IBKR.Api.Kiota.Client.Client.Client.Portfolio.Positions.Item.WithConItemRequestBuilder WithUrl(string rawUrl)
         {
-            return new global::IBKR.Api.Kiota.Client.Client.Portfolio.Positions.Item.WithConItemRequestBuilder(rawUrl, RequestAdapter);
+            return new global::IBKR.Api.Kiota.Client.Client.Client.Portfolio.Positions.Item.WithConItemRequestBuilder(rawUrl, RequestAdapter);
         }
         /// <summary>
         /// Configuration for the request such as headers, query parameters, and middleware options.

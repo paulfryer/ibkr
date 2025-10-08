@@ -22,6 +22,10 @@ public class NSwagSpecFixer
         FixDefaultServerUrl();
         FixRestrictedFieldType();
         FixSnapshotResponseType();
+        // FixSecDefInfoResponseType(); // DISABLED: Causes NSwag to drop the endpoint entirely
+        FixSearchResultRequiredFields();
+        FixContractInfoRequiredFields();
+        FixSecDefInfoRequiredFields();
 
         Console.WriteLine($"\n✓ Applied {_fixesApplied} NSwag-specific fixes total\n");
     }
@@ -93,6 +97,79 @@ public class NSwagSpecFixer
         else
         {
             Console.WriteLine("  ⚠ No paths found to fix");
+        }
+
+        _fixesApplied += fixes;
+    }
+
+    /// <summary>
+    /// Fix the /iserver/secdef/info response type from single object to array.
+    ///
+    /// IBKR's API returns an array of option contract details: [{...}, {...}]
+    /// but the OpenAPI spec defines the response as a single SecDefInfoResponse object.
+    /// This causes deserialization errors in NSwag.
+    ///
+    /// Location: paths/"/iserver/secdef/info"/get/responses/200/content/application/json/schema
+    /// Change: { "$ref": "#/components/schemas/secDefInfoResponse" } → { "type": "array", "items": { "$ref": "#/components/schemas/secDefInfoResponse" } }
+    /// </summary>
+    private void FixSecDefInfoResponseType()
+    {
+        Console.WriteLine("Fixing /iserver/secdef/info response type from object to array...");
+        int fixes = 0;
+
+        // Find the secdef/info endpoint - could be at different paths depending on whether FixDefaultServerUrl has run
+        var possiblePaths = new[] { "/iserver/secdef/info", "/v1/api/iserver/secdef/info" };
+
+        foreach (var pathKey in possiblePaths)
+        {
+            if (_document.Paths.ContainsKey(pathKey))
+            {
+                var pathItem = _document.Paths[pathKey];
+
+                if (pathItem.Operations.ContainsKey(OperationType.Get))
+                {
+                    var operation = pathItem.Operations[OperationType.Get];
+
+                    if (operation.Responses.ContainsKey("200"))
+                    {
+                        var response = operation.Responses["200"];
+
+                        if (response.Content?.ContainsKey("application/json") == true)
+                        {
+                            var mediaType = response.Content["application/json"];
+
+                            // Check if it's currently a single object reference to secDefInfoResponse
+                            if (mediaType.Schema?.Reference != null &&
+                                mediaType.Schema.Reference.Id.Replace("-", "").Replace("_", "")
+                                    .Equals("secdefInforesponse", StringComparison.OrdinalIgnoreCase))
+                            {
+                                // Replace with array of secDefInfoResponse
+                                var arraySchema = new OpenApiSchema
+                                {
+                                    Type = "array",
+                                    Items = new OpenApiSchema
+                                    {
+                                        Reference = new OpenApiReference
+                                        {
+                                            Type = ReferenceType.Schema,
+                                            Id = mediaType.Schema.Reference.Id // Use the exact ID from the spec
+                                        }
+                                    }
+                                };
+
+                                mediaType.Schema = arraySchema;
+                                fixes++;
+                                Console.WriteLine($"  ✓ Changed response type to array at {pathKey}");
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if (fixes == 0)
+        {
+            Console.WriteLine("  ⚠ Could not find secdef/info endpoint to fix");
         }
 
         _fixesApplied += fixes;
@@ -229,6 +306,202 @@ public class NSwagSpecFixer
         if (fixes == 0)
         {
             Console.WriteLine("  ⚠ Could not find snapshot endpoint to fix");
+        }
+
+        _fixesApplied += fixes;
+    }
+
+    /// <summary>
+    /// Make companyName, companyHeader, and description optional in search results.
+    ///
+    /// IBKR's /iserver/secdef/search API returns an array of mixed results:
+    /// - Stock/ETF results have companyName, companyHeader, description
+    /// - Option/Derivative results often have these fields as null or missing
+    ///
+    /// The OpenAPI spec marks these as required, causing NSwag to generate [Required]
+    /// attributes which fail deserialization when the API returns null values.
+    ///
+    /// Location: components/schemas/secdefSearchResponse (array) -> items -> required
+    /// Change: Remove companyName/companyHeader/description from required array
+    /// </summary>
+    private void FixSearchResultRequiredFields()
+    {
+        Console.WriteLine("Making companyName/companyHeader/description optional in search results...");
+        int fixes = 0;
+
+        if (_document.Components?.Schemas != null)
+        {
+            // Find the secdefSearchResponse schema
+            var schemaKey = _document.Components.Schemas.Keys
+                .FirstOrDefault(k => k.Equals("secdefSearchResponse", StringComparison.OrdinalIgnoreCase));
+
+            if (schemaKey != null)
+            {
+                var schema = _document.Components.Schemas[schemaKey];
+
+                // secdefSearchResponse is an array, so the properties are in the items
+                if (schema.Type == "array" && schema.Items != null)
+                {
+                    // Fields that are inconsistent in real API responses
+                    // Some items (stocks/ETFs) have these fields, others (derivatives/warrants) don't
+                    var fieldsToMakeOptional = new[] { "companyName", "companyHeader", "description", "symbol" };
+
+                    foreach (var field in fieldsToMakeOptional)
+                    {
+                        // Remove from required array
+                        if (schema.Items.Required?.Contains(field) == true)
+                        {
+                            schema.Items.Required.Remove(field);
+                            fixes++;
+                            Console.WriteLine($"  ✓ Made '{field}' optional in {schemaKey} items");
+                        }
+
+                        // Mark property as nullable
+                        if (schema.Items.Properties?.ContainsKey(field) == true)
+                        {
+                            schema.Items.Properties[field].Nullable = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (fixes == 0)
+        {
+            Console.WriteLine("  ⚠ Could not find search result schema to fix");
+        }
+
+        _fixesApplied += fixes;
+    }
+
+    /// <summary>
+    /// Make cusip and other optional fields in ContractInfo schema.
+    ///
+    /// IBKR's /iserver/contract/{conid}/info API returns contract details where
+    /// many fields can be null depending on the security type:
+    /// - cusip: null for non-US securities
+    /// - Other fields may also be null
+    ///
+    /// Location: components/schemas/contract (or similar)
+    /// Change: Remove cusip from required array and mark as nullable
+    /// </summary>
+    private void FixContractInfoRequiredFields()
+    {
+        Console.WriteLine("Making cusip optional in ContractInfo...");
+        int fixes = 0;
+
+        if (_document.Components?.Schemas != null)
+        {
+            // Find the contract info schema - could be named "contract", "ContractInfo", etc.
+            foreach (var schemaEntry in _document.Components.Schemas)
+            {
+                var schema = schemaEntry.Value;
+
+                // Look for schema with cusip property
+                if (schema.Properties?.ContainsKey("cusip") == true)
+                {
+                    Console.WriteLine($"  Found schema with cusip: {schemaEntry.Key}");
+
+                    // Fields that can be null in real API responses
+                    // Many fields are null for stocks (vs options/futures)
+                    var fieldsToMakeOptional = new[] {
+                        "cusip",
+                        "expiry_full",
+                        "maturity_date",
+                        "contract_clarification_type",
+                        "classifier",
+                        "text",
+                        "multiplier",
+                        "underlying_issuer",
+                        "contract_month"
+                    };
+
+                    foreach (var field in fieldsToMakeOptional)
+                    {
+                        // Remove from required array
+                        if (schema.Required?.Contains(field) == true)
+                        {
+                            schema.Required.Remove(field);
+                            fixes++;
+                            Console.WriteLine($"  ✓ Made '{field}' optional in {schemaEntry.Key}");
+                        }
+
+                        // Mark property as nullable
+                        if (schema.Properties?.ContainsKey(field) == true)
+                        {
+                            schema.Properties[field].Nullable = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (fixes == 0)
+        {
+            Console.WriteLine("  ⚠ Could not find contract info schema to fix");
+        }
+
+        _fixesApplied += fixes;
+    }
+
+    /// <summary>
+    /// Make listingExchange and other fields optional in SecDefInfoResponse.
+    ///
+    /// IBKR's option contract detail API returns option contracts where:
+    /// - listingExchange: null for many options
+    /// - companyName: null for options (only stocks have company names)
+    /// - Other fields may also be null
+    ///
+    /// Location: components/schemas/secdef-info-response
+    /// Change: Remove fields from required array and mark as nullable
+    /// </summary>
+    private void FixSecDefInfoRequiredFields()
+    {
+        Console.WriteLine("Making listingExchange/companyName optional in SecDefInfoResponse...");
+        int fixes = 0;
+
+        if (_document.Components?.Schemas != null)
+        {
+            // Find the SecDefInfoResponse schema - could be named with different cases
+            var schemaKey = _document.Components.Schemas.Keys
+                .FirstOrDefault(k => k.Replace("-", "").Replace("_", "")
+                    .Equals("secdefInforesponse", StringComparison.OrdinalIgnoreCase));
+
+            if (schemaKey != null)
+            {
+                var schema = _document.Components.Schemas[schemaKey];
+
+                Console.WriteLine($"  Found schema: {schemaKey}");
+
+                // Fields that can be null in real API responses
+                // Options don't have company names, listingExchange can be null
+                var fieldsToMakeOptional = new[] {
+                    "listingExchange",
+                    "companyName"
+                };
+
+                foreach (var field in fieldsToMakeOptional)
+                {
+                    // Remove from required array
+                    if (schema.Required?.Contains(field) == true)
+                    {
+                        schema.Required.Remove(field);
+                        fixes++;
+                        Console.WriteLine($"  ✓ Made '{field}' optional in {schemaKey}");
+                    }
+
+                    // Mark property as nullable
+                    if (schema.Properties?.ContainsKey(field) == true)
+                    {
+                        schema.Properties[field].Nullable = true;
+                    }
+                }
+            }
+        }
+
+        if (fixes == 0)
+        {
+            Console.WriteLine("  ⚠ Could not find SecDefInfoResponse schema to fix");
         }
 
         _fixesApplied += fixes;

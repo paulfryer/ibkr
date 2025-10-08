@@ -5,7 +5,7 @@ using Microsoft.Kiota.Abstractions.Serialization;
 using System.Collections.Generic;
 using System.IO;
 using System;
-namespace IBKR.Api.Kiota.Client.Client.Iserver.Watchlist
+namespace IBKR.Api.Kiota.Client.Client.Client.Iserver.Watchlist
 {
     [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
     #pragma warning disable CS1591
@@ -49,7 +49,7 @@ namespace IBKR.Api.Kiota.Client.Client.Iserver.Watchlist
         /// <summary>Indicates whether watchlist is write-restricted. User-created watchlists will always show false.</summary>
         public bool? ReadOnly { get; set; }
         /// <summary>
-        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Iserver.Watchlist.WatchlistPostResponse"/> and sets the default values.
+        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Watchlist.WatchlistPostResponse"/> and sets the default values.
         /// </summary>
         public WatchlistPostResponse()
         {
@@ -58,12 +58,12 @@ namespace IBKR.Api.Kiota.Client.Client.Iserver.Watchlist
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Iserver.Watchlist.WatchlistPostResponse"/></returns>
+        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Watchlist.WatchlistPostResponse"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static global::IBKR.Api.Kiota.Client.Client.Iserver.Watchlist.WatchlistPostResponse CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Watchlist.WatchlistPostResponse CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            return new global::IBKR.Api.Kiota.Client.Client.Iserver.Watchlist.WatchlistPostResponse();
+            return new global::IBKR.Api.Kiota.Client.Client.Client.Iserver.Watchlist.WatchlistPostResponse();
         }
         /// <summary>
         /// The deserialization information for the current model
