@@ -32,7 +32,7 @@ path: |
   src/Directory.Build.props
 ```
 
-### 2. Added JOB 6: build-clean-api
+### 2. Added JOB 6: build-ibkr-sdk
 
 **Purpose:** Build and package the IBKR SDK layer as NuGet packages
 
@@ -44,19 +44,19 @@ path: |
 1. Restores dependencies for Contract, Authentication, and Client
 2. Builds all three projects with version number
 3. Packs all three as NuGet packages
-4. Uploads packages as artifact: `CleanAPI-SDK-v{version}`
+4. Uploads packages as artifact: `IBKR-SDK-v{version}`
 
 **Packages created:**
 - `IBKR.Sdk.Contract.{version}.nupkg`
 - `IBKR.Sdk.Authentication.{version}.nupkg`
 - `IBKR.Sdk.Client.{version}.nupkg`
 
-### 3. Added JOB 9: test-clean-api
+### 3. Added JOB 9: test-ibkr-sdk
 
 **Purpose:** Run comprehensive test suite for IBKR SDK
 
 **Dependencies:**
-- Needs: `validate`, `build-clean-api`, `scaffold-tests`
+- Needs: `validate`, `build-ibkr-sdk`, `scaffold-tests`
 
 **Configuration:**
 ```yaml
@@ -78,7 +78,7 @@ env:
 ### 4. Updated JOB 10: create-summary
 
 **What changed:**
-- Added `build-clean-api` and `test-clean-api` to needs array
+- Added `build-ibkr-sdk` and `test-ibkr-sdk` to needs array
 - Updated installation instructions to feature IBKR SDK first
 - Added descriptions for each SDK layer
 
@@ -102,7 +102,7 @@ Fluent API architecture...
 ### 5. Updated JOB 11: create-release
 
 **What changed:**
-- Added `build-clean-api` to needs array
+- Added `build-ibkr-sdk` to needs array
 - Updated release body to feature IBKR SDK prominently
 - Added "What's New in IBKR SDK" section
 
@@ -134,14 +134,14 @@ Fluent API architecture...
 └────┬─────────────┘          └────────────────────────┘
      │
 ┌────┴──────────────────────────────────────────────────┐
-│ 6. build-clean-api ← Depends on NSwag                 │
+│ 6. build-ibkr-sdk ← Depends on NSwag                  │
 │    Builds: Contract, Authentication, Client           │
 │    Packs: All three as NuGet packages                 │
 └────┬───────────────────────┬──────────────┬───────────┘
      │                       │              │
 ┌────┴────────┐   ┌─────────┴──────┐   ┌──┴───────────────┐
 │ 7. test-    │   │ 8. test-       │   │ 9. test-         │
-│    nswag    │   │    kiota       │   │    clean-api     │
+│    nswag    │   │    kiota       │   │    ibkr-sdk      │
 │  (parallel) │   │  (parallel)    │   │  (parallel)      │
 │  with mocks │   │  with mocks    │   │  with mocks      │
 └────┬────────┘   └─────────┬──────┘   └──┬───────────────┘
@@ -189,7 +189,7 @@ After a successful workflow run, three artifact sets are created:
    - IBKR.Api.Kiota.Contract.{version}.nupkg
    - IBKR.Api.Kiota.Client.{version}.nupkg
 
-3. **CleanAPI-SDK-v{version}** (90-day retention) ⭐
+3. **IBKR-SDK-v{version}** (90-day retention) ⭐
    - IBKR.Sdk.Contract.{version}.nupkg
    - IBKR.Sdk.Authentication.{version}.nupkg
    - IBKR.Sdk.Client.{version}.nupkg

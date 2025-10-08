@@ -77,9 +77,9 @@ Use **Semantic Versioning (semver)**:
     ↓
 4. build-nswag ←→ 5. build-kiota (parallel)
     ↓
-6. build-clean-api ← Depends on NSwag
+6. build-ibkr-sdk ← Depends on NSwag
     ↓
-7. test-nswag ←→ 8. test-kiota ←→ 9. test-clean-api (parallel)
+7. test-nswag ←→ 8. test-kiota ←→ 9. test-ibkr-sdk (parallel)
     ↓
 10. create-summary - Generate release summary
     ↓

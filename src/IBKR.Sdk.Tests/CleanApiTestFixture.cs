@@ -10,8 +10,8 @@ using Microsoft.Extensions.DependencyInjection;
 namespace IBKR.Sdk.Tests;
 
 /// <summary>
-/// Test fixture for the CLEAN API.
-/// Configures IOptionService and other clean interfaces.
+/// Test fixture for the IBKR SDK.
+/// Configures IOptionService and other IBKR SDK interfaces.
 /// NO direct references to NSwag/Kiota in test code - only in this fixture.
 /// </summary>
 public class CleanApiTestFixture : IDisposable
@@ -53,15 +53,15 @@ public class CleanApiTestFixture : IDisposable
 
         if (useMock)
         {
-            Console.WriteLine("[Clean API Tests] Using MOCK implementation");
+            Console.WriteLine("[IBKR SDK Tests] Using MOCK implementation");
             Console.WriteLine($"  Reason: {(forceMock ? "Testing:UseMockClient=true" : "No credentials found")}");
 
-            // Register mock implementations of clean interfaces
+            // Register mock implementations of IBKR SDK interfaces
             services.AddTransient<IOptionService, Mocks.MockOptionService>();
         }
         else
         {
-            Console.WriteLine("[Clean API Tests] Using REAL IBKR API");
+            Console.WriteLine("[IBKR SDK Tests] Using REAL IBKR API");
             Console.WriteLine($"  ClientId: {Configuration["IBKR:ClientId"]}");
             Console.WriteLine($"  BaseUrl: {Configuration["IBKR:BaseUrl"] ?? "https://api.ibkr.com"}");
 
@@ -80,7 +80,7 @@ public class CleanApiTestFixture : IDisposable
             // Register real NSwag service (implementation detail - hidden from tests)
             services.AddIBKRAuthenticatedClient<IIserverService, IserverService>(authOptions);
 
-            // Register clean service that wraps NSwag
+            // Register IBKR SDK service that wraps NSwag
             services.AddTransient<IOptionService>(sp =>
             {
                 var nswagIserver = sp.GetRequiredService<IIserverService>();

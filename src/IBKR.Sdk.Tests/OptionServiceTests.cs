@@ -252,9 +252,9 @@ public class OptionServiceTests : IClassFixture<CleanApiTestFixture>
     }
 
     [Fact]
-    public async Task GetOptionChain_DemoTest_ShowsCleanAPIUsage()
+    public async Task GetOptionChain_DemoTest_ShowsIBKRSDKUsage()
     {
-        // This test demonstrates how clean and intuitive the API is
+        // This test demonstrates how intuitive the IBKR SDK is
         var chain = await _optionService.GetOptionChainAsync(
             "AAPL",
             DateTime.UtcNow,

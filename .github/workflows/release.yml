@@ -372,10 +372,10 @@ jobs:
           if-no-files-found: error
 
   #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  # JOB 6: Build and Package Clean API (after NSwag completes)
+  # JOB 6: Build and Package IBKR SDK (after NSwag completes)
   #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   build-clean-api:
-    name: 📦 Build Clean API
+    name: 📦 Build IBKR SDK
     needs: [validate, scaffold-tests, build-nswag]
     runs-on: ubuntu-latest
 
@@ -408,21 +408,21 @@ jobs:
           dotnet restore src/IBKR.Sdk.Authentication/IBKR.Sdk.Authentication.csproj
           dotnet restore src/IBKR.Sdk.Client/IBKR.Sdk.Client.csproj
 
-      - name: 🏗️ Build Clean API Contract
+      - name: 🏗️ Build IBKR SDK Contract
         run: |
           dotnet build src/IBKR.Sdk.Contract/IBKR.Sdk.Contract.csproj \
             --configuration ${{ env.CONFIGURATION }} \
             --no-restore \
             /p:Version=${{ needs.validate.outputs.version }}
 
-      - name: 🏗️ Build Authentication
+      - name: 🏗️ Build IBKR SDK Authentication
         run: |
           dotnet build src/IBKR.Sdk.Authentication/IBKR.Sdk.Authentication.csproj \
             --configuration ${{ env.CONFIGURATION }} \
             --no-restore \
             /p:Version=${{ needs.validate.outputs.version }}
 
-      - name: 🏗️ Build Clean API Client
+      - name: 🏗️ Build IBKR SDK Client
         run: |
           dotnet build src/IBKR.Sdk.Client/IBKR.Sdk.Client.csproj \
             --configuration ${{ env.CONFIGURATION }} \
@@ -457,13 +457,13 @@ jobs:
       - name: 📋 List generated packages
         working-directory: packages/CleanAPI
         run: |
-          echo "📦 Clean API packages created:"
+          echo "📦 IBKR SDK packages created:"
           ls -lh *.nupkg
 
-      - name: 📤 Upload Clean API packages
+      - name: 📤 Upload IBKR SDK packages
         uses: actions/upload-artifact@v4
         with:
-          name: CleanAPI-SDK-v${{ needs.validate.outputs.version }}
+          name: IBKR-SDK-v${{ needs.validate.outputs.version }}
           path: packages/CleanAPI/*.nupkg
           retention-days: 90
           if-no-files-found: error
@@ -561,10 +561,10 @@ jobs:
           if-no-files-found: ignore
 
   #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  # JOB 9: Test Clean API (Parallel)
+  # JOB 9: Test IBKR SDK (Parallel)
   #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   test-clean-api:
-    name: ✅ Test Clean API
+    name: ✅ Test IBKR SDK
     needs: [validate, build-clean-api, scaffold-tests]
     runs-on: ubuntu-latest
     env:
@@ -585,9 +585,9 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      - name: 🧪 Run Clean API tests (with mocks)
+      - name: 🧪 Run IBKR SDK tests (with mocks)
         run: |
-          echo "🧪 Running Clean API tests with mocks..."
+          echo "🧪 Running IBKR SDK tests with mocks..."
           echo "   Testing:UseMockClient = $Testing__UseMockClient"
 
           dotnet test src/IBKR.Sdk.Tests/IBKR.Sdk.Tests.csproj \
@@ -595,13 +595,13 @@ jobs:
             --logger "trx;LogFileName=test-results.trx" \
             --logger "console;verbosity=detailed"
 
-          echo "✅ Clean API tests passed"
+          echo "✅ IBKR SDK tests passed"
 
       - name: 📤 Upload test results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: clean-api-test-results
+          name: ibkr-sdk-test-results
           path: src/IBKR.Sdk.Tests/TestResults/*.trx
           retention-days: 30
           if-no-files-found: ignore
@@ -660,7 +660,7 @@ jobs:
 
           echo "## 🚀 Installation" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### ⭐ Clean API (Recommended)" >> $GITHUB_STEP_SUMMARY
+          echo "### ⭐ IBKR SDK (Recommended)" >> $GITHUB_STEP_SUMMARY
           echo "Strongly-typed, production-ready abstraction with comprehensive error handling:" >> $GITHUB_STEP_SUMMARY
           echo "\`\`\`bash" >> $GITHUB_STEP_SUMMARY
           echo "dotnet add package IBKR.Sdk.Contract --version ${{ needs.validate.outputs.version }}" >> $GITHUB_STEP_SUMMARY
@@ -754,9 +754,9 @@ jobs:
 
             ## 📦 Packages Included
 
-            ### ⭐ Clean API (Recommended)
+            ### ⭐ IBKR SDK (Recommended)
             Production-ready abstraction with comprehensive error handling and logging:
-            - **IBKR.Sdk.Contract** - Clean interfaces and strongly-typed models
+            - **IBKR.Sdk.Contract** - Interfaces and strongly-typed models
             - **IBKR.Sdk.Client** - Production-ready implementation with built-in workarounds
             - **IBKR.Sdk.Authentication** - Thread-safe authentication provider
 
@@ -772,7 +772,7 @@ jobs:
 
             ## 🚀 Installation
 
-            ### Recommended: Clean API
+            ### Recommended: IBKR SDK
             ```bash
             dotnet add package IBKR.Sdk.Contract --version ${{ needs.validate.outputs.version }}
             dotnet add package IBKR.Sdk.Client --version ${{ needs.validate.outputs.version }}
@@ -795,13 +795,13 @@ jobs:
 
             See the [repository README](https://github.com/paulfryer/ibkr) for usage examples and API documentation.
 
-            ## ✨ What's New in Clean API
+            ## ✨ What's New in IBKR SDK
 
             - **Strongly-typed models** - DateTime, enums, decimals (no magic strings!)
             - **Comprehensive error handling** - Detailed error messages with full context
             - **Built-in workarounds** - Handles API quirks automatically
             - **Production-ready** - Battle-tested with comprehensive test suite
-            - **Excellent DX** - Clean, intuitive API surface
+            - **Excellent DX** - Intuitive API surface
 
             ## 🔍 Testing
 

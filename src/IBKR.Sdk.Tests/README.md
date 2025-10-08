@@ -1,4 +1,4 @@
-# IBKR.Api.Tests - Clean API Test Suite
+# IBKR.Sdk.Tests - IBKR SDK Test Suite
 
 This test library demonstrates **best practices for unit testing with high explainability and diagnostic quality**.
 
@@ -185,12 +185,12 @@ var forceMock = Configuration.GetValue<bool>("Testing:UseMockClient", false);
 if (hasCredentials && !forceMock)
 {
     // Use real IBKR API
-    Console.WriteLine("[Clean API Tests] Using REAL IBKR API");
+    Console.WriteLine("[IBKR SDK Tests] Using REAL IBKR API");
 }
 else
 {
     // Use mock data
-    Console.WriteLine("[Clean API Tests] Using MOCK implementation");
+    Console.WriteLine("[IBKR SDK Tests] Using MOCK implementation");
 }
 ```
 
@@ -200,10 +200,10 @@ else
 
 ## Test Organization
 
-### Clean API Layer (IBKR.Api.Tests)
+### IBKR SDK Layer (IBKR.Sdk.Tests)
 
 **Purpose:** Production examples and documentation
-- ✅ Tests ONLY the clean IOptionService interface
+- ✅ Tests ONLY the IBKR SDK IOptionService interface
 - ✅ NO knowledge of NSwag/Kiota internals
 - ✅ Shows best practices for API consumers
 - ✅ Comprehensive logging and diagnostics
@@ -243,4 +243,4 @@ See `OptionServiceTests.cs` for complete examples of:
 - ✅ Progressive logging throughout test execution
 - ✅ Descriptive assertion messages with full context
 - ✅ Try-catch with comprehensive state dumps on failure
-- ✅ Clean API usage patterns for documentation
+- ✅ IBKR SDK usage patterns for documentation
