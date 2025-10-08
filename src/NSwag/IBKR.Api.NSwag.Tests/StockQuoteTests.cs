@@ -62,14 +62,16 @@ public class StockQuoteTests : IClassFixture<TestFixture>
         var conid = "265598"; // AAPL
 
         // Act
-        var quote = await _iserverService.SnapshotAsync(
+        var quotes = await _iserverService.SnapshotAsync(
             conids: conid,
             fields: MdFields._31 // Field 31 = Last Price
         );
 
         // Assert
-        Assert.NotNull(quote);
+        Assert.NotNull(quotes);
+        Assert.NotEmpty(quotes);
 
+        var quote = quotes.First();
         // Market data is returned in AdditionalProperties dictionary
         // with field codes as keys (e.g., "31" for last price, "84" for bid, "86" for ask)
         Assert.NotNull(quote.AdditionalProperties);
@@ -86,13 +88,16 @@ public class StockQuoteTests : IClassFixture<TestFixture>
         // 85 = Ask Size, 88 = Bid Size
 
         // Act
-        var quote = await _iserverService.SnapshotAsync(
+        var quotes = await _iserverService.SnapshotAsync(
             conids: conid,
             fields: null // Could pass MdFields enum or string like "31,84,86,85,88"
         );
 
         // Assert
-        Assert.NotNull(quote);
+        Assert.NotNull(quotes);
+        Assert.NotEmpty(quotes);
+
+        var quote = quotes.First();
         Assert.NotNull(quote.AdditionalProperties);
 
         // Verify we can access market data fields
@@ -131,13 +136,16 @@ public class StockQuoteTests : IClassFixture<TestFixture>
         Assert.NotNull(conid);
 
         // Act - Step 2: Get quote
-        var quote = await _iserverService.SnapshotAsync(
+        var quotes = await _iserverService.SnapshotAsync(
             conids: conid,
             fields: MdFields._31
         );
 
         // Assert
-        Assert.NotNull(quote);
+        Assert.NotNull(quotes);
+        Assert.NotEmpty(quotes);
+
+        var quote = quotes.First();
         Assert.NotNull(quote.AdditionalProperties);
     }
 }

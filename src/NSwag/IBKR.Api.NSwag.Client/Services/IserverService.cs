@@ -4657,7 +4657,7 @@ public partial class IserverService : IIserverService
 		}
 	}
 
-	public virtual async Task<FyiVT> SnapshotAsync(string conids, MdFields? fields = null, CancellationToken cancellationToken = default(CancellationToken))
+	public virtual async Task<ICollection<FyiVT>> SnapshotAsync(string conids, MdFields? fields = null, CancellationToken cancellationToken = default(CancellationToken))
 	{
 		if (conids == null)
 		{
@@ -4708,7 +4708,7 @@ public partial class IserverService : IIserverService
 				{
 				case 200:
 				{
-					ObjectResponseResult<FyiVT> objectResponse_ = await ReadObjectResponseAsync<FyiVT>(response_, headers_, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
+					ObjectResponseResult<ICollection<FyiVT>> objectResponse_ = await ReadObjectResponseAsync<ICollection<FyiVT>>(response_, headers_, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
 					if (objectResponse_.Object == null)
 					{
 						throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);

@@ -20,6 +20,8 @@ public class NSwagSpecFixer
         Console.WriteLine("\n=== Applying NSwag-Specific OpenAPI Spec Fixes ===\n");
 
         FixDefaultServerUrl();
+        FixRestrictedFieldType();
+        FixSnapshotResponseType();
 
         Console.WriteLine($"\n✓ Applied {_fixesApplied} NSwag-specific fixes total\n");
     }
@@ -91,6 +93,142 @@ public class NSwagSpecFixer
         else
         {
             Console.WriteLine("  ⚠ No paths found to fix");
+        }
+
+        _fixesApplied += fixes;
+    }
+
+    /// <summary>
+    /// Fix the 'restricted' field type from boolean to string.
+    ///
+    /// IBKR's API returns string values like "CFD,IOPT,WAR" for the restricted field,
+    /// but the OpenAPI spec defines it as boolean. This causes deserialization errors in NSwag.
+    ///
+    /// Location: components/schemas/secdefSearchResponse (array) -> items -> properties -> restricted
+    /// Change: type: boolean → type: string
+    /// </summary>
+    private void FixRestrictedFieldType()
+    {
+        Console.WriteLine("Fixing 'restricted' field type from boolean to string...");
+        int fixes = 0;
+
+        if (_document.Components?.Schemas != null)
+        {
+            // Find the secdefSearchResponse schema
+            var schemaKey = _document.Components.Schemas.Keys
+                .FirstOrDefault(k => k.Equals("secdefSearchResponse", StringComparison.OrdinalIgnoreCase));
+
+            if (schemaKey != null)
+            {
+                var schema = _document.Components.Schemas[schemaKey];
+
+                // secdefSearchResponse is an array, so the properties are in the items
+                if (schema.Type == "array" && schema.Items != null)
+                {
+                    if (schema.Items.Properties != null && schema.Items.Properties.ContainsKey("restricted"))
+                    {
+                        var restrictedProperty = schema.Items.Properties["restricted"];
+
+                        // Change type from boolean to string
+                        if (restrictedProperty.Type == "boolean")
+                        {
+                            restrictedProperty.Type = "string";
+                            fixes++;
+                            Console.WriteLine($"  ✓ Changed 'restricted' field from boolean to string in {schemaKey} items");
+                        }
+                    }
+                }
+                // Fallback: check if it's directly on the schema (shouldn't be, but just in case)
+                else if (schema.Properties != null && schema.Properties.ContainsKey("restricted"))
+                {
+                    var restrictedProperty = schema.Properties["restricted"];
+
+                    // Change type from boolean to string
+                    if (restrictedProperty.Type == "boolean")
+                    {
+                        restrictedProperty.Type = "string";
+                        fixes++;
+                        Console.WriteLine($"  ✓ Changed 'restricted' field from boolean to string in {schemaKey}");
+                    }
+                }
+            }
+        }
+
+        if (fixes == 0)
+        {
+            Console.WriteLine("  ⚠ Could not find 'restricted' field to fix");
+        }
+
+        _fixesApplied += fixes;
+    }
+
+    /// <summary>
+    /// Fix the /iserver/marketdata/snapshot response type from single object to array.
+    ///
+    /// IBKR's API returns an array of market data objects: [{...}]
+    /// but the OpenAPI spec defines the response as a single fyiVT object.
+    /// This causes deserialization errors in NSwag.
+    ///
+    /// Location: paths/"/iserver/marketdata/snapshot"/get/responses/200/content/application/json/schema
+    /// Change: { "$ref": "#/components/schemas/fyiVT" } → { "type": "array", "items": { "$ref": "#/components/schemas/fyiVT" } }
+    /// </summary>
+    private void FixSnapshotResponseType()
+    {
+        Console.WriteLine("Fixing /iserver/marketdata/snapshot response type from object to array...");
+        int fixes = 0;
+
+        // Find the snapshot endpoint - could be at different paths depending on whether FixDefaultServerUrl has run
+        var possiblePaths = new[] { "/iserver/marketdata/snapshot", "/v1/api/iserver/marketdata/snapshot" };
+
+        foreach (var pathKey in possiblePaths)
+        {
+            if (_document.Paths.ContainsKey(pathKey))
+            {
+                var pathItem = _document.Paths[pathKey];
+
+                if (pathItem.Operations.ContainsKey(OperationType.Get))
+                {
+                    var operation = pathItem.Operations[OperationType.Get];
+
+                    if (operation.Responses.ContainsKey("200"))
+                    {
+                        var response = operation.Responses["200"];
+
+                        if (response.Content?.ContainsKey("application/json") == true)
+                        {
+                            var mediaType = response.Content["application/json"];
+
+                            // Check if it's currently a single object reference
+                            if (mediaType.Schema?.Reference != null &&
+                                mediaType.Schema.Reference.Id.Equals("fyiVT", StringComparison.OrdinalIgnoreCase))
+                            {
+                                // Replace with array of fyiVT
+                                var arraySchema = new OpenApiSchema
+                                {
+                                    Type = "array",
+                                    Items = new OpenApiSchema
+                                    {
+                                        Reference = new OpenApiReference
+                                        {
+                                            Type = ReferenceType.Schema,
+                                            Id = "fyiVT"
+                                        }
+                                    }
+                                };
+
+                                mediaType.Schema = arraySchema;
+                                fixes++;
+                                Console.WriteLine($"  ✓ Changed response type to array at {pathKey}");
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if (fixes == 0)
+        {
+            Console.WriteLine("  ⚠ Could not find snapshot endpoint to fix");
         }
 
         _fixesApplied += fixes;

@@ -31,13 +31,16 @@ public class OptionQuoteTests : IClassFixture<TestFixture>
         var optionConid = "12345678"; // Example option conid
 
         // Act - Get market data snapshot for the option
-        var quote = await _iserverService.SnapshotAsync(
+        var quotes = await _iserverService.SnapshotAsync(
             conids: optionConid,
             fields: MdFields._31 // Field 31 = Last Price
         );
 
         // Assert
-        Assert.NotNull(quote);
+        Assert.NotNull(quotes);
+        Assert.NotEmpty(quotes);
+
+        var quote = quotes.First();
 
         // Market data is returned in AdditionalProperties dictionary
         // with field codes as keys
@@ -57,13 +60,16 @@ public class OptionQuoteTests : IClassFixture<TestFixture>
         // 7310 = Vega, 7311 = Theta
 
         // Act
-        var quote = await _iserverService.SnapshotAsync(
+        var quotes = await _iserverService.SnapshotAsync(
             conids: optionConid,
             fields: null // Could pass string like "31,84,86,85,88,7295,7308,7309,7310,7311"
         );
 
         // Assert
-        Assert.NotNull(quote);
+        Assert.NotNull(quotes);
+        Assert.NotEmpty(quotes);
+
+        var quote = quotes.First();
         Assert.NotNull(quote.AdditionalProperties);
 
         // In a real response, fields like "31", "84", "86", "7295" (IV), "7308" (Delta) would be present
@@ -93,13 +99,16 @@ public class OptionQuoteTests : IClassFixture<TestFixture>
         Assert.NotNull(optionConid);
 
         // Act - Step 2: Get quote for the specific option contract
-        var quote = await _iserverService.SnapshotAsync(
+        var quotes = await _iserverService.SnapshotAsync(
             conids: optionConid,
             fields: MdFields._31
         );
 
         // Assert
-        Assert.NotNull(quote);
+        Assert.NotNull(quotes);
+        Assert.NotEmpty(quotes);
+
+        var quote = quotes.First();
         Assert.NotNull(quote.AdditionalProperties);
     }
 
@@ -110,13 +119,16 @@ public class OptionQuoteTests : IClassFixture<TestFixture>
         var putOptionConid = "87654321"; // Example put option conid
 
         // Act
-        var quote = await _iserverService.SnapshotAsync(
+        var quotes = await _iserverService.SnapshotAsync(
             conids: putOptionConid,
             fields: MdFields._31
         );
 
         // Assert
-        Assert.NotNull(quote);
+        Assert.NotNull(quotes);
+        Assert.NotEmpty(quotes);
+
+        var quote = quotes.First();
         Assert.NotNull(quote.AdditionalProperties);
     }
 
@@ -135,7 +147,7 @@ public class OptionQuoteTests : IClassFixture<TestFixture>
 
         // Assert
         Assert.NotNull(quotes);
-        Assert.NotNull(quotes.AdditionalProperties);
+        Assert.NotEmpty(quotes);
 
         // In a real response, you would get an array of FyiVT objects
         // Each object would contain the market data for one option
@@ -152,13 +164,16 @@ public class OptionQuoteTests : IClassFixture<TestFixture>
         // 7311 = Theta, 7295 = Implied Volatility
 
         // Act
-        var quote = await _iserverService.SnapshotAsync(
+        var quotes = await _iserverService.SnapshotAsync(
             conids: optionConid,
             fields: null // Could pass string like "7308,7309,7310,7311,7295"
         );
 
         // Assert
-        Assert.NotNull(quote);
+        Assert.NotNull(quotes);
+        Assert.NotEmpty(quotes);
+
+        var quote = quotes.First();
         Assert.NotNull(quote.AdditionalProperties);
 
         // In a real response, you would extract greeks from AdditionalProperties:
@@ -202,11 +217,14 @@ public class OptionQuoteTests : IClassFixture<TestFixture>
 
         var optionConid = "12345678";
 
-        var quote = await _iserverService.SnapshotAsync(
+        var quotes = await _iserverService.SnapshotAsync(
             conids: optionConid,
             fields: MdFields._31
         );
 
-        Assert.NotNull(quote);
+        Assert.NotNull(quotes);
+        Assert.NotEmpty(quotes);
+
+        var quote = quotes.First();
     }
 }

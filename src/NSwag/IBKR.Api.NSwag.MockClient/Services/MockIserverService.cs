@@ -38,21 +38,24 @@ public class MockIserverService : IIserverService
         });
     }
 
-    public async System.Threading.Tasks.Task<FyiVT> SnapshotAsync(
+    public async System.Threading.Tasks.Task<ICollection<FyiVT>> SnapshotAsync(
         string conids,
         MdFields? fields = null,
         CancellationToken cancellationToken = default)
     {
-        // Return mock market data snapshot
-        return await System.Threading.Tasks.Task.FromResult(new FyiVT
+        // Return mock market data snapshot (as array)
+        return await System.Threading.Tasks.Task.FromResult<ICollection<FyiVT>>(new List<FyiVT>
         {
-            AdditionalProperties = new Dictionary<string, object>
+            new FyiVT
             {
-                { "31", "150.25" },  // Last Price
-                { "84", "150.20" },  // Bid
-                { "86", "150.30" },  // Ask
-                { "85", "100" },     // Ask Size
-                { "88", "200" }      // Bid Size
+                AdditionalProperties = new Dictionary<string, object>
+                {
+                    { "31", "150.25" },  // Last Price
+                    { "84", "150.20" },  // Bid
+                    { "86", "150.30" },  // Ask
+                    { "85", "100" },     // Ask Size
+                    { "88", "200" }      // Bid Size
+                }
             }
         });
     }

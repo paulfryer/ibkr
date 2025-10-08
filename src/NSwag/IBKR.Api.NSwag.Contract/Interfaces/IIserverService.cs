@@ -103,7 +103,7 @@ public interface IIserverService
 
 	Task<AllocationGroup> SingleAsync(Body15 body, CancellationToken cancellationToken = default(CancellationToken));
 
-	Task<FyiVT> SnapshotAsync(string conids, MdFields? fields = null, CancellationToken cancellationToken = default(CancellationToken));
+	Task<ICollection<FyiVT>> SnapshotAsync(string conids, MdFields? fields = null, CancellationToken cancellationToken = default(CancellationToken));
 
 	Task<OrderStatus> StatusGET4Async(string orderId, CancellationToken cancellationToken = default(CancellationToken));
 

@@ -34,7 +34,7 @@ public class Anonymous5
 
 
 	[JsonProperty("restricted", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
-	public bool? Restricted { get; set; } = null;
+	public string? Restricted { get; set; } = null;
 
 
 	[JsonProperty("fop", Required = Required.Default, NullValueHandling = NullValueHandling.Ignore)]
