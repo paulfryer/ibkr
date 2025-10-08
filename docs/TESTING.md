@@ -1,18 +1,196 @@
 # Testing Guide
 
-This guide covers testing patterns for both SDKs, including mock implementations, dependency injection, and configuration-based switching between mock and real clients.
+This guide covers testing strategies for all three SDK layers: Clean API, NSwag, and Kiota.
 
-## Test Architecture
+## Testing Philosophy
 
-Both SDKs include comprehensive test infrastructure:
+Tests should serve three purposes:
+1. **Validate behavior** - Ensure the code works correctly
+2. **Document usage** - Show developers how to use the API
+3. **Diagnose failures** - Provide actionable information when things break
+
+The Clean API test suite (`IBKR.Api.Tests`) demonstrates best practices for comprehensive logging and diagnostics.
+
+## Test Architecture Overview
+
+All three SDK layers include comprehensive test infrastructure:
 
 ```
-SDK Projects:
-├── Contract     # Models (shared by all)
+Clean API:
+├── IBKR.Api.Contract        # Interfaces & models
+├── IBKR.Api.Client          # Implementation
+├── IBKR.Api.Authentication  # Session management
+└── IBKR.Api.Tests          # Comprehensive test suite ⭐
+
+NSwag SDK:
+├── Contract     # Models + service interfaces
 ├── Client       # Real implementations
 ├── MockClient   # Test mocks (user-editable)
-└── Tests        # xUnit tests with DI
+└── Tests        # Discovery & quirk testing
+
+Kiota SDK:
+├── Contract     # Models (POCOs)
+├── Client       # Fluent request builders
+├── MockClient   # Test mocks (user-editable)
+└── Tests        # Discovery & quirk testing
 ```
+
+## Clean API Testing ⭐
+
+The Clean API test suite (`IBKR.Api.Tests`) demonstrates best practices for production-quality testing.
+
+### Key Features
+
+1. **Comprehensive Logging** - ITestOutputHelper shows exactly what happened
+2. **Descriptive Assertions** - Every assertion explains itself with context
+3. **Try-Catch State Dumps** - Full contract details on validation failure
+4. **Progressive Logging** - Track test execution step-by-step
+5. **Auto-Detect Credentials** - Uses real API locally, mocks in CI/CD
+
+### Example Test with Comprehensive Logging
+
+```csharp
+public class OptionServiceTests : IClassFixture<CleanApiTestFixture>
+{
+    private readonly IOptionService _optionService;
+    private readonly ITestOutputHelper _output;
+
+    public OptionServiceTests(CleanApiTestFixture fixture, ITestOutputHelper output)
+    {
+        _optionService = fixture.GetService<IOptionService>();
+        _output = output;
+    }
+
+    [Theory]
+    [InlineData("AAPL", 30)]
+    [InlineData("TSLA", 30)]
+    public async Task GetOptionChain_ReturnsValidContracts(string symbol, int daysAhead)
+    {
+        // Arrange
+        var expirationStart = DateTime.UtcNow;
+        var expirationEnd = expirationStart.AddDays(daysAhead);
+
+        _output.WriteLine($"TEST: GetOptionChain for {symbol} within {daysAhead} days");
+        _output.WriteLine($"Date Range: {expirationStart:yyyy-MM-dd} to {expirationEnd:yyyy-MM-dd}");
+
+        // Act
+        _output.WriteLine($"Calling GetOptionChainAsync('{symbol}', ...)");
+        var optionChain = await _optionService.GetOptionChainAsync(
+            symbol, expirationStart, expirationEnd);
+        _output.WriteLine($"✓ API call completed\\n");
+
+        // Assert
+        _output.WriteLine($"Validating {optionChain.Contracts.Count} contracts...");
+
+        int contractIndex = 0;
+        foreach (var contract in optionChain.Contracts)
+        {
+            contractIndex++;
+            try
+            {
+                Assert.False(string.IsNullOrEmpty(contract.Symbol),
+                    $"Contract #{contractIndex} (ConId: {contract.ContractId}): " +
+                    $"Symbol is null or empty. " +
+                    $"Strike={contract.Strike}, Right={contract.Right}, " +
+                    $"Exp={contract.Expiration:yyyy-MM-dd}");
+
+                Assert.True(contract.Strike > 0,
+                    $"Contract #{contractIndex}: Strike should be > 0, " +
+                    $"was: {contract.Strike}");
+            }
+            catch (Exception ex)
+            {
+                _output.WriteLine($"\\n❌ VALIDATION FAILED for Contract #{contractIndex}:");
+                _output.WriteLine($"  ContractId: {contract.ContractId}");
+                _output.WriteLine($"  Symbol: '{contract.Symbol}'");
+                _output.WriteLine($"  Strike: {contract.Strike}");
+                _output.WriteLine($"  Right: {contract.Right}");
+                _output.WriteLine($"  Expiration: {contract.Expiration:yyyy-MM-dd}");
+                _output.WriteLine($"\\n  Error: {ex.Message}\\n");
+                throw;
+            }
+        }
+
+        _output.WriteLine($"✓ All {contractIndex} contracts validated successfully\\n");
+    }
+}
+```
+
+### Clean API Test Configuration
+
+```csharp
+public class CleanApiTestFixture : IDisposable
+{
+    public CleanApiTestFixture()
+    {
+        // Auto-detect credentials
+        var hasCredentials = !string.IsNullOrEmpty(Configuration["IBKR:ClientId"]) &&
+                            !string.IsNullOrEmpty(Configuration["IBKR:ClientSecret"]);
+
+        // Allow CI/CD to force mock mode
+        var forceMock = Configuration.GetValue<bool>("Testing:UseMockClient", false);
+        var useMock = forceMock || !hasCredentials;
+
+        if (useMock)
+        {
+            Console.WriteLine("[Clean API Tests] Using MOCK implementation");
+            // Register mocks
+        }
+        else
+        {
+            Console.WriteLine("[Clean API Tests] Using REAL IBKR API");
+            // Register real services
+        }
+    }
+}
+```
+
+### Running Clean API Tests
+
+```bash
+# Local development (uses real API if credentials available)
+dotnet test src/IBKR.Api.Tests
+
+# Force mock mode (no credentials needed)
+dotnet test src/IBKR.Api.Tests -e Testing:UseMockClient=true
+
+# Run specific test with verbose output
+dotnet test src/IBKR.Api.Tests --filter "DisplayName~AAPL" \\
+  --logger "console;verbosity=detailed"
+```
+
+### Benefits of Clean API Testing Approach
+
+**When tests pass:**
+```
+TEST: GetOptionChain for AAPL within 30 days
+Date Range: 2025-10-08 to 2025-11-07
+Calling GetOptionChainAsync('AAPL', ...)
+✓ API call completed
+Validating 156 contracts...
+✓ All 156 contracts validated successfully
+```
+
+**When tests fail:**
+```
+TEST: GetOptionChain for AAPL within 30 days
+...
+❌ VALIDATION FAILED for Contract #1:
+  ContractId: 774988992
+  Symbol: '' (IsNullOrEmpty: True)
+  Strike: 90
+  Right: Call
+  Expiration: 2025-10-17
+  Error: Contract #1 (ConId: 774988992): Symbol is null or empty.
+```
+
+**Result:** You know exactly which contract failed, what the values were, and why it failed.
+
+---
+
+## Lower-Level SDK Testing
+
+### NSwag & Kiota Test Architecture
 
 ## MockClient Projects
 

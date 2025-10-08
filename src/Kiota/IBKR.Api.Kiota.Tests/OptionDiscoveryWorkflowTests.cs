@@ -188,7 +188,7 @@ public class OptionDiscoveryWorkflowTests : IClassFixture<TestFixture>
     }
 
     [Fact]
-    public async Task GetTypicalMonthlyExpirations_WithinRange_ReturnsValidDates()
+    public void GetTypicalMonthlyExpirations_WithinRange_ReturnsValidDates()
     {
         // Test the helper method for generating typical 3rd Friday expirations
         var daysAhead = 60;

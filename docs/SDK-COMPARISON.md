@@ -1,23 +1,70 @@
-# SDK Comparison: NSwag vs Kiota
+# SDK Comparison: Clean API vs NSwag vs Kiota
 
-This guide helps you choose between the two SDK architectures by comparing their design philosophies, code patterns, and ideal use cases.
+This guide helps you choose between the three SDK layers by comparing their design philosophies, code patterns, and ideal use cases.
 
 ## TL;DR - Quick Decision Guide
 
 | Your Situation | Choose This SDK |
 |----------------|-----------------|
-| Building enterprise .NET app with existing DI infrastructure | **NSwag** 🔷 |
-| Want IntelliSense-driven API discovery | **Kiota** 🔶 |
-| Testing with service mocks is critical | **Either** ✅ (both have full mock support) |
-| Building microservices with minimal dependencies | **Kiota** 🔶 |
-| Familiar with traditional service-oriented .NET patterns | **NSwag** 🔷 |
-| Want smaller package footprint | **Kiota** 🔶 |
-| Using ASP.NET Core built-in DI | **NSwag** 🔷 |
-| Prefer fluent API style (like LINQ) | **Kiota** 🔶 |
+| **Production applications** | **Clean API** ⭐ (strongly-typed, error handling included) |
+| **Quick prototypes** | **Clean API** ⭐ (minimal setup, comprehensive docs) |
+| **Enterprise .NET apps** | **Clean API** ⭐ (DI-friendly, production-ready) |
+| Need lower-level API control | **NSwag** 🔷 (direct API access) |
+| Want IntelliSense-driven API discovery | **Kiota** 🔶 (fluent API surface) |
+| Testing with service mocks is critical | **All** ✅ (all have full mock support) |
+| Building microservices with minimal dependencies | **Clean API** ⭐ or **Kiota** 🔶 |
+| SDK development/quirk discovery | **NSwag** 🔷 or **Kiota** 🔶 |
+
+## Three-Layer Architecture
+
+```
+┌─────────────────────────────────────────────┐
+│  Your Application                           │
+│  ↓ Recommended: Use Clean API               │
+├─────────────────────────────────────────────┤
+│  ⭐ Clean API Layer                         │
+│  • Strongly-typed models (DateTime, enums)  │
+│  • Comprehensive error handling             │
+│  • Built-in API quirk workarounds           │
+│  • Thread-safe authentication               │
+├─────────────────────────────────────────────┤
+│  🔷 NSwag SDK / 🔶 Kiota SDK                │
+│  • Generated from OpenAPI spec              │
+│  • Direct API access                        │
+│  • Manual workarounds needed                │
+└─────────────────────────────────────────────┘
+```
 
 ## Side-by-Side Code Comparison
 
-### Example: Get Unread Notification Count
+### Example: Get Option Chain for AAPL
+
+#### Clean API ⭐ (Recommended)
+```csharp
+// Strongly-typed, production-ready
+var optionService = serviceProvider.GetRequiredService<IOptionService>();
+var chain = await optionService.GetOptionChainAsync(
+    "AAPL",
+    DateTime.UtcNow,
+    DateTime.UtcNow.AddDays(30));
+
+// All fields are strongly typed
+foreach (var contract in chain.Contracts)
+{
+    Console.WriteLine($"{contract.Symbol} {contract.Right} " +
+                     $"Strike: {contract.Strike:C} " +         // decimal
+                     $"Exp: {contract.Expiration:yyyy-MM-dd}"); // DateTime
+}
+```
+
+**Characteristics:**
+- ✅ Strongly-typed models (DateTime, decimal, enums)
+- ✅ Comprehensive error handling
+- ✅ API quirks handled automatically
+- ✅ Production-ready from day one
+- ✅ Excellent documentation
+
+### Example: Get Unread Notification Count (Lower-Level SDKs)
 
 #### NSwag SDK 🔷
 ```csharp
@@ -337,6 +384,24 @@ public class Service
 
 ## Pros & Cons Summary
 
+### Clean API ⭐
+
+**Pros:**
+✅ Strongly-typed models (DateTime, decimal, enums)
+✅ Comprehensive error handling built-in
+✅ All API quirks handled automatically
+✅ Thread-safe authentication
+✅ Production-ready from day one
+✅ Excellent documentation and examples
+✅ DI-friendly design
+✅ High-quality test suite with comprehensive logging
+
+**Cons:**
+⚠️ Currently covers option-related endpoints only (expanding)
+⚠️ Builds on NSwag (includes NSwag dependencies)
+
+**Best For:** Production applications, quick prototypes, developers who want a polished experience
+
 ### NSwag SDK 🔷
 
 **Pros:**
@@ -345,12 +410,16 @@ public class Service
 ✅ Works seamlessly with ASP.NET Core DI
 ✅ Independent service configuration
 ✅ Each service can have different HttpClient settings
+✅ Direct API access for all endpoints
 
 **Cons:**
 ⚠️ Larger dependency footprint
 ⚠️ More DI registrations required
 ⚠️ API structure less discoverable (which interface has which method?)
 ⚠️ Multiple HttpClient instances (slightly more memory)
+⚠️ Manual workarounds for API quirks
+
+**Best For:** Lower-level control, SDK development, quirk discovery
 
 ### Kiota SDK 🔶
 
@@ -367,8 +436,30 @@ public class Service
 ⚠️ Requires understanding IRequestAdapter
 ⚠️ All endpoints share same configuration
 ⚠️ Testing requires mocking at adapter level
+⚠️ Manual workarounds for API quirks
+
+**Best For:** API discovery, modern fluent patterns, minimal footprint
 
 ## Real-World Use Case Recommendations
+
+### Use Clean API ⭐ When:
+
+1. **Building Production Applications**
+   - Need strongly-typed models and comprehensive error handling
+   - Want API quirks handled automatically
+   - Require thread-safe authentication out of the box
+
+2. **Rapid Prototyping**
+   - Want to get started quickly with minimal setup
+   - Need good documentation and examples
+   - Don't want to deal with API quirks
+
+3. **Enterprise .NET Applications**
+   - Using dependency injection extensively
+   - Need production-ready abstractions
+   - Want high-quality test coverage
+
+**Note:** Clean API currently covers option-related endpoints. For other endpoints, use NSwag or Kiota (we're expanding coverage over time).
 
 ### Use NSwag 🔷 When:
 
@@ -409,46 +500,51 @@ public class Service
    - Don't need complex DI
    - Want straightforward API access
 
-## Can I Use Both?
+## Can I Use Multiple SDKs?
 
-**Yes!** Both SDKs can coexist in the same solution:
+**Yes!** All three SDK layers can coexist in the same solution:
 
 ```xml
 <ItemGroup>
-  <!-- Use NSwag for FYI endpoints -->
+  <!-- Clean API for option trading -->
+  <PackageReference Include="IBKR.Api.Contract" Version="1.0.0" />
+  <PackageReference Include="IBKR.Api.Client" Version="1.0.0" />
+  <PackageReference Include="IBKR.Api.Authentication" Version="1.0.0" />
+
+  <!-- NSwag for other endpoints not yet in Clean API -->
   <PackageReference Include="IBKR.Api.NSwag.Contract" Version="1.0.0" />
   <PackageReference Include="IBKR.Api.NSwag.Client" Version="1.0.0" />
-
-  <!-- Use Kiota for Account endpoints -->
-  <PackageReference Include="IBKR.Api.Kiota.Contract" Version="1.0.0" />
-  <PackageReference Include="IBKR.Api.Kiota.Client" Version="1.0.0" />
 </ItemGroup>
 ```
 
 **Why would you do this?**
-- Gradual migration from one to the other
+- Use Clean API for supported endpoints (options)
+- Use NSwag/Kiota for endpoints not yet in Clean API
+- Gradual migration as Clean API coverage expands
 - Different teams prefer different patterns
-- Specific features work better in one SDK
 
-⚠️ **Caution:** Mixing SDKs increases overall dependency footprint. Choose one SDK unless you have a specific reason to use both.
+⚠️ **Caution:** Clean API already includes NSwag dependencies, so combining Clean API + NSwag doesn't add much overhead.
 
 ## Conclusion
 
-Both SDKs are **production-ready** and **fully supported**. Your choice comes down to:
+All three SDK layers are **production-ready** and **fully supported**. Your choice comes down to:
 
 | Priority | Choose |
 |----------|--------|
-| Developer familiarity | NSwag 🔷 |
+| **Production-ready abstractions** | **Clean API** ⭐ |
+| **Strongly-typed models** | **Clean API** ⭐ |
+| **Quick setup** | **Clean API** ⭐ |
+| Lower-level API control | NSwag 🔷 |
 | API discoverability | Kiota 🔶 |
-| Package size | Kiota 🔶 |
-| Testing granularity | NSwag 🔷 |
-| Modern patterns | Kiota 🔶 |
+| Smallest package size | Kiota 🔶 |
+| SDK development | NSwag 🔷 or Kiota 🔶 |
 
-**Still undecided?** Start with the [Getting Started Guide](GETTING-STARTED.md) and try both! The SDK choice can be changed later with minimal refactoring.
+**Recommendation for most developers:** Start with **Clean API** ⭐ for the best experience. Use NSwag or Kiota for endpoints not yet covered by the Clean API.
 
 ---
 
 **Next Steps:**
 - [Getting Started Guide](GETTING-STARTED.md) - Install and make your first API call
+- [Clean API Guide](CLEAN-API.md) - Production-ready abstraction layer (recommended)
 - [NSwag SDK Guide](NSWAG-SDK.md) - Deep dive into service-oriented architecture
 - [Kiota SDK Guide](KIOTA-SDK.md) - Deep dive into fluent API architecture

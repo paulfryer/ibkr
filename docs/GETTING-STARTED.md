@@ -1,6 +1,6 @@
 # Getting Started with IBKR SDKs
 
-This guide walks you through installing and making your first API call with both SDK options.
+This guide walks you through installing and making your first API call with the IBKR SDKs.
 
 ## Prerequisites
 
@@ -11,23 +11,37 @@ This guide walks you through installing and making your first API call with both
 
 ## Installation
 
-Choose your preferred SDK architecture:
+### ⭐ Recommended: Clean API
 
-### Option 1: NSwag SDK (Service-Oriented)
+Production-ready abstraction with comprehensive error handling and strongly-typed models:
+
+```bash
+dotnet add package IBKR.Api.Contract
+dotnet add package IBKR.Api.Client
+dotnet add package IBKR.Api.Authentication
+```
+
+### Alternative: Lower-Level SDKs
+
+<details>
+<summary><b>NSwag SDK</b> (Service-Oriented)</summary>
 
 ```bash
 dotnet add package IBKR.Api.NSwag.Contract
 dotnet add package IBKR.Api.NSwag.Client
 ```
+</details>
 
-### Option 2: Kiota SDK (Fluent API)
+<details>
+<summary><b>Kiota SDK</b> (Fluent API)</summary>
 
 ```bash
 dotnet add package IBKR.Api.Kiota.Contract
 dotnet add package IBKR.Api.Kiota.Client
 ```
+</details>
 
-**Not sure which to choose?** Read the [SDK Comparison](SDK-COMPARISON.md).
+**Not sure which to choose?** Read the [SDK Comparison](SDK-COMPARISON.md) or start with the **Clean API** for the best experience.
 
 ## Authentication Setup
 
@@ -55,7 +69,82 @@ const string baseUrl = "https://localhost:5000";
 
 ## Your First API Call
 
-### NSwag SDK Example 🔷
+### Clean API Example ⭐ (Recommended)
+
+```csharp
+using IBKR.Api.Authentication;
+using IBKR.Api.Client.Services;
+using IBKR.Api.Contract.Services;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+
+// Configure services
+var services = new ServiceCollection();
+
+// Configure IBKR settings
+services.Configure<IBKRSettings>(options =>
+{
+    options.ClientId = "your-client-id";
+    options.ClientSecret = "your-client-secret";
+    options.BaseUrl = "https://localhost:5000/v1/api";
+});
+
+// Register authentication
+services.AddSingleton<IIBKRAuthenticationProvider, IBKRAuthenticationProvider>();
+
+// Register option service
+services.AddTransient<IOptionService, OptionService>();
+
+var serviceProvider = services.BuildServiceProvider();
+
+try
+{
+    // Get option service
+    var optionService = serviceProvider.GetRequiredService<IOptionService>();
+
+    // Get option chain for AAPL expiring in next 30 days
+    var chain = await optionService.GetOptionChainAsync(
+        "AAPL",
+        DateTime.UtcNow,
+        DateTime.UtcNow.AddDays(30));
+
+    Console.WriteLine($"Symbol: {chain.Symbol}");
+    Console.WriteLine($"Total Contracts: {chain.Contracts.Count}");
+
+    foreach (var contract in chain.Contracts.Take(5))
+    {
+        Console.WriteLine($"{contract.Symbol} {contract.Right} " +
+                         $"Strike: {contract.Strike:C} " +
+                         $"Exp: {contract.Expiration:yyyy-MM-dd}");
+    }
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"Error: {ex.Message}");
+}
+```
+
+**Output:**
+```
+Symbol: AAPL
+Total Contracts: 156
+AAPL Call Strike: $90.00 Exp: 2025-10-17
+AAPL Call Strike: $95.00 Exp: 2025-10-17
+AAPL Put Strike: $90.00 Exp: 2025-10-17
+AAPL Put Strike: $95.00 Exp: 2025-10-17
+...
+```
+
+**Why use Clean API?**
+- ✅ Strongly-typed models (DateTime, decimal, enums)
+- ✅ Comprehensive error handling
+- ✅ API quirks handled automatically
+- ✅ Thread-safe authentication
+- ✅ Production-ready from day one
+
+---
+
+### NSwag SDK Example 🔷 (Lower-Level)
 
 ```csharp
 using IBKR.Api.NSwag.Client;
@@ -92,7 +181,7 @@ catch (Exception ex)
 }
 ```
 
-### Kiota SDK Example 🔶
+### Kiota SDK Example 🔶 (Lower-Level)
 
 ```csharp
 using IBKR.Api.Kiota.Client;

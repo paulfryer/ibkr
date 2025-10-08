@@ -94,19 +94,27 @@ Three SDK layers offering different levels of abstraction:
 
 | Scenario | Recommended SDK | Why? |
 |----------|----------------|------|
-| Enterprise .NET apps with DI | **NSwag** | Native service interfaces, familiar patterns |
-| Modern microservices | **Kiota** | Smaller footprint, fluent API |
-| Testing with mocks | **Both** | Full mock infrastructure included |
-| Maximum IntelliSense | **Kiota** | Fluent API provides better discoverability |
+| **Production applications** | **Clean API** ⭐ | Strongly-typed, built-in error handling, API quirks handled |
+| **Quick prototypes** | **Clean API** ⭐ | Minimal setup, comprehensive documentation |
+| **Enterprise .NET apps** | **Clean API** ⭐ | DI-friendly, production-ready abstractions |
+| **Need lower-level control** | **NSwag** | Direct API access, service interfaces |
+| **Fluent API preference** | **Kiota** | Discoverable API surface, smaller footprint |
+| **SDK development/testing** | **NSwag/Kiota** | Full mock infrastructure, quirk discovery |
 
 **→ [Detailed SDK Comparison](docs/SDK-COMPARISON.md)**
 
 ## 📚 Documentation
 
+### Getting Started
 - **[Getting Started](docs/GETTING-STARTED.md)** - Installation, first API call, authentication
+- **[Clean API Guide](docs/CLEAN-API.md)** - Production-ready abstraction layer (recommended)
 - **[SDK Comparison](docs/SDK-COMPARISON.md)** - Side-by-side code examples and decision guide
+
+### SDK-Specific Guides
 - **[NSwag SDK Guide](docs/NSWAG-SDK.md)** - Service-oriented architecture details
 - **[Kiota SDK Guide](docs/KIOTA-SDK.md)** - Fluent API architecture details
+
+### Development & Testing
 - **[Testing Guide](docs/TESTING.md)** - Mock vs real implementations, DI patterns
 - **[Architecture](docs/ARCHITECTURE.md)** - Repository structure and generation workflow
 - **[Contributing](docs/CONTRIBUTING.md)** - How to regenerate SDKs and contribute
@@ -114,10 +122,12 @@ Three SDK layers offering different levels of abstraction:
 
 ## 🏗️ Architecture Highlights
 
+- ✅ **Three-Layer Architecture** - Clean API → NSwag/Kiota → OpenAPI spec
+- ✅ **Production-Ready Abstractions** - Built-in error handling and API quirk workarounds
 - ✅ **Dual SDK Generation** - NSwag + Kiota from single OpenAPI spec
 - ✅ **Automated Reorganization** - Splits generated code into Contract/Client projects
-- ✅ **Test Infrastructure** - MockClient + xUnit tests with DI support
-- ✅ **CI/CD Ready** - GitHub Actions workflow for automated releases
+- ✅ **Comprehensive Test Suite** - High-quality logging, mocks + real API support
+- ✅ **CI/CD Ready** - GitHub Actions workflow with parallel job execution
 - ✅ **NuGet Packaging** - Production-ready packages with symbols
 
 ## 🔧 Development

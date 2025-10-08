@@ -1,15 +1,20 @@
 # Release Workflow
 
-This document explains the CI/CD pipeline for building and releasing SDK packages.
+This document describes the automated CI/CD pipeline for building, testing, and publishing all three SDK layers: Clean API, NSwag, and Kiota.
 
 ## Overview
 
 The release workflow is a **manual GitHub Actions workflow** that:
-- ✅ Generates both SDKs from the latest OpenAPI spec
-- ✅ Builds and packages NuGet packages
-- ✅ Runs tests with mock implementations
+- ✅ Generates NSwag and Kiota SDKs from the latest OpenAPI spec
+- ✅ Builds and packages Clean API, NSwag, and Kiota as NuGet packages
+- ✅ Runs comprehensive test suites with mock implementations
 - ✅ Creates GitHub releases (optional)
 - ✅ Publishes downloadable artifacts
+
+**Three SDK layers published:**
+1. **Clean API** (IBKR.Api.Contract, IBKR.Api.Client, IBKR.Api.Authentication) ⭐
+2. **NSwag SDK** (IBKR.Api.NSwag.Contract, IBKR.Api.NSwag.Client)
+3. **Kiota SDK** (IBKR.Api.Kiota.Contract, IBKR.Api.Kiota.Client)
 
 ## Triggering a Release
 
@@ -64,20 +69,24 @@ Use **Semantic Versioning (semver)**:
 ## Workflow Jobs
 
 ```
-validate
-  ↓
-generate-sdks
-  ↓
-scaffold-tests
-  ↓
-├─ build-nswag ←→ build-kiota (parallel)
-  ↓
-├─ test-nswag ←→ test-kiota (parallel)
-  ↓
-create-summary
-  ↓
-create-release (optional)
+1. validate - Validate semver version
+    ↓
+2. generate-sdks - Generate NSwag + Kiota
+    ↓
+3. scaffold-tests - Create Mock + Test projects
+    ↓
+4. build-nswag ←→ 5. build-kiota (parallel)
+    ↓
+6. build-clean-api ← Depends on NSwag
+    ↓
+7. test-nswag ←→ 8. test-kiota ←→ 9. test-clean-api (parallel)
+    ↓
+10. create-summary - Generate release summary
+    ↓
+11. create-release (optional) - GitHub Release
 ```
+
+For detailed job descriptions, see [WORKFLOW-UPDATES.md](WORKFLOW-UPDATES.md).
 
 ### Job 1: Validate
 
@@ -92,9 +101,38 @@ create-release (optional)
     fi
 ```
 
+### Key Jobs
+
+#### Job 6: Build Clean API
+
+**Purpose:** Build and package the production-ready Clean API layer
+
+**Dependencies:** Needs NSwag to be built first (Clean API uses NSwag packages)
+
+**Outputs:**
+- `IBKR.Api.Contract.{version}.nupkg`
+- `IBKR.Api.Authentication.{version}.nupkg`
+- `IBKR.Api.Client.{version}.nupkg`
+
+#### Job 9: Test Clean API
+
+**Purpose:** Run comprehensive test suite with high-quality logging
+
+**Configuration:**
+```yaml
+env:
+  Testing__UseMockClient: true  # Forces mock mode for CI/CD
+```
+
+**Features:**
+- Comprehensive logging with ITestOutputHelper
+- Descriptive assertion messages
+- Try-catch state dumps on failure
+- No real API credentials needed
+
 ### Job 2: Generate SDKs
 
-**Purpose:** Download OpenAPI spec and generate both SDKs
+**Purpose:** Download OpenAPI spec and generate NSwag and Kiota SDKs
 
 ```yaml
 - name: 🔧 Generate SDKs
