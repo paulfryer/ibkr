@@ -4,25 +4,55 @@
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![.NET](https://img.shields.io/badge/.NET-8.0-purple)
 
-> Auto-generated C# SDKs for the Interactive Brokers Client Portal Web API
+> Production-ready C# SDKs for the Interactive Brokers Client Portal Web API
 
 ## 🚀 Quick Start
 
-Choose your preferred SDK architecture:
+### ⭐ Clean API (Recommended)
+Production-ready abstraction with comprehensive error handling and strongly-typed models:
 
-### NSwag SDK (Service-Oriented)
+```bash
+dotnet add package IBKR.Api.Contract
+dotnet add package IBKR.Api.Client
+dotnet add package IBKR.Api.Authentication
+```
+
+```csharp
+// Strongly-typed, clean API - no magic strings!
+var optionService = serviceProvider.GetRequiredService<IOptionService>();
+var chain = await optionService.GetOptionChainAsync(
+    "AAPL",
+    DateTime.UtcNow,
+    DateTime.UtcNow.AddDays(30));
+
+// All contracts are strongly typed with DateTime, enums, decimals
+foreach (var contract in chain.Contracts)
+{
+    Console.WriteLine($"{contract.Symbol} {contract.Right} " +
+                     $"Strike: {contract.Strike:C} Exp: {contract.Expiration:yyyy-MM-dd}");
+}
+```
+
+### Alternative: Lower-Level SDKs
+
+<details>
+<summary><b>NSwag SDK</b> (Service-Oriented)</summary>
+
 ```bash
 dotnet add package IBKR.Api.NSwag.Contract
 dotnet add package IBKR.Api.NSwag.Client
 ```
 
 ```csharp
-// Dependency injection with service interfaces
-services.AddTransient<IFyiService, FyiService>();
-var notifications = await fyiService.UnreadnumberAsync();
+// Direct API access with service interfaces
+services.AddTransient<IIserverService, IserverService>();
+var searchResults = await iserverService.SearchAllGETAsync(symbol: "AAPL");
 ```
+</details>
 
-### Kiota SDK (Fluent API)
+<details>
+<summary><b>Kiota SDK</b> (Fluent API)</summary>
+
 ```bash
 dotnet add package IBKR.Api.Kiota.Contract
 dotnet add package IBKR.Api.Kiota.Client
@@ -31,26 +61,33 @@ dotnet add package IBKR.Api.Kiota.Client
 ```csharp
 // Fluent, discoverable API surface
 var client = new IBKRClient(requestAdapter);
-var notifications = await client.Fyi.Unreadnumber.GetAsync();
+var results = await client.Iserver.Secdef.Search.GetAsync();
 ```
+</details>
 
 ## 📦 What's Inside
 
-Both SDKs are generated from the same OpenAPI specification but offer different architectural approaches:
+Three SDK layers offering different levels of abstraction:
 
 ```
 📁 src/
-├── 🔷 NSwag/          # Service-oriented architecture
-│   ├── Contract       # Models + Service Interfaces
-│   ├── Client         # HTTP Client Implementations
-│   ├── MockClient     # Test Mocks
-│   └── Tests          # xUnit Tests
+├── ⭐ Clean API/        # Production-ready abstraction (Recommended)
+│   ├── IBKR.Api.Contract       # Clean interfaces & strongly-typed models
+│   ├── IBKR.Api.Client         # Implementation with built-in workarounds
+│   ├── IBKR.Api.Authentication # Thread-safe session management
+│   └── IBKR.Api.Tests          # Comprehensive test suite
 │
-└── 🔶 Kiota/          # Fluent API architecture
-    ├── Contract       # Model Classes (POCOs)
-    ├── Client         # Fluent Request Builders
-    ├── MockClient     # Test Mocks
-    └── Tests          # xUnit Tests
+├── 🔷 NSwag/            # Lower-level generated SDK
+│   ├── Contract         # Generated models + service interfaces
+│   ├── Client           # HTTP client implementations
+│   ├── MockClient       # Test mocks
+│   └── Tests            # Discovery & quirk testing
+│
+└── 🔶 Kiota/            # Lower-level generated SDK
+    ├── Contract         # Generated model classes (POCOs)
+    ├── Client           # Fluent request builders
+    ├── MockClient       # Test mocks
+    └── Tests            # Discovery & quirk testing
 ```
 
 ## 🎯 Which SDK Should I Use?

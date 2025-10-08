@@ -24,13 +24,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\IBKR.Api.Authentication\IBKR.Api.Authentication.csproj" />
-    <ProjectReference Include="..\..\IBKR.Api.Contract\IBKR.Api.Contract.csproj" />
-    <ProjectReference Include="..\..\IBKR.Api.Client\IBKR.Api.Client.csproj" />
-    <ProjectReference Include="..\IBKR.Api.NSwag.Authentication\IBKR.Api.NSwag.Authentication.csproj" />
-    <ProjectReference Include="..\IBKR.Api.NSwag.Contract\IBKR.Api.NSwag.Contract.csproj" />
-    <ProjectReference Include="..\IBKR.Api.NSwag.Client\IBKR.Api.NSwag.Client.csproj" />
-    <ProjectReference Include="..\IBKR.Api.NSwag.MockClient\IBKR.Api.NSwag.MockClient.csproj" />
+    <!-- Clean API - only reference Contract and Client -->
+    <ProjectReference Include="..\IBKR.Api.Contract\IBKR.Api.Contract.csproj" />
+    <ProjectReference Include="..\IBKR.Api.Client\IBKR.Api.Client.csproj" />
+    <ProjectReference Include="..\IBKR.Api.Authentication\IBKR.Api.Authentication.csproj" />
+
+    <!-- Need NSwag for real API implementation - but tests don't know about it -->
+    <ProjectReference Include="..\NSwag\IBKR.Api.NSwag.Authentication\IBKR.Api.NSwag.Authentication.csproj" />
+    <ProjectReference Include="..\NSwag\IBKR.Api.NSwag.Contract\IBKR.Api.NSwag.Contract.csproj" />
+    <ProjectReference Include="..\NSwag\IBKR.Api.NSwag.Client\IBKR.Api.NSwag.Client.csproj" />
   </ItemGroup>
 
   <ItemGroup>
