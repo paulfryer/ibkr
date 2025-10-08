@@ -171,10 +171,10 @@ public class MockRequestAdapter : IRequestAdapter
             };
         }
 
-        // Option strikes - /iserver/secdef/strikes
+        // Option strikes - /v1/api/iserver/secdef/strikes
         if (path.Contains("/iserver/secdef/strikes") || path.EndsWith("/strikes"))
         {
-            return new IBKR.Api.Kiota.Client.Iserver.Secdef.Strikes.StrikesGetResponse
+            return new IBKR.Api.Kiota.Client.V1.Api.Iserver.Secdef.Strikes.StrikesGetResponse
             {
                 Call = new List<double?> { 145, 150, 155, 160 },
                 Put = new List<double?> { 145, 150, 155, 160 }

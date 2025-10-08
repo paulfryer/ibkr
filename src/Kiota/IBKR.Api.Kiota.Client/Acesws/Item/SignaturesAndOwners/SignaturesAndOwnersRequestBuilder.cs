@@ -9,7 +9,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Threading;
 using System;
-namespace IBKR.Api.Kiota.Client.Acesws.Item.SignaturesAndOwners
+namespace IBKR.Api.Kiota.Client.Client.Acesws.Item.SignaturesAndOwners
 {
     /// <summary>
     /// Builds and executes requests for operations under \acesws\{accountId}\signatures-and-owners
@@ -18,7 +18,7 @@ namespace IBKR.Api.Kiota.Client.Acesws.Item.SignaturesAndOwners
     public partial class SignaturesAndOwnersRequestBuilder : BaseRequestBuilder
     {
         /// <summary>
-        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Acesws.Item.SignaturesAndOwners.SignaturesAndOwnersRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Acesws.Item.SignaturesAndOwners.SignaturesAndOwnersRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -26,7 +26,7 @@ namespace IBKR.Api.Kiota.Client.Acesws.Item.SignaturesAndOwners
         {
         }
         /// <summary>
-        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Acesws.Item.SignaturesAndOwners.SignaturesAndOwnersRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Acesws.Item.SignaturesAndOwners.SignaturesAndOwnersRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -80,11 +80,11 @@ namespace IBKR.Api.Kiota.Client.Acesws.Item.SignaturesAndOwners
         /// <summary>
         /// Returns a request builder with the provided arbitrary URL. Using this method means any other path or query parameters are ignored.
         /// </summary>
-        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Acesws.Item.SignaturesAndOwners.SignaturesAndOwnersRequestBuilder"/></returns>
+        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Acesws.Item.SignaturesAndOwners.SignaturesAndOwnersRequestBuilder"/></returns>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
-        public global::IBKR.Api.Kiota.Client.Acesws.Item.SignaturesAndOwners.SignaturesAndOwnersRequestBuilder WithUrl(string rawUrl)
+        public global::IBKR.Api.Kiota.Client.Client.Acesws.Item.SignaturesAndOwners.SignaturesAndOwnersRequestBuilder WithUrl(string rawUrl)
         {
-            return new global::IBKR.Api.Kiota.Client.Acesws.Item.SignaturesAndOwners.SignaturesAndOwnersRequestBuilder(rawUrl, RequestAdapter);
+            return new global::IBKR.Api.Kiota.Client.Client.Acesws.Item.SignaturesAndOwners.SignaturesAndOwnersRequestBuilder(rawUrl, RequestAdapter);
         }
         /// <summary>
         /// Configuration for the request such as headers, query parameters, and middleware options.

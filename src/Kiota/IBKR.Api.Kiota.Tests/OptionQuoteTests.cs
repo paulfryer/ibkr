@@ -1,5 +1,5 @@
 using IBKR.Api.Kiota.Client;
-using IBKR.Api.Kiota.Client.Iserver.Secdef.Info;
+using IBKR.Api.Kiota.Client.V1.Api.Iserver.Secdef.Info;
 using IBKR.Api.Kiota.Contract.Models;
 using Xunit;
 
@@ -30,7 +30,7 @@ public class OptionQuoteTests : IClassFixture<TestFixture>
         var optionConid = 12345678; // Example option conid
 
         // Act - Get market data snapshot for the option using fluent API
-        var quote = await _client.Iserver.Marketdata.Snapshot.GetAsync(config =>
+        var quote = await _client.V1.Api.Iserver.Marketdata.Snapshot.GetAsync(config =>
         {
             config.QueryParameters.Conids = optionConid;
             config.QueryParameters.FieldsAsMdFields = MdFields.ThreeOne; // Field 31 = Last Price
@@ -62,7 +62,7 @@ public class OptionQuoteTests : IClassFixture<TestFixture>
         // 7311 = Theta
 
         // Act - Using MdFields enum for multiple field codes
-        var quote = await _client.Iserver.Marketdata.Snapshot.GetAsync(config =>
+        var quote = await _client.V1.Api.Iserver.Marketdata.Snapshot.GetAsync(config =>
         {
             config.QueryParameters.Conids = optionConid;
             config.QueryParameters.FieldsAsMdFields = MdFields.ThreeOne; // Could pass fieldsString instead
@@ -84,7 +84,7 @@ public class OptionQuoteTests : IClassFixture<TestFixture>
         var strike = 150.0;
 
         // Act - Step 1: Get option contract info to get the option conid
-        var optionInfo = await _client.Iserver.Secdef.Info.GetAsync(config =>
+        var optionInfo = await _client.V1.Api.Iserver.Secdef.Info.GetAsync(config =>
         {
             config.QueryParameters.Conid = underlyingConid;
             config.QueryParameters.Sectype = "OPT";
@@ -99,7 +99,7 @@ public class OptionQuoteTests : IClassFixture<TestFixture>
         Assert.NotNull(optionConid);
 
         // Act - Step 2: Get quote for the specific option contract using fluent API
-        var quote = await _client.Iserver.Marketdata.Snapshot.GetAsync(config =>
+        var quote = await _client.V1.Api.Iserver.Marketdata.Snapshot.GetAsync(config =>
         {
             config.QueryParameters.Conids = optionConid.Value;
             config.QueryParameters.FieldsAsMdFields = MdFields.ThreeOne;
@@ -116,7 +116,7 @@ public class OptionQuoteTests : IClassFixture<TestFixture>
         var putOptionConid = 87654321; // Example put option conid
 
         // Act - Fluent API for put option quote
-        var quote = await _client.Iserver.Marketdata.Snapshot.GetAsync(config =>
+        var quote = await _client.V1.Api.Iserver.Marketdata.Snapshot.GetAsync(config =>
         {
             config.QueryParameters.Conids = putOptionConid;
             config.QueryParameters.FieldsAsMdFields = MdFields.ThreeOne;
@@ -135,14 +135,14 @@ public class OptionQuoteTests : IClassFixture<TestFixture>
         var optionConid2 = 87654321;
 
         // Act - Get quotes for first option using fluent API
-        var quote1 = await _client.Iserver.Marketdata.Snapshot.GetAsync(config =>
+        var quote1 = await _client.V1.Api.Iserver.Marketdata.Snapshot.GetAsync(config =>
         {
             config.QueryParameters.Conids = optionConid1;
             config.QueryParameters.FieldsAsMdFields = MdFields.ThreeOne;
         });
 
         // Act - Get quotes for second option using fluent API
-        var quote2 = await _client.Iserver.Marketdata.Snapshot.GetAsync(config =>
+        var quote2 = await _client.V1.Api.Iserver.Marketdata.Snapshot.GetAsync(config =>
         {
             config.QueryParameters.Conids = optionConid2;
             config.QueryParameters.FieldsAsMdFields = MdFields.ThreeOne;
@@ -169,7 +169,7 @@ public class OptionQuoteTests : IClassFixture<TestFixture>
         // 7295 = Implied Volatility
 
         // Act - Fluent API with greeks fields
-        var quote = await _client.Iserver.Marketdata.Snapshot.GetAsync(config =>
+        var quote = await _client.V1.Api.Iserver.Marketdata.Snapshot.GetAsync(config =>
         {
             config.QueryParameters.Conids = optionConid;
             config.QueryParameters.FieldsAsMdFields = MdFields.ThreeOne; // Could pass fieldsString instead
@@ -217,6 +217,8 @@ public class OptionQuoteTests : IClassFixture<TestFixture>
         var optionConid = 12345678;
 
         var quote = await _client
+            .V1
+            .Api
             .Iserver
             .Marketdata
             .Snapshot
@@ -236,15 +238,15 @@ public class OptionQuoteTests : IClassFixture<TestFixture>
         // for option quote requests:
 
         // Type: _client.
-        //   -> Shows: Iserver, Md, Fyi, Gw, etc.
+        //   -> Shows: V1, Iserver, Md, Fyi, Gw, etc.
 
-        // Type: _client.Iserver.
+        // Type: _client.V1.Api.Iserver.
         //   -> Shows: Marketdata, Secdef, Account, Orders, etc.
 
-        // Type: _client.Iserver.Marketdata.
+        // Type: _client.V1.Api.Iserver.Marketdata.
         //   -> Shows: Snapshot, History, Unsubscribe, etc.
 
-        // Type: _client.Iserver.Marketdata.Snapshot.
+        // Type: _client.V1.Api.Iserver.Marketdata.Snapshot.
         //   -> Shows: GetAsync(), ToGetRequestInformation(), etc.
 
         // Type: config.QueryParameters.
@@ -255,6 +257,8 @@ public class OptionQuoteTests : IClassFixture<TestFixture>
         var optionConid = 12345678;
 
         var quote = await _client
+            .V1
+            .Api
             .Iserver
             .Marketdata
             .Snapshot

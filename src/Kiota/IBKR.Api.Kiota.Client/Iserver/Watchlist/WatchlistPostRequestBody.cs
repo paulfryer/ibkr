@@ -5,7 +5,7 @@ using Microsoft.Kiota.Abstractions.Serialization;
 using System.Collections.Generic;
 using System.IO;
 using System;
-namespace IBKR.Api.Kiota.Client.Iserver.Watchlist
+namespace IBKR.Api.Kiota.Client.Client.Iserver.Watchlist
 {
     [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
     #pragma warning disable CS1591
@@ -39,7 +39,7 @@ namespace IBKR.Api.Kiota.Client.Iserver.Watchlist
         public UntypedNode Rows { get; set; }
 #endif
         /// <summary>
-        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Iserver.Watchlist.WatchlistPostRequestBody"/> and sets the default values.
+        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Iserver.Watchlist.WatchlistPostRequestBody"/> and sets the default values.
         /// </summary>
         public WatchlistPostRequestBody()
         {
@@ -48,12 +48,12 @@ namespace IBKR.Api.Kiota.Client.Iserver.Watchlist
         /// <summary>
         /// Creates a new instance of the appropriate class based on discriminator value
         /// </summary>
-        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Iserver.Watchlist.WatchlistPostRequestBody"/></returns>
+        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Iserver.Watchlist.WatchlistPostRequestBody"/></returns>
         /// <param name="parseNode">The parse node to use to read the discriminator value and create the object</param>
-        public static global::IBKR.Api.Kiota.Client.Iserver.Watchlist.WatchlistPostRequestBody CreateFromDiscriminatorValue(IParseNode parseNode)
+        public static global::IBKR.Api.Kiota.Client.Client.Iserver.Watchlist.WatchlistPostRequestBody CreateFromDiscriminatorValue(IParseNode parseNode)
         {
             _ = parseNode ?? throw new ArgumentNullException(nameof(parseNode));
-            return new global::IBKR.Api.Kiota.Client.Iserver.Watchlist.WatchlistPostRequestBody();
+            return new global::IBKR.Api.Kiota.Client.Client.Iserver.Watchlist.WatchlistPostRequestBody();
         }
         /// <summary>
         /// The deserialization information for the current model

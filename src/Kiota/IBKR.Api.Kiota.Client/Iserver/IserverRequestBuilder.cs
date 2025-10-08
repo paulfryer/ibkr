@@ -4,18 +4,12 @@ using IBKR.Api.Kiota.Client.Iserver.Account;
 using IBKR.Api.Kiota.Client.Iserver.Accounts;
 using IBKR.Api.Kiota.Client.Iserver.Auth;
 using IBKR.Api.Kiota.Client.Iserver.Contract;
-using IBKR.Api.Kiota.Client.Iserver.Currency;
 using IBKR.Api.Kiota.Client.Iserver.Dynaccount;
-using IBKR.Api.Kiota.Client.Iserver.Exchangerate;
 using IBKR.Api.Kiota.Client.Iserver.Marketdata;
 using IBKR.Api.Kiota.Client.Iserver.Notification;
 using IBKR.Api.Kiota.Client.Iserver.Questions;
 using IBKR.Api.Kiota.Client.Iserver.Reauthenticate;
-using IBKR.Api.Kiota.Client.Iserver.Reply;
 using IBKR.Api.Kiota.Client.Iserver.Scanner;
-using IBKR.Api.Kiota.Client.Iserver.Secdef;
-using IBKR.Api.Kiota.Client.Iserver.Watchlist;
-using IBKR.Api.Kiota.Client.Iserver.Watchlists;
 using Microsoft.Kiota.Abstractions.Extensions;
 using Microsoft.Kiota.Abstractions;
 using System.Collections.Generic;
@@ -50,20 +44,10 @@ namespace IBKR.Api.Kiota.Client.Iserver
         {
             get => new global::IBKR.Api.Kiota.Client.Iserver.Contract.ContractRequestBuilder(PathParameters, RequestAdapter);
         }
-        /// <summary>The currency property</summary>
-        public global::IBKR.Api.Kiota.Client.Iserver.Currency.CurrencyRequestBuilder Currency
-        {
-            get => new global::IBKR.Api.Kiota.Client.Iserver.Currency.CurrencyRequestBuilder(PathParameters, RequestAdapter);
-        }
         /// <summary>The dynaccount property</summary>
         public global::IBKR.Api.Kiota.Client.Iserver.Dynaccount.DynaccountRequestBuilder Dynaccount
         {
             get => new global::IBKR.Api.Kiota.Client.Iserver.Dynaccount.DynaccountRequestBuilder(PathParameters, RequestAdapter);
-        }
-        /// <summary>The exchangerate property</summary>
-        public global::IBKR.Api.Kiota.Client.Iserver.Exchangerate.ExchangerateRequestBuilder Exchangerate
-        {
-            get => new global::IBKR.Api.Kiota.Client.Iserver.Exchangerate.ExchangerateRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>The marketdata property</summary>
         public global::IBKR.Api.Kiota.Client.Iserver.Marketdata.MarketdataRequestBuilder Marketdata
@@ -85,30 +69,10 @@ namespace IBKR.Api.Kiota.Client.Iserver
         {
             get => new global::IBKR.Api.Kiota.Client.Iserver.Reauthenticate.ReauthenticateRequestBuilder(PathParameters, RequestAdapter);
         }
-        /// <summary>The reply property</summary>
-        public global::IBKR.Api.Kiota.Client.Iserver.Reply.ReplyRequestBuilder Reply
-        {
-            get => new global::IBKR.Api.Kiota.Client.Iserver.Reply.ReplyRequestBuilder(PathParameters, RequestAdapter);
-        }
         /// <summary>The scanner property</summary>
         public global::IBKR.Api.Kiota.Client.Iserver.Scanner.ScannerRequestBuilder Scanner
         {
             get => new global::IBKR.Api.Kiota.Client.Iserver.Scanner.ScannerRequestBuilder(PathParameters, RequestAdapter);
-        }
-        /// <summary>The secdef property</summary>
-        public global::IBKR.Api.Kiota.Client.Iserver.Secdef.SecdefRequestBuilder Secdef
-        {
-            get => new global::IBKR.Api.Kiota.Client.Iserver.Secdef.SecdefRequestBuilder(PathParameters, RequestAdapter);
-        }
-        /// <summary>The watchlist property</summary>
-        public global::IBKR.Api.Kiota.Client.Iserver.Watchlist.WatchlistRequestBuilder Watchlist
-        {
-            get => new global::IBKR.Api.Kiota.Client.Iserver.Watchlist.WatchlistRequestBuilder(PathParameters, RequestAdapter);
-        }
-        /// <summary>The watchlists property</summary>
-        public global::IBKR.Api.Kiota.Client.Iserver.Watchlists.WatchlistsRequestBuilder Watchlists
-        {
-            get => new global::IBKR.Api.Kiota.Client.Iserver.Watchlists.WatchlistsRequestBuilder(PathParameters, RequestAdapter);
         }
         /// <summary>
         /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Iserver.IserverRequestBuilder"/> and sets the default values.

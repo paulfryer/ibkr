@@ -9,7 +9,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Threading;
 using System;
-namespace IBKR.Api.Kiota.Client.Portfolio.Item.Positions.Invalidate
+namespace IBKR.Api.Kiota.Client.Client.Portfolio.Item.Positions.Invalidate
 {
     /// <summary>
     /// Builds and executes requests for operations under \portfolio\{accountId}\positions\invalidate
@@ -18,7 +18,7 @@ namespace IBKR.Api.Kiota.Client.Portfolio.Item.Positions.Invalidate
     public partial class InvalidateRequestBuilder : BaseRequestBuilder
     {
         /// <summary>
-        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Portfolio.Item.Positions.Invalidate.InvalidateRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Portfolio.Item.Positions.Invalidate.InvalidateRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -26,7 +26,7 @@ namespace IBKR.Api.Kiota.Client.Portfolio.Item.Positions.Invalidate
         {
         }
         /// <summary>
-        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Portfolio.Item.Positions.Invalidate.InvalidateRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Portfolio.Item.Positions.Invalidate.InvalidateRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -36,7 +36,7 @@ namespace IBKR.Api.Kiota.Client.Portfolio.Item.Positions.Invalidate
         /// <summary>
         /// Instructs IB to discard cached portfolio positions for a given account, so that the next request for positions delivers freshly obtained data.
         /// </summary>
-        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Portfolio.Item.Positions.Invalidate.InvalidatePostResponse"/></returns>
+        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Portfolio.Item.Positions.Invalidate.InvalidatePostResponse"/></returns>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
         /// <exception cref="global::IBKR.Api.Kiota.Contract.Models.ErrorResponse">When receiving a 400 status code</exception>
@@ -44,11 +44,11 @@ namespace IBKR.Api.Kiota.Client.Portfolio.Item.Positions.Invalidate
         /// <exception cref="global::IBKR.Api.Kiota.Contract.Models.ErrorResponse">When receiving a 503 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<global::IBKR.Api.Kiota.Client.Portfolio.Item.Positions.Invalidate.InvalidatePostResponse?> PostAsInvalidatePostResponseAsync(Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::IBKR.Api.Kiota.Client.Client.Portfolio.Item.Positions.Invalidate.InvalidatePostResponse?> PostAsInvalidatePostResponseAsync(Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<global::IBKR.Api.Kiota.Client.Portfolio.Item.Positions.Invalidate.InvalidatePostResponse> PostAsInvalidatePostResponseAsync(Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::IBKR.Api.Kiota.Client.Client.Portfolio.Item.Positions.Invalidate.InvalidatePostResponse> PostAsInvalidatePostResponseAsync(Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             var requestInfo = ToPostRequestInformation(requestConfiguration);
@@ -58,12 +58,12 @@ namespace IBKR.Api.Kiota.Client.Portfolio.Item.Positions.Invalidate
                 { "500", global::IBKR.Api.Kiota.Contract.Models.ErrorOnlyResponse.CreateFromDiscriminatorValue },
                 { "503", global::IBKR.Api.Kiota.Contract.Models.ErrorResponse.CreateFromDiscriminatorValue },
             };
-            return await RequestAdapter.SendAsync<global::IBKR.Api.Kiota.Client.Portfolio.Item.Positions.Invalidate.InvalidatePostResponse>(requestInfo, global::IBKR.Api.Kiota.Client.Portfolio.Item.Positions.Invalidate.InvalidatePostResponse.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
+            return await RequestAdapter.SendAsync<global::IBKR.Api.Kiota.Client.Client.Portfolio.Item.Positions.Invalidate.InvalidatePostResponse>(requestInfo, global::IBKR.Api.Kiota.Client.Client.Portfolio.Item.Positions.Invalidate.InvalidatePostResponse.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
         }
         /// <summary>
         /// Instructs IB to discard cached portfolio positions for a given account, so that the next request for positions delivers freshly obtained data.
         /// </summary>
-        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Portfolio.Item.Positions.Invalidate.InvalidateResponse"/></returns>
+        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Portfolio.Item.Positions.Invalidate.InvalidateResponse"/></returns>
         /// <param name="cancellationToken">Cancellation token to use when cancelling requests</param>
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
         /// <exception cref="global::IBKR.Api.Kiota.Contract.Models.ErrorResponse">When receiving a 400 status code</exception>
@@ -72,11 +72,11 @@ namespace IBKR.Api.Kiota.Client.Portfolio.Item.Positions.Invalidate
         [Obsolete("This method is obsolete. Use PostAsInvalidatePostResponseAsync instead.")]
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<global::IBKR.Api.Kiota.Client.Portfolio.Item.Positions.Invalidate.InvalidateResponse?> PostAsync(Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::IBKR.Api.Kiota.Client.Client.Portfolio.Item.Positions.Invalidate.InvalidateResponse?> PostAsync(Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<global::IBKR.Api.Kiota.Client.Portfolio.Item.Positions.Invalidate.InvalidateResponse> PostAsync(Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::IBKR.Api.Kiota.Client.Client.Portfolio.Item.Positions.Invalidate.InvalidateResponse> PostAsync(Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             var requestInfo = ToPostRequestInformation(requestConfiguration);
@@ -86,7 +86,7 @@ namespace IBKR.Api.Kiota.Client.Portfolio.Item.Positions.Invalidate
                 { "500", global::IBKR.Api.Kiota.Contract.Models.ErrorOnlyResponse.CreateFromDiscriminatorValue },
                 { "503", global::IBKR.Api.Kiota.Contract.Models.ErrorResponse.CreateFromDiscriminatorValue },
             };
-            return await RequestAdapter.SendAsync<global::IBKR.Api.Kiota.Client.Portfolio.Item.Positions.Invalidate.InvalidateResponse>(requestInfo, global::IBKR.Api.Kiota.Client.Portfolio.Item.Positions.Invalidate.InvalidateResponse.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
+            return await RequestAdapter.SendAsync<global::IBKR.Api.Kiota.Client.Client.Portfolio.Item.Positions.Invalidate.InvalidateResponse>(requestInfo, global::IBKR.Api.Kiota.Client.Client.Portfolio.Item.Positions.Invalidate.InvalidateResponse.CreateFromDiscriminatorValue, errorMapping, cancellationToken).ConfigureAwait(false);
         }
         /// <summary>
         /// Instructs IB to discard cached portfolio positions for a given account, so that the next request for positions delivers freshly obtained data.
@@ -110,11 +110,11 @@ namespace IBKR.Api.Kiota.Client.Portfolio.Item.Positions.Invalidate
         /// <summary>
         /// Returns a request builder with the provided arbitrary URL. Using this method means any other path or query parameters are ignored.
         /// </summary>
-        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Portfolio.Item.Positions.Invalidate.InvalidateRequestBuilder"/></returns>
+        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Portfolio.Item.Positions.Invalidate.InvalidateRequestBuilder"/></returns>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
-        public global::IBKR.Api.Kiota.Client.Portfolio.Item.Positions.Invalidate.InvalidateRequestBuilder WithUrl(string rawUrl)
+        public global::IBKR.Api.Kiota.Client.Client.Portfolio.Item.Positions.Invalidate.InvalidateRequestBuilder WithUrl(string rawUrl)
         {
-            return new global::IBKR.Api.Kiota.Client.Portfolio.Item.Positions.Invalidate.InvalidateRequestBuilder(rawUrl, RequestAdapter);
+            return new global::IBKR.Api.Kiota.Client.Client.Portfolio.Item.Positions.Invalidate.InvalidateRequestBuilder(rawUrl, RequestAdapter);
         }
         /// <summary>
         /// Configuration for the request such as headers, query parameters, and middleware options.

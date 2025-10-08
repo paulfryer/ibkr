@@ -47,6 +47,12 @@ public class IBKRAuthenticationHandler : DelegatingHandler
         var bearerToken = await _authProvider.GetBearerTokenAsync(cancellationToken);
         Console.WriteLine($"[IBKRAuthenticationHandler] Got bearer token: {bearerToken?.Substring(0, Math.Min(20, bearerToken?.Length ?? 0))}...");
 
+        // Add required IBKR API headers (matching working implementation)
+        request.Headers.TryAddWithoutValidation("Host", "api.ibkr.com");
+        request.Headers.TryAddWithoutValidation("User-Agent", "CSharp/IBKR-SDK");
+        request.Headers.TryAddWithoutValidation("Accept", "*/*");
+        request.Headers.TryAddWithoutValidation("Connection", "keep-alive");
+
         // Add authorization header
         request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", bearerToken);
         Console.WriteLine($"[IBKRAuthenticationHandler] Authorization header set: {request.Headers.Authorization}");

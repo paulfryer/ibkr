@@ -1,7 +1,7 @@
 using IBKR.Api.Kiota.Client;
-using IBKR.Api.Kiota.Client.Iserver.Secdef.Info;
-using IBKR.Api.Kiota.Client.Iserver.Secdef.Search;
-using IBKR.Api.Kiota.Client.Iserver.Secdef.Strikes;
+using IBKR.Api.Kiota.Client.V1.Api.Iserver.Secdef.Info;
+using IBKR.Api.Kiota.Client.V1.Api.Iserver.Secdef.Search;
+using IBKR.Api.Kiota.Client.V1.Api.Iserver.Secdef.Strikes;
 using IBKR.Api.Kiota.Contract.Models;
 using Xunit;
 
@@ -32,7 +32,7 @@ public class OptionChainTests : IClassFixture<TestFixture>
         var month = "202501"; // January 2025 (YYYYMM format)
 
         // Act - Fluent API: client.Iserver.Secdef.Strikes
-        var strikes = await _client.Iserver.Secdef.Strikes.GetAsStrikesGetResponseAsync(config =>
+        var strikes = await _client.V1.Api.Iserver.Secdef.Strikes.GetAsStrikesGetResponseAsync(config =>
         {
             config.QueryParameters.Conid = conid;
             config.QueryParameters.Sectype = sectype;
@@ -68,7 +68,7 @@ public class OptionChainTests : IClassFixture<TestFixture>
         var month = "20250117"; // January 17, 2025 (YYYYMMDD format)
 
         // Act - Get call option info using fluent API
-        var callInfo = await _client.Iserver.Secdef.Info.GetAsync(config =>
+        var callInfo = await _client.V1.Api.Iserver.Secdef.Info.GetAsync(config =>
         {
             config.QueryParameters.Conid = conid;
             config.QueryParameters.Sectype = "OPT";
@@ -93,7 +93,7 @@ public class OptionChainTests : IClassFixture<TestFixture>
         var month = "202501"; // January 2025
 
         // Act - Step 1: Get available strikes using fluent API
-        var strikes = await _client.Iserver.Secdef.Strikes.GetAsStrikesGetResponseAsync(config =>
+        var strikes = await _client.V1.Api.Iserver.Secdef.Strikes.GetAsStrikesGetResponseAsync(config =>
         {
             config.QueryParameters.Conid = underlyingConid;
             config.QueryParameters.Sectype = "OPT";
@@ -125,7 +125,7 @@ public class OptionChainTests : IClassFixture<TestFixture>
         var month = "202501";
 
         // Act - Step 1: Search for underlying stock using fluent API
-        var searchResults = await _client.Iserver.Secdef.Search.GetAsync(config =>
+        var searchResults = await _client.V1.Api.Iserver.Secdef.Search.GetAsync(config =>
         {
             config.QueryParameters.Symbol = symbol;
             config.QueryParameters.SecTypeAsGetSecTypeQueryParameterType = GetSecTypeQueryParameterType.STK;
@@ -136,7 +136,7 @@ public class OptionChainTests : IClassFixture<TestFixture>
         Assert.NotNull(conid);
 
         // Act - Step 2: Get option strikes using fluent API
-        var strikes = await _client.Iserver.Secdef.Strikes.GetAsStrikesGetResponseAsync(config =>
+        var strikes = await _client.V1.Api.Iserver.Secdef.Strikes.GetAsStrikesGetResponseAsync(config =>
         {
             config.QueryParameters.Conid = conid;
             config.QueryParameters.Sectype = "OPT";
@@ -153,7 +153,7 @@ public class OptionChainTests : IClassFixture<TestFixture>
         {
             var targetStrike = strikes.Call.First();
 
-            var contractInfo = await _client.Iserver.Secdef.Info.GetAsync(config =>
+            var contractInfo = await _client.V1.Api.Iserver.Secdef.Info.GetAsync(config =>
             {
                 config.QueryParameters.Conid = conid;
                 config.QueryParameters.Sectype = "OPT";
@@ -177,7 +177,7 @@ public class OptionChainTests : IClassFixture<TestFixture>
         var month = "20250117"; // January 17, 2025
 
         // Act - Get put option info using fluent API
-        var putInfo = await _client.Iserver.Secdef.Info.GetAsync(config =>
+        var putInfo = await _client.V1.Api.Iserver.Secdef.Info.GetAsync(config =>
         {
             config.QueryParameters.Conid = conid;
             config.QueryParameters.Sectype = "OPT";
@@ -205,7 +205,7 @@ public class OptionChainTests : IClassFixture<TestFixture>
         // Format 1: YYYYMM for getting strikes
         var monthFormat1 = "202501"; // January 2025
 
-        var strikes = await _client.Iserver.Secdef.Strikes.GetAsStrikesGetResponseAsync(config =>
+        var strikes = await _client.V1.Api.Iserver.Secdef.Strikes.GetAsStrikesGetResponseAsync(config =>
         {
             config.QueryParameters.Conid = conid;
             config.QueryParameters.Sectype = "OPT";
@@ -219,7 +219,7 @@ public class OptionChainTests : IClassFixture<TestFixture>
 
         if (strikes.Call.Any())
         {
-            var contractInfo = await _client.Iserver.Secdef.Info.GetAsync(config =>
+            var contractInfo = await _client.V1.Api.Iserver.Secdef.Info.GetAsync(config =>
             {
                 config.QueryParameters.Conid = conid;
                 config.QueryParameters.Sectype = "OPT";
@@ -239,15 +239,15 @@ public class OptionChainTests : IClassFixture<TestFixture>
         // IntelliSense guides you through the API structure:
 
         // Type: _client.
-        //   -> Shows: Iserver, Md, Fyi, Gw, etc.
+        //   -> Shows: V1, Iserver, Md, Fyi, Gw, etc.
 
-        // Type: _client.Iserver.
+        // Type: _client.V1.Api.Iserver.
         //   -> Shows: Marketdata, Secdef, Account, Orders, etc.
 
-        // Type: _client.Iserver.Secdef.
-        //   -> Shows: Search, Strikes, Info2, etc.
+        // Type: _client.V1.Api.Iserver.Secdef.
+        //   -> Shows: Search, Strikes, Info, etc.
 
-        // Type: _client.Iserver.Secdef.Strikes.
+        // Type: _client.V1.Api.Iserver.Secdef.Strikes.
         //   -> Shows: GetAsync(), ToGetRequestInformation(), etc.
 
         // This fluent structure makes API exploration intuitive!
@@ -255,6 +255,8 @@ public class OptionChainTests : IClassFixture<TestFixture>
         var conid = "265598"; // AAPL
 
         var strikes = await _client
+            .V1
+            .Api
             .Iserver
             .Secdef
             .Strikes

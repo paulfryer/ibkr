@@ -47,6 +47,12 @@ public class IBKRKiotaAuthenticationProvider : IAuthenticationProvider
         // Get bearer token
         var bearerToken = await _authProvider.GetBearerTokenAsync(cancellationToken);
 
+        // Add required IBKR API headers (matching working implementation)
+        request.Headers.Add("Host", "api.ibkr.com");
+        request.Headers.Add("User-Agent", "CSharp/IBKR-SDK");
+        request.Headers.Add("Accept", "*/*");
+        request.Headers.Add("Connection", "keep-alive");
+
         // Add authorization header
         request.Headers.Add("Authorization", $"Bearer {bearerToken}");
     }

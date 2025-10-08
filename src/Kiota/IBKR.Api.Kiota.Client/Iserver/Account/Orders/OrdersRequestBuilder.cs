@@ -9,7 +9,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Threading;
 using System;
-namespace IBKR.Api.Kiota.Client.Iserver.Account.Orders
+namespace IBKR.Api.Kiota.Client.Client.Iserver.Account.Orders
 {
     /// <summary>
     /// Builds and executes requests for operations under \iserver\account\orders
@@ -18,7 +18,7 @@ namespace IBKR.Api.Kiota.Client.Iserver.Account.Orders
     public partial class OrdersRequestBuilder : BaseRequestBuilder
     {
         /// <summary>
-        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Iserver.Account.Orders.OrdersRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Iserver.Account.Orders.OrdersRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -26,7 +26,7 @@ namespace IBKR.Api.Kiota.Client.Iserver.Account.Orders
         {
         }
         /// <summary>
-        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Iserver.Account.Orders.OrdersRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Iserver.Account.Orders.OrdersRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -43,11 +43,11 @@ namespace IBKR.Api.Kiota.Client.Iserver.Account.Orders
         /// <exception cref="global::IBKR.Api.Kiota.Contract.Models.ErrorResponse">When receiving a 503 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<global::IBKR.Api.Kiota.Contract.Models.LiveOrdersResponse?> GetAsync(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Iserver.Account.Orders.OrdersRequestBuilder.OrdersRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::IBKR.Api.Kiota.Contract.Models.LiveOrdersResponse?> GetAsync(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Iserver.Account.Orders.OrdersRequestBuilder.OrdersRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<global::IBKR.Api.Kiota.Contract.Models.LiveOrdersResponse> GetAsync(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Iserver.Account.Orders.OrdersRequestBuilder.OrdersRequestBuilderGetQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::IBKR.Api.Kiota.Contract.Models.LiveOrdersResponse> GetAsync(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Iserver.Account.Orders.OrdersRequestBuilder.OrdersRequestBuilderGetQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             var requestInfo = ToGetRequestInformation(requestConfiguration);
@@ -65,11 +65,11 @@ namespace IBKR.Api.Kiota.Client.Iserver.Account.Orders
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Iserver.Account.Orders.OrdersRequestBuilder.OrdersRequestBuilderGetQueryParameters>>? requestConfiguration = default)
+        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Iserver.Account.Orders.OrdersRequestBuilder.OrdersRequestBuilderGetQueryParameters>>? requestConfiguration = default)
         {
 #nullable restore
 #else
-        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Iserver.Account.Orders.OrdersRequestBuilder.OrdersRequestBuilderGetQueryParameters>> requestConfiguration = default)
+        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Iserver.Account.Orders.OrdersRequestBuilder.OrdersRequestBuilderGetQueryParameters>> requestConfiguration = default)
         {
 #endif
             var requestInfo = new RequestInformation(Method.GET, UrlTemplate, PathParameters);
@@ -80,11 +80,11 @@ namespace IBKR.Api.Kiota.Client.Iserver.Account.Orders
         /// <summary>
         /// Returns a request builder with the provided arbitrary URL. Using this method means any other path or query parameters are ignored.
         /// </summary>
-        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Iserver.Account.Orders.OrdersRequestBuilder"/></returns>
+        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Iserver.Account.Orders.OrdersRequestBuilder"/></returns>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
-        public global::IBKR.Api.Kiota.Client.Iserver.Account.Orders.OrdersRequestBuilder WithUrl(string rawUrl)
+        public global::IBKR.Api.Kiota.Client.Client.Iserver.Account.Orders.OrdersRequestBuilder WithUrl(string rawUrl)
         {
-            return new global::IBKR.Api.Kiota.Client.Iserver.Account.Orders.OrdersRequestBuilder(rawUrl, RequestAdapter);
+            return new global::IBKR.Api.Kiota.Client.Client.Iserver.Account.Orders.OrdersRequestBuilder(rawUrl, RequestAdapter);
         }
         /// <summary>
         /// Retrieves open orders and filled or cancelled orders submitted during the current brokerage session.
@@ -115,7 +115,7 @@ namespace IBKR.Api.Kiota.Client.Iserver.Account.Orders
 #endif
             /// <summary>Filter results using a comma-separated list of Order Status values. Also accepts a value to sort results by time.</summary>
             [QueryParameter("filters")]
-            public global::IBKR.Api.Kiota.Client.Iserver.Account.Orders.GetFiltersQueryParameterType? FiltersAsGetFiltersQueryParameterType { get; set; }
+            public global::IBKR.Api.Kiota.Client.Client.Iserver.Account.Orders.GetFiltersQueryParameterType? FiltersAsGetFiltersQueryParameterType { get; set; }
             /// <summary>Instructs IB to clear cache of orders and obtain updated view from brokerage backend. Response will be an empty array.</summary>
             [QueryParameter("force")]
             public bool? Force { get; set; }
@@ -125,7 +125,7 @@ namespace IBKR.Api.Kiota.Client.Iserver.Account.Orders
         /// </summary>
         [Obsolete("This class is deprecated. Please use the generic RequestConfiguration class generated by the generator.")]
         [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
-        public partial class OrdersRequestBuilderGetRequestConfiguration : RequestConfiguration<global::IBKR.Api.Kiota.Client.Iserver.Account.Orders.OrdersRequestBuilder.OrdersRequestBuilderGetQueryParameters>
+        public partial class OrdersRequestBuilderGetRequestConfiguration : RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Iserver.Account.Orders.OrdersRequestBuilder.OrdersRequestBuilderGetQueryParameters>
         {
         }
     }

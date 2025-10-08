@@ -9,7 +9,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Threading;
 using System;
-namespace IBKR.Api.Kiota.Client.Iserver.Secdef.Search
+namespace IBKR.Api.Kiota.Client.Client.Iserver.Secdef.Search
 {
     /// <summary>
     /// Builds and executes requests for operations under \iserver\secdef\search
@@ -18,7 +18,7 @@ namespace IBKR.Api.Kiota.Client.Iserver.Secdef.Search
     public partial class SearchRequestBuilder : BaseRequestBuilder
     {
         /// <summary>
-        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Iserver.Secdef.Search.SearchRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Iserver.Secdef.Search.SearchRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -26,7 +26,7 @@ namespace IBKR.Api.Kiota.Client.Iserver.Secdef.Search
         {
         }
         /// <summary>
-        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Iserver.Secdef.Search.SearchRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Iserver.Secdef.Search.SearchRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -44,11 +44,11 @@ namespace IBKR.Api.Kiota.Client.Iserver.Secdef.Search
         /// <exception cref="global::IBKR.Api.Kiota.Contract.Models.ErrorResponse">When receiving a 503 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<List<global::IBKR.Api.Kiota.Contract.Models.SecdefSearchResponse>?> GetAsync(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Iserver.Secdef.Search.SearchRequestBuilder.SearchRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<List<global::IBKR.Api.Kiota.Contract.Models.SecdefSearchResponse>?> GetAsync(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Iserver.Secdef.Search.SearchRequestBuilder.SearchRequestBuilderGetQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<List<global::IBKR.Api.Kiota.Contract.Models.SecdefSearchResponse>> GetAsync(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Iserver.Secdef.Search.SearchRequestBuilder.SearchRequestBuilderGetQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<List<global::IBKR.Api.Kiota.Contract.Models.SecdefSearchResponse>> GetAsync(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Iserver.Secdef.Search.SearchRequestBuilder.SearchRequestBuilderGetQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             var requestInfo = ToGetRequestInformation(requestConfiguration);
@@ -73,11 +73,11 @@ namespace IBKR.Api.Kiota.Client.Iserver.Secdef.Search
         /// <exception cref="global::IBKR.Api.Kiota.Contract.Models.ErrorResponse">When receiving a 503 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<List<global::IBKR.Api.Kiota.Contract.Models.SecdefSearchResponse>?> PostAsync(global::IBKR.Api.Kiota.Client.Iserver.Secdef.Search.SearchPostRequestBody body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<List<global::IBKR.Api.Kiota.Contract.Models.SecdefSearchResponse>?> PostAsync(global::IBKR.Api.Kiota.Client.Client.Iserver.Secdef.Search.SearchPostRequestBody body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<List<global::IBKR.Api.Kiota.Contract.Models.SecdefSearchResponse>> PostAsync(global::IBKR.Api.Kiota.Client.Iserver.Secdef.Search.SearchPostRequestBody body, Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<List<global::IBKR.Api.Kiota.Contract.Models.SecdefSearchResponse>> PostAsync(global::IBKR.Api.Kiota.Client.Client.Iserver.Secdef.Search.SearchPostRequestBody body, Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));
@@ -98,11 +98,11 @@ namespace IBKR.Api.Kiota.Client.Iserver.Secdef.Search
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Iserver.Secdef.Search.SearchRequestBuilder.SearchRequestBuilderGetQueryParameters>>? requestConfiguration = default)
+        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Iserver.Secdef.Search.SearchRequestBuilder.SearchRequestBuilderGetQueryParameters>>? requestConfiguration = default)
         {
 #nullable restore
 #else
-        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Iserver.Secdef.Search.SearchRequestBuilder.SearchRequestBuilderGetQueryParameters>> requestConfiguration = default)
+        public RequestInformation ToGetRequestInformation(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Iserver.Secdef.Search.SearchRequestBuilder.SearchRequestBuilderGetQueryParameters>> requestConfiguration = default)
         {
 #endif
             var requestInfo = new RequestInformation(Method.GET, UrlTemplate, PathParameters);
@@ -118,11 +118,11 @@ namespace IBKR.Api.Kiota.Client.Iserver.Secdef.Search
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToPostRequestInformation(global::IBKR.Api.Kiota.Client.Iserver.Secdef.Search.SearchPostRequestBody body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default)
+        public RequestInformation ToPostRequestInformation(global::IBKR.Api.Kiota.Client.Client.Iserver.Secdef.Search.SearchPostRequestBody body, Action<RequestConfiguration<DefaultQueryParameters>>? requestConfiguration = default)
         {
 #nullable restore
 #else
-        public RequestInformation ToPostRequestInformation(global::IBKR.Api.Kiota.Client.Iserver.Secdef.Search.SearchPostRequestBody body, Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default)
+        public RequestInformation ToPostRequestInformation(global::IBKR.Api.Kiota.Client.Client.Iserver.Secdef.Search.SearchPostRequestBody body, Action<RequestConfiguration<DefaultQueryParameters>> requestConfiguration = default)
         {
 #endif
             _ = body ?? throw new ArgumentNullException(nameof(body));
@@ -135,11 +135,11 @@ namespace IBKR.Api.Kiota.Client.Iserver.Secdef.Search
         /// <summary>
         /// Returns a request builder with the provided arbitrary URL. Using this method means any other path or query parameters are ignored.
         /// </summary>
-        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Iserver.Secdef.Search.SearchRequestBuilder"/></returns>
+        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Iserver.Secdef.Search.SearchRequestBuilder"/></returns>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
-        public global::IBKR.Api.Kiota.Client.Iserver.Secdef.Search.SearchRequestBuilder WithUrl(string rawUrl)
+        public global::IBKR.Api.Kiota.Client.Client.Iserver.Secdef.Search.SearchRequestBuilder WithUrl(string rawUrl)
         {
-            return new global::IBKR.Api.Kiota.Client.Iserver.Secdef.Search.SearchRequestBuilder(rawUrl, RequestAdapter);
+            return new global::IBKR.Api.Kiota.Client.Client.Iserver.Secdef.Search.SearchRequestBuilder(rawUrl, RequestAdapter);
         }
         /// <summary>
         /// Returns a list of contracts based on the search symbol provided as a query param.
@@ -186,7 +186,7 @@ namespace IBKR.Api.Kiota.Client.Iserver.Secdef.Search
 #endif
             /// <summary>Available underlying security types:  * `STK` - Represents an underlying as a Stock security type.  * `IND` - Represents an underlying as an Index security type.  * `BOND` - Represents an underlying as a Bond security type.</summary>
             [QueryParameter("secType")]
-            public global::IBKR.Api.Kiota.Client.Iserver.Secdef.Search.GetSecTypeQueryParameterType? SecTypeAsGetSecTypeQueryParameterType { get; set; }
+            public global::IBKR.Api.Kiota.Client.Client.Iserver.Secdef.Search.GetSecTypeQueryParameterType? SecTypeAsGetSecTypeQueryParameterType { get; set; }
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
             [QueryParameter("symbol")]
@@ -202,7 +202,7 @@ namespace IBKR.Api.Kiota.Client.Iserver.Secdef.Search
         /// </summary>
         [Obsolete("This class is deprecated. Please use the generic RequestConfiguration class generated by the generator.")]
         [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
-        public partial class SearchRequestBuilderGetRequestConfiguration : RequestConfiguration<global::IBKR.Api.Kiota.Client.Iserver.Secdef.Search.SearchRequestBuilder.SearchRequestBuilderGetQueryParameters>
+        public partial class SearchRequestBuilderGetRequestConfiguration : RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Iserver.Secdef.Search.SearchRequestBuilder.SearchRequestBuilderGetQueryParameters>
         {
         }
         /// <summary>

@@ -9,7 +9,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Threading;
 using System;
-namespace IBKR.Api.Kiota.Client.Fyi.Deliveryoptions.Email
+namespace IBKR.Api.Kiota.Client.Client.Fyi.Deliveryoptions.Email
 {
     /// <summary>
     /// Builds and executes requests for operations under \fyi\deliveryoptions\email
@@ -18,7 +18,7 @@ namespace IBKR.Api.Kiota.Client.Fyi.Deliveryoptions.Email
     public partial class EmailRequestBuilder : BaseRequestBuilder
     {
         /// <summary>
-        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Fyi.Deliveryoptions.Email.EmailRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Fyi.Deliveryoptions.Email.EmailRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="pathParameters">Path parameters for the request</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -26,7 +26,7 @@ namespace IBKR.Api.Kiota.Client.Fyi.Deliveryoptions.Email
         {
         }
         /// <summary>
-        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Fyi.Deliveryoptions.Email.EmailRequestBuilder"/> and sets the default values.
+        /// Instantiates a new <see cref="global::IBKR.Api.Kiota.Client.Client.Fyi.Deliveryoptions.Email.EmailRequestBuilder"/> and sets the default values.
         /// </summary>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
         /// <param name="requestAdapter">The request adapter to use to execute the requests.</param>
@@ -43,11 +43,11 @@ namespace IBKR.Api.Kiota.Client.Fyi.Deliveryoptions.Email
         /// <exception cref="global::IBKR.Api.Kiota.Contract.Models.ErrorResponse">When receiving a 503 status code</exception>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public async Task<global::IBKR.Api.Kiota.Contract.Models.FyiVT?> PutAsync(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Fyi.Deliveryoptions.Email.EmailRequestBuilder.EmailRequestBuilderPutQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::IBKR.Api.Kiota.Contract.Models.FyiVT?> PutAsync(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Fyi.Deliveryoptions.Email.EmailRequestBuilder.EmailRequestBuilderPutQueryParameters>>? requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #nullable restore
 #else
-        public async Task<global::IBKR.Api.Kiota.Contract.Models.FyiVT> PutAsync(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Fyi.Deliveryoptions.Email.EmailRequestBuilder.EmailRequestBuilderPutQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
+        public async Task<global::IBKR.Api.Kiota.Contract.Models.FyiVT> PutAsync(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Fyi.Deliveryoptions.Email.EmailRequestBuilder.EmailRequestBuilderPutQueryParameters>> requestConfiguration = default, CancellationToken cancellationToken = default)
         {
 #endif
             var requestInfo = ToPutRequestInformation(requestConfiguration);
@@ -65,11 +65,11 @@ namespace IBKR.Api.Kiota.Client.Fyi.Deliveryoptions.Email
         /// <param name="requestConfiguration">Configuration for the request such as headers, query parameters, and middleware options.</param>
 #if NETSTANDARD2_1_OR_GREATER || NETCOREAPP3_1_OR_GREATER
 #nullable enable
-        public RequestInformation ToPutRequestInformation(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Fyi.Deliveryoptions.Email.EmailRequestBuilder.EmailRequestBuilderPutQueryParameters>>? requestConfiguration = default)
+        public RequestInformation ToPutRequestInformation(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Fyi.Deliveryoptions.Email.EmailRequestBuilder.EmailRequestBuilderPutQueryParameters>>? requestConfiguration = default)
         {
 #nullable restore
 #else
-        public RequestInformation ToPutRequestInformation(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Fyi.Deliveryoptions.Email.EmailRequestBuilder.EmailRequestBuilderPutQueryParameters>> requestConfiguration = default)
+        public RequestInformation ToPutRequestInformation(Action<RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Fyi.Deliveryoptions.Email.EmailRequestBuilder.EmailRequestBuilderPutQueryParameters>> requestConfiguration = default)
         {
 #endif
             var requestInfo = new RequestInformation(Method.PUT, UrlTemplate, PathParameters);
@@ -80,11 +80,11 @@ namespace IBKR.Api.Kiota.Client.Fyi.Deliveryoptions.Email
         /// <summary>
         /// Returns a request builder with the provided arbitrary URL. Using this method means any other path or query parameters are ignored.
         /// </summary>
-        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Fyi.Deliveryoptions.Email.EmailRequestBuilder"/></returns>
+        /// <returns>A <see cref="global::IBKR.Api.Kiota.Client.Client.Fyi.Deliveryoptions.Email.EmailRequestBuilder"/></returns>
         /// <param name="rawUrl">The raw URL to use for the request builder.</param>
-        public global::IBKR.Api.Kiota.Client.Fyi.Deliveryoptions.Email.EmailRequestBuilder WithUrl(string rawUrl)
+        public global::IBKR.Api.Kiota.Client.Client.Fyi.Deliveryoptions.Email.EmailRequestBuilder WithUrl(string rawUrl)
         {
-            return new global::IBKR.Api.Kiota.Client.Fyi.Deliveryoptions.Email.EmailRequestBuilder(rawUrl, RequestAdapter);
+            return new global::IBKR.Api.Kiota.Client.Client.Fyi.Deliveryoptions.Email.EmailRequestBuilder(rawUrl, RequestAdapter);
         }
         /// <summary>
         /// Enable or disable your account’s primary email to receive notifications.
@@ -107,7 +107,7 @@ namespace IBKR.Api.Kiota.Client.Fyi.Deliveryoptions.Email
         /// </summary>
         [Obsolete("This class is deprecated. Please use the generic RequestConfiguration class generated by the generator.")]
         [global::System.CodeDom.Compiler.GeneratedCode("Kiota", "1.0.0")]
-        public partial class EmailRequestBuilderPutRequestConfiguration : RequestConfiguration<global::IBKR.Api.Kiota.Client.Fyi.Deliveryoptions.Email.EmailRequestBuilder.EmailRequestBuilderPutQueryParameters>
+        public partial class EmailRequestBuilderPutRequestConfiguration : RequestConfiguration<global::IBKR.Api.Kiota.Client.Client.Fyi.Deliveryoptions.Email.EmailRequestBuilder.EmailRequestBuilderPutQueryParameters>
         {
         }
     }

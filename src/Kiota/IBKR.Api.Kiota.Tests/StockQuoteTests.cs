@@ -1,5 +1,5 @@
 using IBKR.Api.Kiota.Client;
-using IBKR.Api.Kiota.Client.Iserver.Secdef.Search;
+using IBKR.Api.Kiota.Client.V1.Api.Iserver.Secdef.Search;
 using IBKR.Api.Kiota.Contract.Models;
 using Xunit;
 
@@ -27,13 +27,15 @@ public class StockQuoteTests : IClassFixture<TestFixture>
         // Arrange
         var symbol = "AAPL";
 
-        // Act - Fluent API: client.Iserver.Secdef.Search
-        var results = await _client.Iserver.Secdef.Search.GetAsync(config =>
+        // Act - Fluent API: client.V1.Api.Iserver.Secdef.Search using POST (correct path with /v1/api)
+        var requestBody = new IBKR.Api.Kiota.Client.V1.Api.Iserver.Secdef.Search.SearchPostRequestBody
         {
-            config.QueryParameters.Symbol = symbol;
-            config.QueryParameters.SecTypeAsGetSecTypeQueryParameterType = GetSecTypeQueryParameterType.STK;
-            config.QueryParameters.Name = false;
-        });
+            Symbol = symbol,
+            SecType = IBKR.Api.Kiota.Client.V1.Api.Iserver.Secdef.Search.SearchPostRequestBody_secType.STK,
+            Name = true
+        };
+
+        var results = await _client.V1.Api.Iserver.Secdef.Search.PostAsync(requestBody);
 
         // Assert
         Assert.NotNull(results);
@@ -51,7 +53,7 @@ public class StockQuoteTests : IClassFixture<TestFixture>
         var conid = 265598; // AAPL
 
         // Act - Fluent API: client.Iserver.Marketdata.Snapshot
-        var quote = await _client.Iserver.Marketdata.Snapshot.GetAsync(config =>
+        var quote = await _client.V1.Api.Iserver.Marketdata.Snapshot.GetAsync(config =>
         {
             config.QueryParameters.Conids = conid;
             config.QueryParameters.FieldsAsMdFields = MdFields.ThreeOne; // Field 31 = Last Price
@@ -74,7 +76,7 @@ public class StockQuoteTests : IClassFixture<TestFixture>
         // 31 = Last Price, 84 = Bid Price, 86 = Ask Price, 85 = Ask Size, 88 = Bid Size
 
         // Act - Fluent API with MdFields enum
-        var quote = await _client.Iserver.Marketdata.Snapshot.GetAsync(config =>
+        var quote = await _client.V1.Api.Iserver.Marketdata.Snapshot.GetAsync(config =>
         {
             config.QueryParameters.Conids = conid;
             config.QueryParameters.FieldsAsMdFields = MdFields.ThreeOne; // Could pass fieldsString instead
@@ -94,7 +96,7 @@ public class StockQuoteTests : IClassFixture<TestFixture>
         var conid = 265598; // AAPL
 
         // Act - Fluent API: client.Md.Regsnapshot with query parameter
-        var snapshot = await _client.Md.Regsnapshot.GetAsync(config =>
+        var snapshot = await _client.V1.Api.Md.Regsnapshot.GetAsync(config =>
         {
             config.QueryParameters.Conid = conid;
         });
@@ -111,7 +113,7 @@ public class StockQuoteTests : IClassFixture<TestFixture>
         var symbol = "AAPL";
 
         // Act - Step 1: Search for stock using fluent API
-        var searchResults = await _client.Iserver.Secdef.Search.GetAsync(config =>
+        var searchResults = await _client.V1.Api.Iserver.Secdef.Search.GetAsync(config =>
         {
             config.QueryParameters.Symbol = symbol;
             config.QueryParameters.SecTypeAsGetSecTypeQueryParameterType = GetSecTypeQueryParameterType.STK;
@@ -123,7 +125,7 @@ public class StockQuoteTests : IClassFixture<TestFixture>
         var conid = int.Parse(conidString);
 
         // Act - Step 2: Get quote using fluent API
-        var quote = await _client.Iserver.Marketdata.Snapshot.GetAsync(config =>
+        var quote = await _client.V1.Api.Iserver.Marketdata.Snapshot.GetAsync(config =>
         {
             config.QueryParameters.Conids = conid;
             config.QueryParameters.FieldsAsMdFields = MdFields.ThreeOne;
@@ -140,15 +142,15 @@ public class StockQuoteTests : IClassFixture<TestFixture>
         // IntelliSense guides you through the API structure:
 
         // Type: _client.
-        //   -> Shows: Iserver, Md, Fyi, Gw, etc.
+        //   -> Shows: V1, Iserver, Md, Fyi, Gw, etc.
 
-        // Type: _client.Iserver.
+        // Type: _client.V1.Api.Iserver.
         //   -> Shows: Marketdata, Secdef, Account, Orders, etc.
 
-        // Type: _client.Iserver.Marketdata.
+        // Type: _client.V1.Api.Iserver.Marketdata.
         //   -> Shows: Snapshot, History, Unsubscribe, etc.
 
-        // Type: _client.Iserver.Marketdata.Snapshot.
+        // Type: _client.V1.Api.Iserver.Marketdata.Snapshot.
         //   -> Shows: GetAsync(), ToGetRequestInformation(), etc.
 
         // This fluent structure makes API exploration intuitive!
@@ -156,6 +158,8 @@ public class StockQuoteTests : IClassFixture<TestFixture>
         var conid = 265598; // AAPL
 
         var quote = await _client
+            .V1
+            .Api
             .Iserver
             .Marketdata
             .Snapshot
