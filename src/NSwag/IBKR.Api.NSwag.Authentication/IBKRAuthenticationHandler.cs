@@ -14,15 +14,19 @@ public class IBKRAuthenticationHandler : DelegatingHandler
     public IBKRAuthenticationHandler(IIBKRAuthenticationProvider authProvider)
     {
         _authProvider = authProvider ?? throw new ArgumentNullException(nameof(authProvider));
+        Console.WriteLine("[IBKRAuthenticationHandler] Handler instance created");
     }
 
     protected override async Task<HttpResponseMessage> SendAsync(
         HttpRequestMessage request,
         CancellationToken cancellationToken)
     {
+        Console.WriteLine($"[IBKRAuthenticationHandler] SendAsync called for: {request.RequestUri}");
+
         // Ensure session is initialized (only once)
         if (!_sessionInitialized)
         {
+            Console.WriteLine("[IBKRAuthenticationHandler] Initializing session...");
             await _initLock.WaitAsync(cancellationToken);
             try
             {
@@ -30,6 +34,7 @@ public class IBKRAuthenticationHandler : DelegatingHandler
                 {
                     await _authProvider.InitializeSessionAsync(cancellationToken);
                     _sessionInitialized = true;
+                    Console.WriteLine("[IBKRAuthenticationHandler] Session initialized successfully");
                 }
             }
             finally
@@ -40,9 +45,11 @@ public class IBKRAuthenticationHandler : DelegatingHandler
 
         // Get bearer token
         var bearerToken = await _authProvider.GetBearerTokenAsync(cancellationToken);
+        Console.WriteLine($"[IBKRAuthenticationHandler] Got bearer token: {bearerToken?.Substring(0, Math.Min(20, bearerToken?.Length ?? 0))}...");
 
         // Add authorization header
         request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", bearerToken);
+        Console.WriteLine($"[IBKRAuthenticationHandler] Authorization header set: {request.Headers.Authorization}");
 
         // Send the request
         return await base.SendAsync(request, cancellationToken);

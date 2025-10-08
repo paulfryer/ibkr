@@ -30,12 +30,21 @@ public class StockQuoteTests : IClassFixture<TestFixture>
         // Arrange
         var symbol = "AAPL";
 
+
+        var results = await _iserverService.SearchAllPOSTAsync(new Body22
+        {
+            Symbol = symbol,
+            Name = true,
+            SecType = Body22SecType.STK
+        });
+
+
         // Act
-        var results = await _iserverService.SearchAllGETAsync(
-            symbol: symbol,
-            secType: SecType.STK,
-            name: false
-        );
+       // var results = await _iserverService.SearchAllGETAsync(
+       //     symbol: symbol,
+      //      secType: SecType.STK,
+        //    name: false
+        //);
 
         // Assert
         Assert.NotNull(results);

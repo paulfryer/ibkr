@@ -12,7 +12,8 @@ namespace IBKR.Api.Kiota.Tests;
 
 /// <summary>
 /// Test fixture for dependency injection setup.
-/// Configures IRequestAdapter based on appsettings.json to use either Mock or Real implementation.
+/// Uses Mock client by default. Set Testing:UseMockClient=false to test against real IBKR API.
+/// Credentials can be provided via appsettings.json or environment variables (IBKR__ClientId, etc.)
 /// </summary>
 public class TestFixture : IDisposable
 {
@@ -21,13 +22,11 @@ public class TestFixture : IDisposable
 
     public TestFixture()
     {
-        // Load configuration
+        // Load configuration: appsettings.json with environment variable overrides
         Configuration = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
             .AddJsonFile("appsettings.json", optional: false)
-            .AddJsonFile("appsettings.test.json", optional: true)
-            .AddJsonFile("appsettings.development.json", optional: true)
-            .AddEnvironmentVariables()
+            .AddEnvironmentVariables()  // Environment variables override config file
             .Build();
 
         // Setup DI container
@@ -43,11 +42,10 @@ public class TestFixture : IDisposable
 
         // Determine which implementation to use
         var useMockClient = Configuration.GetValue<bool>("Testing:UseMockClient", defaultValue: true);
-        var useRealAuthentication = Configuration.GetValue<bool>("Testing:UseRealAuthentication", defaultValue: false);
 
         if (useMockClient)
         {
-            Console.WriteLine("[Test Setup] Using MOCK request adapter");
+            Console.WriteLine("[Test Setup] Using MOCK client - no credentials required");
 
             // Register mock request adapter
             services.AddSingleton<IRequestAdapter>(sp => new MockRequestAdapter());
@@ -59,47 +57,25 @@ public class TestFixture : IDisposable
                 return new IBKRClient(adapter);
             });
         }
-        else if (useRealAuthentication)
+        else
         {
-            Console.WriteLine("[Test Setup] Using REAL request adapter with IBKR authentication");
+            Console.WriteLine("[Test Setup] Using REAL IBKR API - credentials required");
 
-            // Load authentication options from configuration
+            // Load authentication options from configuration or environment variables
             var authOptions = new IBKRAuthenticationOptions
             {
-                ClientId = Configuration["IBKR:ClientId"] ?? throw new InvalidOperationException("IBKR:ClientId not configured"),
-                Credential = Configuration["IBKR:Credential"] ?? throw new InvalidOperationException("IBKR:Credential not configured"),
-                ClientKeyId = Configuration["IBKR:ClientKeyId"] ?? throw new InvalidOperationException("IBKR:ClientKeyId not configured"),
-                ClientPemPath = Configuration["IBKR:ClientPemPath"] ?? throw new InvalidOperationException("IBKR:ClientPemPath not configured"),
+                ClientId = Configuration["IBKR:ClientId"] ?? throw new InvalidOperationException("IBKR:ClientId not configured. Set via appsettings.json or environment variable IBKR__ClientId"),
+                Credential = Configuration["IBKR:Credential"] ?? throw new InvalidOperationException("IBKR:Credential not configured. Set via appsettings.json or environment variable IBKR__Credential"),
+                ClientKeyId = Configuration["IBKR:ClientKeyId"] ?? throw new InvalidOperationException("IBKR:ClientKeyId not configured. Set via appsettings.json or environment variable IBKR__ClientKeyId"),
+                ClientPemPath = Configuration["IBKR:ClientPemPath"] ?? throw new InvalidOperationException("IBKR:ClientPemPath not configured. Set via appsettings.json or environment variable IBKR__ClientPemPath"),
                 BaseUrl = Configuration["IBKR:BaseUrl"] ?? "https://api.ibkr.com"
             };
 
+            // Validate credentials are complete
+            authOptions.Validate();
+
             // Use extension method to register authenticated Kiota client
             services.AddIBKRAuthenticatedKiotaClient(authOptions);
-        }
-        else
-        {
-            Console.WriteLine("[Test Setup] Using REAL request adapter with anonymous authentication");
-
-            // Register real request adapter with HTTP client (no IBKR auth)
-            services.AddHttpClient();
-
-            services.AddSingleton<IRequestAdapter>(sp =>
-            {
-                var authProvider = new AnonymousAuthenticationProvider();
-                var httpClient = sp.GetRequiredService<IHttpClientFactory>().CreateClient();
-                var baseUrl = Configuration["IBKR:BaseUrl"] ?? "https://localhost:5000";
-                return new HttpClientRequestAdapter(authProvider, httpClient: httpClient)
-                {
-                    BaseUrl = baseUrl
-                };
-            });
-
-            // Register IBKRClient
-            services.AddTransient<IBKRClient>(sp =>
-            {
-                var adapter = sp.GetRequiredService<IRequestAdapter>();
-                return new IBKRClient(adapter);
-            });
         }
     }
 

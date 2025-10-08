@@ -13,6 +13,16 @@ namespace IBKR.Api.Kiota.Authentication;
 public static class ServiceCollectionExtensions
 {
     /// <summary>
+    /// Ensures the base URL ends with a trailing slash for proper URL concatenation.
+    /// </summary>
+    private static string NormalizeBaseUrl(string baseUrl)
+    {
+        if (string.IsNullOrEmpty(baseUrl))
+            return baseUrl;
+
+        return baseUrl.EndsWith('/') ? baseUrl : baseUrl + '/';
+    }
+    /// <summary>
     /// Add IBKR authenticated Kiota client to service collection.
     /// This configures the request adapter to automatically include authentication headers.
     /// </summary>
@@ -35,7 +45,8 @@ public static class ServiceCollectionExtensions
         // Register HttpClient for Kiota
         services.AddHttpClient("IBKRKiotaClient", client =>
         {
-            client.BaseAddress = new Uri(baseUrl ?? options.BaseUrl);
+            var normalizedUrl = NormalizeBaseUrl(baseUrl ?? options.BaseUrl);
+            client.BaseAddress = new Uri(normalizedUrl);
         });
 
         // Register IRequestAdapter as singleton
@@ -44,10 +55,11 @@ public static class ServiceCollectionExtensions
             var authProvider = sp.GetRequiredService<IAuthenticationProvider>();
             var httpClientFactory = sp.GetRequiredService<IHttpClientFactory>();
             var httpClient = httpClientFactory.CreateClient("IBKRKiotaClient");
+            var normalizedUrl = NormalizeBaseUrl(baseUrl ?? options.BaseUrl);
 
             return new HttpClientRequestAdapter(authProvider, httpClient: httpClient)
             {
-                BaseUrl = baseUrl ?? options.BaseUrl
+                BaseUrl = normalizedUrl
             };
         });
 
@@ -85,7 +97,8 @@ public static class ServiceCollectionExtensions
         // Register HttpClient with configuration
         services.AddHttpClient("IBKRKiotaClient", client =>
         {
-            client.BaseAddress = new Uri(baseUrl ?? options.BaseUrl);
+            var normalizedUrl = NormalizeBaseUrl(baseUrl ?? options.BaseUrl);
+            client.BaseAddress = new Uri(normalizedUrl);
             configureClient(client);
         });
 
@@ -95,10 +108,11 @@ public static class ServiceCollectionExtensions
             var authProvider = sp.GetRequiredService<IAuthenticationProvider>();
             var httpClientFactory = sp.GetRequiredService<IHttpClientFactory>();
             var httpClient = httpClientFactory.CreateClient("IBKRKiotaClient");
+            var normalizedUrl = NormalizeBaseUrl(baseUrl ?? options.BaseUrl);
 
             return new HttpClientRequestAdapter(authProvider, httpClient: httpClient)
             {
-                BaseUrl = baseUrl ?? options.BaseUrl
+                BaseUrl = normalizedUrl
             };
         });
 

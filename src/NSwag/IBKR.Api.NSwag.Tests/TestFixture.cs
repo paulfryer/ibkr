@@ -10,7 +10,8 @@ namespace IBKR.Api.NSwag.Tests;
 
 /// <summary>
 /// Test fixture for dependency injection setup.
-/// Configures services based on appsettings.json to use either Mock or Real implementations.
+/// Uses Mock client by default. Set Testing:UseMockClient=false to test against real IBKR API.
+/// Credentials can be provided via appsettings.json or environment variables (IBKR__ClientId, etc.)
 /// </summary>
 public class TestFixture : IDisposable
 {
@@ -19,13 +20,11 @@ public class TestFixture : IDisposable
 
     public TestFixture()
     {
-        // Load configuration
+        // Load configuration: appsettings.json with environment variable overrides
         Configuration = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
             .AddJsonFile("appsettings.json", optional: false)
-            .AddJsonFile("appsettings.test.json", optional: true)
-            .AddJsonFile("appsettings.development.json", optional: true)
-            .AddEnvironmentVariables()
+            .AddEnvironmentVariables()  // Environment variables override config file
             .Build();
 
         // Setup DI container
@@ -41,45 +40,13 @@ public class TestFixture : IDisposable
 
         // Determine which implementation to use
         var useMockClient = Configuration.GetValue<bool>("Testing:UseMockClient", defaultValue: true);
-        var useRealAuthentication = Configuration.GetValue<bool>("Testing:UseRealAuthentication", defaultValue: false);
 
-        // Configure authentication
-        if (useRealAuthentication && !useMockClient)
+        if (useMockClient)
         {
-            Console.WriteLine("[Test Setup] Using REAL IBKR authentication");
-
-            // Load authentication options from configuration
-            var authOptions = new IBKRAuthenticationOptions
-            {
-                ClientId = Configuration["IBKR:ClientId"] ?? throw new InvalidOperationException("IBKR:ClientId not configured"),
-                Credential = Configuration["IBKR:Credential"] ?? throw new InvalidOperationException("IBKR:Credential not configured"),
-                ClientKeyId = Configuration["IBKR:ClientKeyId"] ?? throw new InvalidOperationException("IBKR:ClientKeyId not configured"),
-                ClientPemPath = Configuration["IBKR:ClientPemPath"] ?? throw new InvalidOperationException("IBKR:ClientPemPath not configured"),
-                BaseUrl = Configuration["IBKR:BaseUrl"] ?? "https://api.ibkr.com"
-            };
-
-            // Register authenticated services for stock/option testing
-            services.AddIBKRAuthenticatedClient<IIserverService, IserverService>(authOptions, client =>
-            {
-                client.BaseAddress = new Uri(authOptions.BaseUrl);
-            });
-            services.AddIBKRAuthenticatedClient<IMdService, MdService>(authOptions, client =>
-            {
-                client.BaseAddress = new Uri(authOptions.BaseUrl);
-            });
-        }
-        else
-        {
-            Console.WriteLine($"[Test Setup] Using MOCK authentication (UseRealAuth={useRealAuthentication})");
+            Console.WriteLine("[Test Setup] Using MOCK client - no credentials required");
 
             // Register mock authentication provider
             services.AddSingleton<IIBKRAuthenticationProvider>(new MockAuthenticationProvider());
-        }
-
-        // Configure client implementations
-        if (useMockClient)
-        {
-            Console.WriteLine("[Test Setup] Using MOCK client implementations");
 
             // Register mock service implementations for stock and option testing
             services.AddTransient<IIserverService, MockIserverService>();
@@ -87,16 +54,25 @@ public class TestFixture : IDisposable
         }
         else
         {
-            Console.WriteLine("[Test Setup] Using REAL client implementations");
+            Console.WriteLine("[Test Setup] Using REAL IBKR API - credentials required");
 
-            // Real services are registered above with authentication if UseRealAuthentication is true
-            // If UseRealAuthentication is false, register them without authentication
-            if (!useRealAuthentication)
+            // Load authentication options from configuration or environment variables
+            var authOptions = new IBKRAuthenticationOptions
             {
-                services.AddHttpClient();
-                services.AddTransient<IIserverService, IserverService>();
-                services.AddTransient<IMdService, MdService>();
-            }
+                ClientId = Configuration["IBKR:ClientId"] ?? throw new InvalidOperationException("IBKR:ClientId not configured. Set via appsettings.json or environment variable IBKR__ClientId"),
+                Credential = Configuration["IBKR:Credential"] ?? throw new InvalidOperationException("IBKR:Credential not configured. Set via appsettings.json or environment variable IBKR__Credential"),
+                ClientKeyId = Configuration["IBKR:ClientKeyId"] ?? throw new InvalidOperationException("IBKR:ClientKeyId not configured. Set via appsettings.json or environment variable IBKR__ClientKeyId"),
+                ClientPemPath = Configuration["IBKR:ClientPemPath"] ?? throw new InvalidOperationException("IBKR:ClientPemPath not configured. Set via appsettings.json or environment variable IBKR__ClientPemPath"),
+                BaseUrl = Configuration["IBKR:BaseUrl"] ?? "https://api.ibkr.com"
+            };
+
+            // Validate credentials are complete
+            authOptions.Validate();
+
+            // Register authenticated services for stock/option testing
+            // The services will be created with the normalized baseUrl from authOptions
+            services.AddIBKRAuthenticatedClient<IIserverService, IserverService>(authOptions);
+            services.AddIBKRAuthenticatedClient<IMdService, MdService>(authOptions);
         }
     }
 

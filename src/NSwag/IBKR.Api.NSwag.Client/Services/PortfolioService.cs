@@ -30,7 +30,16 @@ public partial class PortfolioService : IPortfolioService
 	{
 		_httpClient = httpClient;
 		_settings = new Lazy<Newtonsoft.Json.JsonSerializerSettings>(CreateSerializerSettings);
-		_baseUrl = "https://api.ibkr.com";
+		_baseUrl = "https://api.ibkr.com/";
+	}
+
+	public PortfolioService(System.Net.Http.HttpClient httpClient, string baseUrl) : this(httpClient)
+	{
+		if (!string.IsNullOrEmpty(baseUrl))
+		{
+			// Ensure baseUrl ends with trailing slash for proper URL concatenation
+			_baseUrl = baseUrl.EndsWith('/') ? baseUrl : baseUrl + '/';
+		}
 	}
 
 	protected Newtonsoft.Json.JsonSerializerSettings JsonSerializerSettings => _settings.Value;
@@ -155,7 +164,7 @@ public partial class PortfolioService : IPortfolioService
 			{
 				urlBuilder_.Append(_baseUrl);
 			}
-			urlBuilder_.Append("portfolio/");
+			urlBuilder_.Append("v1/api/portfolio/");
 			urlBuilder_.Append(Uri.EscapeDataString(ConvertToString(accountId, CultureInfo.InvariantCulture)));
 			urlBuilder_.Append("/allocation");
 			urlBuilder_.Append('?');
@@ -271,7 +280,7 @@ public partial class PortfolioService : IPortfolioService
 			{
 				urlBuilder_.Append(_baseUrl);
 			}
-			urlBuilder_.Append("portfolio/");
+			urlBuilder_.Append("v1/api/portfolio/");
 			urlBuilder_.Append(Uri.EscapeDataString(ConvertToString(accountId, CultureInfo.InvariantCulture)));
 			urlBuilder_.Append("/positions/invalidate");
 			string url_ = urlBuilder_.ToString();
@@ -379,7 +388,7 @@ public partial class PortfolioService : IPortfolioService
 			{
 				urlBuilder_.Append(_baseUrl);
 			}
-			urlBuilder_.Append("portfolio/");
+			urlBuilder_.Append("v1/api/portfolio/");
 			urlBuilder_.Append(Uri.EscapeDataString(ConvertToString(accountId, CultureInfo.InvariantCulture)));
 			urlBuilder_.Append("/ledger");
 			string url_ = urlBuilder_.ToString();
@@ -478,7 +487,7 @@ public partial class PortfolioService : IPortfolioService
 			{
 				urlBuilder_.Append(_baseUrl);
 			}
-			urlBuilder_.Append("portfolio/");
+			urlBuilder_.Append("v1/api/portfolio/");
 			urlBuilder_.Append(Uri.EscapeDataString(ConvertToString(accountId, CultureInfo.InvariantCulture)));
 			urlBuilder_.Append("/meta");
 			string url_ = urlBuilder_.ToString();
@@ -581,7 +590,7 @@ public partial class PortfolioService : IPortfolioService
 			{
 				urlBuilder_.Append(_baseUrl);
 			}
-			urlBuilder_.Append("portfolio/");
+			urlBuilder_.Append("v1/api/portfolio/");
 			urlBuilder_.Append("/position/");
 			urlBuilder_.Append(Uri.EscapeDataString(ConvertToString(conid, CultureInfo.InvariantCulture)));
 			string url_ = urlBuilder_.ToString();
@@ -689,7 +698,7 @@ public partial class PortfolioService : IPortfolioService
 			{
 				urlBuilder_.Append(_baseUrl);
 			}
-			urlBuilder_.Append("portfolio/");
+			urlBuilder_.Append("v1/api/portfolio/");
 			urlBuilder_.Append(Uri.EscapeDataString(ConvertToString(accountId, CultureInfo.InvariantCulture)));
 			urlBuilder_.Append("/positions/");
 			if (pageId != null)
@@ -806,7 +815,7 @@ public partial class PortfolioService : IPortfolioService
 			{
 				urlBuilder_.Append(_baseUrl);
 			}
-			urlBuilder_.Append("portfolio/positions/");
+			urlBuilder_.Append("v1/api/portfolio/positions/");
 			urlBuilder_.Append(Uri.EscapeDataString(ConvertToString(conid, CultureInfo.InvariantCulture)));
 			string url_ = urlBuilder_.ToString();
 			request_.RequestUri = new Uri(url_, UriKind.RelativeOrAbsolute);
@@ -1006,7 +1015,7 @@ public partial class PortfolioService : IPortfolioService
 			{
 				urlBuilder_.Append(_baseUrl);
 			}
-			urlBuilder_.Append("portfolio/");
+			urlBuilder_.Append("v1/api/portfolio/");
 			urlBuilder_.Append(Uri.EscapeDataString(ConvertToString(accountId, CultureInfo.InvariantCulture)));
 			urlBuilder_.Append("/summary");
 			string url_ = urlBuilder_.ToString();

@@ -30,7 +30,16 @@ public partial class PaService : IPaService
 	{
 		_httpClient = httpClient;
 		_settings = new Lazy<Newtonsoft.Json.JsonSerializerSettings>(CreateSerializerSettings);
-		_baseUrl = "https://api.ibkr.com";
+		_baseUrl = "https://api.ibkr.com/";
+	}
+
+	public PaService(System.Net.Http.HttpClient httpClient, string baseUrl) : this(httpClient)
+	{
+		if (!string.IsNullOrEmpty(baseUrl))
+		{
+			// Ensure baseUrl ends with trailing slash for proper URL concatenation
+			_baseUrl = baseUrl.EndsWith('/') ? baseUrl : baseUrl + '/';
+		}
 	}
 
 	protected Newtonsoft.Json.JsonSerializerSettings JsonSerializerSettings => _settings.Value;
@@ -66,7 +75,7 @@ public partial class PaService : IPaService
 			{
 				urlBuilder_.Append(_baseUrl);
 			}
-			urlBuilder_.Append("pa/allperiods");
+			urlBuilder_.Append("v1/api/pa/allperiods");
 			string url_ = urlBuilder_.ToString();
 			request_.RequestUri = new Uri(url_, UriKind.RelativeOrAbsolute);
 			HttpResponseMessage response_ = await client_.SendAsync(request_, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);

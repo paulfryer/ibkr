@@ -376,9 +376,40 @@ class Program
 
         try
         {
-            // Load the OpenAPI document
-            Console.WriteLine("Loading OpenAPI document...");
-            var document = await OpenApiDocument.FromFileAsync(specPath);
+            // Step 1: Load the OpenAPI spec using Microsoft OpenAPI reader (for fixing)
+            Console.WriteLine("Loading OpenAPI spec for fixing...");
+            var reader = new OpenApiStreamReader();
+            Microsoft.OpenApi.Models.OpenApiDocument msDocument;
+            OpenApiDiagnostic diagnostic;
+
+            using (var stream = File.OpenRead(specPath))
+            {
+                msDocument = reader.Read(stream, out diagnostic);
+            }
+
+            Console.WriteLine($"  Loaded: {msDocument.Info.Title} v{msDocument.Info.Version}");
+            Console.WriteLine($"  Paths: {msDocument.Paths.Count}, Schemas: {msDocument.Components?.Schemas?.Count ?? 0}");
+
+            // Step 2: Apply NSwag-specific fixes
+            var fixer = new NSwagSpecFixer(msDocument);
+            fixer.ApplyAllFixes();
+
+            // Step 3: Save fixed spec to temp file
+            var fixedSpecPath = Path.Combine(Path.GetDirectoryName(specPath)!, "api-docs.nswag-fixed.json");
+            Console.WriteLine($"Saving NSwag-fixed spec to: {fixedSpecPath}");
+
+            using (var stream = File.Create(fixedSpecPath))
+            {
+                var writer = new Microsoft.OpenApi.Writers.OpenApiJsonWriter(new StreamWriter(stream));
+                msDocument.SerializeAsV3(writer);
+                writer.Flush();
+            }
+
+            Console.WriteLine("  ✓ Fixed spec saved\n");
+
+            // Step 4: Load the FIXED OpenAPI document for NSwag generation
+            Console.WriteLine("Loading fixed OpenAPI document for NSwag...");
+            var document = await OpenApiDocument.FromFileAsync(fixedSpecPath);
 
             Console.WriteLine($"✓ Loaded successfully");
             Console.WriteLine($"  Title: {document.Info.Title}");

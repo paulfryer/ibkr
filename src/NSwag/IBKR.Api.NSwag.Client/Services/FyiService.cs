@@ -30,7 +30,16 @@ public partial class FyiService : IFyiService
 	{
 		_httpClient = httpClient;
 		_settings = new Lazy<Newtonsoft.Json.JsonSerializerSettings>(CreateSerializerSettings);
-		_baseUrl = "https://api.ibkr.com";
+		_baseUrl = "https://api.ibkr.com/";
+	}
+
+	public FyiService(System.Net.Http.HttpClient httpClient, string baseUrl) : this(httpClient)
+	{
+		if (!string.IsNullOrEmpty(baseUrl))
+		{
+			// Ensure baseUrl ends with trailing slash for proper URL concatenation
+			_baseUrl = baseUrl.EndsWith('/') ? baseUrl : baseUrl + '/';
+		}
 	}
 
 	protected Newtonsoft.Json.JsonSerializerSettings JsonSerializerSettings => _settings.Value;
@@ -61,7 +70,7 @@ public partial class FyiService : IFyiService
 			{
 				urlBuilder_.Append(_baseUrl);
 			}
-			urlBuilder_.Append("fyi/deliveryoptions/");
+			urlBuilder_.Append("v1/api/fyi/deliveryoptions/");
 			urlBuilder_.Append(Uri.EscapeDataString(ConvertToString(deviceId, CultureInfo.InvariantCulture)));
 			string url_ = urlBuilder_.ToString();
 			request_.RequestUri = new Uri(url_, UriKind.RelativeOrAbsolute);
@@ -324,7 +333,7 @@ public partial class FyiService : IFyiService
 			{
 				urlBuilder_.Append(_baseUrl);
 			}
-			urlBuilder_.Append("fyi/disclaimer/");
+			urlBuilder_.Append("v1/api/fyi/disclaimer/");
 			urlBuilder_.Append(Uri.EscapeDataString(ConvertToString(typecode, CultureInfo.InvariantCulture)));
 			string url_ = urlBuilder_.ToString();
 			request_.RequestUri = new Uri(url_, UriKind.RelativeOrAbsolute);
@@ -419,7 +428,7 @@ public partial class FyiService : IFyiService
 			{
 				urlBuilder_.Append(_baseUrl);
 			}
-			urlBuilder_.Append("fyi/disclaimer/");
+			urlBuilder_.Append("v1/api/fyi/disclaimer/");
 			urlBuilder_.Append(Uri.EscapeDataString(ConvertToString(typecode, CultureInfo.InvariantCulture)));
 			string url_ = urlBuilder_.ToString();
 			request_.RequestUri = new Uri(url_, UriKind.RelativeOrAbsolute);
@@ -527,7 +536,7 @@ public partial class FyiService : IFyiService
 			{
 				urlBuilder_.Append(_baseUrl);
 			}
-			urlBuilder_.Append("fyi/deliveryoptions/email");
+			urlBuilder_.Append("v1/api/fyi/deliveryoptions/email");
 			urlBuilder_.Append('?');
 			urlBuilder_.Append(Uri.EscapeDataString("enabled")).Append('=').Append(Uri.EscapeDataString(ConvertToString(enabled, CultureInfo.InvariantCulture)))
 				.Append('&');
@@ -628,7 +637,7 @@ public partial class FyiService : IFyiService
 			{
 				urlBuilder_.Append(_baseUrl);
 			}
-			urlBuilder_.Append("fyi/notifications");
+			urlBuilder_.Append("v1/api/fyi/notifications");
 			urlBuilder_.Append('?');
 			urlBuilder_.Append(Uri.EscapeDataString("max")).Append('=').Append(Uri.EscapeDataString(ConvertToString(max, CultureInfo.InvariantCulture)))
 				.Append('&');
@@ -754,7 +763,7 @@ public partial class FyiService : IFyiService
 			{
 				urlBuilder_.Append(_baseUrl);
 			}
-			urlBuilder_.Append("fyi/notifications/");
+			urlBuilder_.Append("v1/api/fyi/notifications/");
 			string url_ = urlBuilder_.ToString();
 			request_.RequestUri = new Uri(url_, UriKind.RelativeOrAbsolute);
 			HttpResponseMessage response_ = await client_.SendAsync(request_, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
@@ -957,7 +966,7 @@ public partial class FyiService : IFyiService
 			{
 				urlBuilder_.Append(_baseUrl);
 			}
-			urlBuilder_.Append("fyi/settings/");
+			urlBuilder_.Append("v1/api/fyi/settings/");
 			urlBuilder_.Append(Uri.EscapeDataString(ConvertToString(typecode, CultureInfo.InvariantCulture)));
 			string url_ = urlBuilder_.ToString();
 			request_.RequestUri = new Uri(url_, UriKind.RelativeOrAbsolute);

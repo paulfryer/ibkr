@@ -202,7 +202,18 @@ public class ServiceImplementationGenerator
         sb.AppendLine("\t{");
         sb.AppendLine("\t\t_httpClient = httpClient;");
         sb.AppendLine("\t\t_settings = new Lazy<Newtonsoft.Json.JsonSerializerSettings>(CreateSerializerSettings);");
-        sb.AppendLine("\t\t_baseUrl = \"https://api.ibkr.com\";");
+        sb.AppendLine("\t\t_baseUrl = \"https://api.ibkr.com/\";"); // Trailing slash for proper URL concatenation
+        sb.AppendLine("\t}");
+        sb.AppendLine();
+
+        // Constructor with baseUrl parameter
+        sb.AppendLine($"\tpublic {serviceName}(System.Net.Http.HttpClient httpClient, string baseUrl) : this(httpClient)");
+        sb.AppendLine("\t{");
+        sb.AppendLine("\t\tif (!string.IsNullOrEmpty(baseUrl))");
+        sb.AppendLine("\t\t{");
+        sb.AppendLine("\t\t\t// Ensure baseUrl ends with trailing slash for proper URL concatenation");
+        sb.AppendLine("\t\t\t_baseUrl = baseUrl.EndsWith('/') ? baseUrl : baseUrl + '/';");
+        sb.AppendLine("\t\t}");
         sb.AppendLine("\t}");
         sb.AppendLine();
 

@@ -30,7 +30,16 @@ public partial class OAuthService : IOAuthService
 	{
 		_httpClient = httpClient;
 		_settings = new Lazy<Newtonsoft.Json.JsonSerializerSettings>(CreateSerializerSettings);
-		_baseUrl = "https://api.ibkr.com";
+		_baseUrl = "https://api.ibkr.com/";
+	}
+
+	public OAuthService(System.Net.Http.HttpClient httpClient, string baseUrl) : this(httpClient)
+	{
+		if (!string.IsNullOrEmpty(baseUrl))
+		{
+			// Ensure baseUrl ends with trailing slash for proper URL concatenation
+			_baseUrl = baseUrl.EndsWith('/') ? baseUrl : baseUrl + '/';
+		}
 	}
 
 	protected Newtonsoft.Json.JsonSerializerSettings JsonSerializerSettings => _settings.Value;
@@ -63,7 +72,7 @@ public partial class OAuthService : IOAuthService
 			{
 				urlBuilder_.Append(_baseUrl);
 			}
-			urlBuilder_.Append("oauth/access_token");
+			urlBuilder_.Append("v1/api/oauth/access_token");
 			string url_ = urlBuilder_.ToString();
 			request_.RequestUri = new Uri(url_, UriKind.RelativeOrAbsolute);
 			HttpResponseMessage response_ = await client_.SendAsync(request_, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
@@ -249,7 +258,7 @@ public partial class OAuthService : IOAuthService
 			{
 				urlBuilder_.Append(_baseUrl);
 			}
-			urlBuilder_.Append("oauth/live_session_token");
+			urlBuilder_.Append("v1/api/oauth/live_session_token");
 			string url_ = urlBuilder_.ToString();
 			request_.RequestUri = new Uri(url_, UriKind.RelativeOrAbsolute);
 			HttpResponseMessage response_ = await client_.SendAsync(request_, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
@@ -338,7 +347,7 @@ public partial class OAuthService : IOAuthService
 			{
 				urlBuilder_.Append(_baseUrl);
 			}
-			urlBuilder_.Append("oauth/request_token");
+			urlBuilder_.Append("v1/api/oauth/request_token");
 			string url_ = urlBuilder_.ToString();
 			request_.RequestUri = new Uri(url_, UriKind.RelativeOrAbsolute);
 			HttpResponseMessage response_ = await client_.SendAsync(request_, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);

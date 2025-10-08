@@ -30,7 +30,16 @@ public partial class WsService : IWsService
 	{
 		_httpClient = httpClient;
 		_settings = new Lazy<Newtonsoft.Json.JsonSerializerSettings>(CreateSerializerSettings);
-		_baseUrl = "https://api.ibkr.com";
+		_baseUrl = "https://api.ibkr.com/";
+	}
+
+	public WsService(System.Net.Http.HttpClient httpClient, string baseUrl) : this(httpClient)
+	{
+		if (!string.IsNullOrEmpty(baseUrl))
+		{
+			// Ensure baseUrl ends with trailing slash for proper URL concatenation
+			_baseUrl = baseUrl.EndsWith('/') ? baseUrl : baseUrl + '/';
+		}
 	}
 
 	protected Newtonsoft.Json.JsonSerializerSettings JsonSerializerSettings => _settings.Value;
@@ -63,7 +72,7 @@ public partial class WsService : IWsService
 			{
 				urlBuilder_.Append(_baseUrl);
 			}
-			urlBuilder_.Append("ws");
+			urlBuilder_.Append("v1/api/ws");
 			urlBuilder_.Append('?');
 			urlBuilder_.Append(Uri.EscapeDataString("oauth_token")).Append('=').Append(Uri.EscapeDataString(ConvertToString(oauth_token, CultureInfo.InvariantCulture)))
 				.Append('&');

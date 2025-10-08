@@ -408,10 +408,6 @@ FodyWeavers.xsd
 # DO NOT commit these files - they contain sensitive authentication data
 *.pem                                                 # RSA private keys
 *.key                                                 # Private keys
-appsettings.development.json                          # Local development config
-**/appsettings.development.json                       # In subdirectories
-src/Kiota/IBKR.Api.Kiota.Tests/appsettings.development.json
-src/NSwag/IBKR.Api.NSwag.Tests/appsettings.development.json
 .env                                                  # Environment variables file
 .env.local                                            # Local environment overrides
 **/secrets.json                                       # User secrets

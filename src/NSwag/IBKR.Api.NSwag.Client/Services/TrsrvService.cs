@@ -30,7 +30,16 @@ public partial class TrsrvService : ITrsrvService
 	{
 		_httpClient = httpClient;
 		_settings = new Lazy<Newtonsoft.Json.JsonSerializerSettings>(CreateSerializerSettings);
-		_baseUrl = "https://api.ibkr.com";
+		_baseUrl = "https://api.ibkr.com/";
+	}
+
+	public TrsrvService(System.Net.Http.HttpClient httpClient, string baseUrl) : this(httpClient)
+	{
+		if (!string.IsNullOrEmpty(baseUrl))
+		{
+			// Ensure baseUrl ends with trailing slash for proper URL concatenation
+			_baseUrl = baseUrl.EndsWith('/') ? baseUrl : baseUrl + '/';
+		}
 	}
 
 	protected Newtonsoft.Json.JsonSerializerSettings JsonSerializerSettings => _settings.Value;
@@ -62,7 +71,7 @@ public partial class TrsrvService : ITrsrvService
 			{
 				urlBuilder_.Append(_baseUrl);
 			}
-			urlBuilder_.Append("trsrv/all-conids");
+			urlBuilder_.Append("v1/api/trsrv/all-conids");
 			urlBuilder_.Append('?');
 			urlBuilder_.Append(Uri.EscapeDataString("exchange")).Append('=').Append(Uri.EscapeDataString(ConvertToString(exchange, CultureInfo.InvariantCulture)))
 				.Append('&');
@@ -168,7 +177,7 @@ public partial class TrsrvService : ITrsrvService
 			{
 				urlBuilder_.Append(_baseUrl);
 			}
-			urlBuilder_.Append("trsrv/futures");
+			urlBuilder_.Append("v1/api/trsrv/futures");
 			urlBuilder_.Append('?');
 			urlBuilder_.Append(Uri.EscapeDataString("symbols")).Append('=').Append(Uri.EscapeDataString(ConvertToString(symbols, CultureInfo.InvariantCulture)))
 				.Append('&');
@@ -274,7 +283,7 @@ public partial class TrsrvService : ITrsrvService
 			{
 				urlBuilder_.Append(_baseUrl);
 			}
-			urlBuilder_.Append("trsrv/secdef/schedule");
+			urlBuilder_.Append("v1/api/trsrv/secdef/schedule");
 			urlBuilder_.Append('?');
 			urlBuilder_.Append(Uri.EscapeDataString("assetClass")).Append('=').Append(Uri.EscapeDataString(ConvertToString(assetClass, CultureInfo.InvariantCulture)))
 				.Append('&');
@@ -396,7 +405,7 @@ public partial class TrsrvService : ITrsrvService
 			{
 				urlBuilder_.Append(_baseUrl);
 			}
-			urlBuilder_.Append("trsrv/secdef");
+			urlBuilder_.Append("v1/api/trsrv/secdef");
 			urlBuilder_.Append('?');
 			urlBuilder_.Append(Uri.EscapeDataString("conids")).Append('=').Append(Uri.EscapeDataString(ConvertToString(conids, CultureInfo.InvariantCulture)))
 				.Append('&');
@@ -522,7 +531,7 @@ public partial class TrsrvService : ITrsrvService
 			{
 				urlBuilder_.Append(_baseUrl);
 			}
-			urlBuilder_.Append("trsrv/stocks");
+			urlBuilder_.Append("v1/api/trsrv/stocks");
 			urlBuilder_.Append('?');
 			urlBuilder_.Append(Uri.EscapeDataString("symbols")).Append('=').Append(Uri.EscapeDataString(ConvertToString(symbols, CultureInfo.InvariantCulture)))
 				.Append('&');

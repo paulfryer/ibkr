@@ -30,7 +30,16 @@ public partial class IserverService : IIserverService
 	{
 		_httpClient = httpClient;
 		_settings = new Lazy<Newtonsoft.Json.JsonSerializerSettings>(CreateSerializerSettings);
-		_baseUrl = "https://api.ibkr.com";
+		_baseUrl = "https://api.ibkr.com/";
+	}
+
+	public IserverService(System.Net.Http.HttpClient httpClient, string baseUrl) : this(httpClient)
+	{
+		if (!string.IsNullOrEmpty(baseUrl))
+		{
+			// Ensure baseUrl ends with trailing slash for proper URL concatenation
+			_baseUrl = baseUrl.EndsWith('/') ? baseUrl : baseUrl + '/';
+		}
 	}
 
 	protected Newtonsoft.Json.JsonSerializerSettings JsonSerializerSettings => _settings.Value;
@@ -348,7 +357,7 @@ public partial class IserverService : IIserverService
 			{
 				urlBuilder_.Append(_baseUrl);
 			}
-			urlBuilder_.Append("iserver/account/");
+			urlBuilder_.Append("v1/api/iserver/account/");
 			urlBuilder_.Append(Uri.EscapeDataString(ConvertToString(accountId, CultureInfo.InvariantCulture)));
 			urlBuilder_.Append("/alert/activate");
 			string url_ = urlBuilder_.ToString();
@@ -450,7 +459,7 @@ public partial class IserverService : IIserverService
 			{
 				urlBuilder_.Append(_baseUrl);
 			}
-			urlBuilder_.Append("iserver/account/");
+			urlBuilder_.Append("v1/api/iserver/account/");
 			urlBuilder_.Append(Uri.EscapeDataString(ConvertToString(accountId, CultureInfo.InvariantCulture)));
 			urlBuilder_.Append("/alert/");
 			urlBuilder_.Append(Uri.EscapeDataString(ConvertToString(alertId, CultureInfo.InvariantCulture)));
@@ -541,7 +550,7 @@ public partial class IserverService : IIserverService
 			{
 				urlBuilder_.Append(_baseUrl);
 			}
-			urlBuilder_.Append("iserver/account/alert/");
+			urlBuilder_.Append("v1/api/iserver/account/alert/");
 			urlBuilder_.Append(Uri.EscapeDataString(ConvertToString(alertId, CultureInfo.InvariantCulture)));
 			urlBuilder_.Append('?');
 			urlBuilder_.Append(Uri.EscapeDataString("type")).Append('=').Append(Uri.EscapeDataString(ConvertToString(type, CultureInfo.InvariantCulture)))
@@ -660,7 +669,7 @@ public partial class IserverService : IIserverService
 			{
 				urlBuilder_.Append(_baseUrl);
 			}
-			urlBuilder_.Append("iserver/account/");
+			urlBuilder_.Append("v1/api/iserver/account/");
 			urlBuilder_.Append(Uri.EscapeDataString(ConvertToString(accountId, CultureInfo.InvariantCulture)));
 			urlBuilder_.Append("/alert");
 			string url_ = urlBuilder_.ToString();
@@ -768,7 +777,7 @@ public partial class IserverService : IIserverService
 			{
 				urlBuilder_.Append(_baseUrl);
 			}
-			urlBuilder_.Append("iserver/account/");
+			urlBuilder_.Append("v1/api/iserver/account/");
 			urlBuilder_.Append(Uri.EscapeDataString(ConvertToString(accountId, CultureInfo.InvariantCulture)));
 			urlBuilder_.Append("/alerts");
 			string url_ = urlBuilder_.ToString();
@@ -858,7 +867,7 @@ public partial class IserverService : IIserverService
 			{
 				urlBuilder_.Append(_baseUrl);
 			}
-			urlBuilder_.Append("iserver/contract/");
+			urlBuilder_.Append("v1/api/iserver/contract/");
 			urlBuilder_.Append(Uri.EscapeDataString(ConvertToString(conid, CultureInfo.InvariantCulture)));
 			urlBuilder_.Append("/algos");
 			urlBuilder_.Append('?');
@@ -974,7 +983,7 @@ public partial class IserverService : IIserverService
 			{
 				urlBuilder_.Append(_baseUrl);
 			}
-			urlBuilder_.Append("iserver/account/");
+			urlBuilder_.Append("v1/api/iserver/account/");
 			urlBuilder_.Append(Uri.EscapeDataString(ConvertToString(accountId, CultureInfo.InvariantCulture)));
 			urlBuilder_.Append("/summary/available_funds");
 			string url_ = urlBuilder_.ToString();
@@ -1073,7 +1082,7 @@ public partial class IserverService : IIserverService
 			{
 				urlBuilder_.Append(_baseUrl);
 			}
-			urlBuilder_.Append("iserver/account/");
+			urlBuilder_.Append("v1/api/iserver/account/");
 			urlBuilder_.Append(Uri.EscapeDataString(ConvertToString(accountId, CultureInfo.InvariantCulture)));
 			urlBuilder_.Append("/summary/balances");
 			string url_ = urlBuilder_.ToString();
@@ -1176,7 +1185,7 @@ public partial class IserverService : IIserverService
 			{
 				urlBuilder_.Append(_baseUrl);
 			}
-			urlBuilder_.Append("iserver/secdef/bond-filters");
+			urlBuilder_.Append("v1/api/iserver/secdef/bond-filters");
 			urlBuilder_.Append('?');
 			urlBuilder_.Append(Uri.EscapeDataString("symbol")).Append('=').Append(Uri.EscapeDataString(ConvertToString(symbol, CultureInfo.InvariantCulture)))
 				.Append('&');
@@ -1485,7 +1494,7 @@ public partial class IserverService : IIserverService
 			{
 				urlBuilder_.Append(_baseUrl);
 			}
-			urlBuilder_.Append("iserver/exchangerate");
+			urlBuilder_.Append("v1/api/iserver/exchangerate");
 			urlBuilder_.Append('?');
 			urlBuilder_.Append(Uri.EscapeDataString("target")).Append('=').Append(Uri.EscapeDataString(ConvertToString(target, CultureInfo.InvariantCulture)))
 				.Append('&');
@@ -1900,7 +1909,7 @@ public partial class IserverService : IIserverService
 			{
 				urlBuilder_.Append(_baseUrl);
 			}
-			urlBuilder_.Append("iserver/marketdata/history");
+			urlBuilder_.Append("v1/api/iserver/marketdata/history");
 			urlBuilder_.Append('?');
 			urlBuilder_.Append(Uri.EscapeDataString("conid")).Append('=').Append(Uri.EscapeDataString(ConvertToString(conid, CultureInfo.InvariantCulture)))
 				.Append('&');
@@ -2025,7 +2034,7 @@ public partial class IserverService : IIserverService
 			{
 				urlBuilder_.Append(_baseUrl);
 			}
-			urlBuilder_.Append("iserver/secdef/info");
+			urlBuilder_.Append("v1/api/iserver/secdef/info");
 			urlBuilder_.Append('?');
 			if (conid != null)
 			{
@@ -2173,7 +2182,7 @@ public partial class IserverService : IIserverService
 			{
 				urlBuilder_.Append(_baseUrl);
 			}
-			urlBuilder_.Append("iserver/contract/");
+			urlBuilder_.Append("v1/api/iserver/contract/");
 			urlBuilder_.Append(Uri.EscapeDataString(ConvertToString(conid, CultureInfo.InvariantCulture)));
 			urlBuilder_.Append("/info-and-rules");
 			string url_ = urlBuilder_.ToString();
@@ -2272,7 +2281,7 @@ public partial class IserverService : IIserverService
 			{
 				urlBuilder_.Append(_baseUrl);
 			}
-			urlBuilder_.Append("iserver/contract/");
+			urlBuilder_.Append("v1/api/iserver/contract/");
 			urlBuilder_.Append(Uri.EscapeDataString(ConvertToString(conid, CultureInfo.InvariantCulture)));
 			urlBuilder_.Append("/info");
 			string url_ = urlBuilder_.ToString();
@@ -2472,7 +2481,7 @@ public partial class IserverService : IIserverService
 			{
 				urlBuilder_.Append(_baseUrl);
 			}
-			urlBuilder_.Append("iserver/account/");
+			urlBuilder_.Append("v1/api/iserver/account/");
 			urlBuilder_.Append(Uri.EscapeDataString(ConvertToString(accountId, CultureInfo.InvariantCulture)));
 			urlBuilder_.Append("/summary/margins");
 			string url_ = urlBuilder_.ToString();
@@ -2571,7 +2580,7 @@ public partial class IserverService : IIserverService
 			{
 				urlBuilder_.Append(_baseUrl);
 			}
-			urlBuilder_.Append("iserver/account/");
+			urlBuilder_.Append("v1/api/iserver/account/");
 			urlBuilder_.Append(Uri.EscapeDataString(ConvertToString(accountId, CultureInfo.InvariantCulture)));
 			urlBuilder_.Append("/summary/market_value");
 			string url_ = urlBuilder_.ToString();
@@ -2810,7 +2819,7 @@ public partial class IserverService : IIserverService
 			{
 				urlBuilder_.Append(_baseUrl);
 			}
-			urlBuilder_.Append("iserver/account/");
+			urlBuilder_.Append("v1/api/iserver/account/");
 			urlBuilder_.Append(Uri.EscapeDataString(ConvertToString(accountId, CultureInfo.InvariantCulture)));
 			urlBuilder_.Append("/order/");
 			urlBuilder_.Append(Uri.EscapeDataString(ConvertToString(orderId, CultureInfo.InvariantCulture)));
@@ -2931,7 +2940,7 @@ public partial class IserverService : IIserverService
 			{
 				urlBuilder_.Append(_baseUrl);
 			}
-			urlBuilder_.Append("iserver/account/");
+			urlBuilder_.Append("v1/api/iserver/account/");
 			urlBuilder_.Append(Uri.EscapeDataString(ConvertToString(accountId, CultureInfo.InvariantCulture)));
 			urlBuilder_.Append("/order/");
 			urlBuilder_.Append(Uri.EscapeDataString(ConvertToString(orderId, CultureInfo.InvariantCulture)));
@@ -3036,7 +3045,7 @@ public partial class IserverService : IIserverService
 			{
 				urlBuilder_.Append(_baseUrl);
 			}
-			urlBuilder_.Append("iserver/account/orders");
+			urlBuilder_.Append("v1/api/iserver/account/orders");
 			urlBuilder_.Append('?');
 			if (filters.HasValue)
 			{
@@ -3158,7 +3167,7 @@ public partial class IserverService : IIserverService
 			{
 				urlBuilder_.Append(_baseUrl);
 			}
-			urlBuilder_.Append("iserver/account/");
+			urlBuilder_.Append("v1/api/iserver/account/");
 			urlBuilder_.Append(Uri.EscapeDataString(ConvertToString(accountId, CultureInfo.InvariantCulture)));
 			urlBuilder_.Append("/orders");
 			string url_ = urlBuilder_.ToString();
@@ -3257,7 +3266,7 @@ public partial class IserverService : IIserverService
 			{
 				urlBuilder_.Append(_baseUrl);
 			}
-			urlBuilder_.Append("iserver/currency/pairs");
+			urlBuilder_.Append("v1/api/iserver/currency/pairs");
 			urlBuilder_.Append('?');
 			urlBuilder_.Append(Uri.EscapeDataString("currency")).Append('=').Append(Uri.EscapeDataString(ConvertToString(currency, CultureInfo.InvariantCulture)))
 				.Append('&');
@@ -3819,7 +3828,7 @@ public partial class IserverService : IIserverService
 			{
 				urlBuilder_.Append(_baseUrl);
 			}
-			urlBuilder_.Append("iserver/reply/");
+			urlBuilder_.Append("v1/api/iserver/reply/");
 			urlBuilder_.Append(Uri.EscapeDataString(ConvertToString(replyId, CultureInfo.InvariantCulture)));
 			string url_ = urlBuilder_.ToString();
 			request_.RequestUri = new Uri(url_, UriKind.RelativeOrAbsolute);
@@ -4218,7 +4227,7 @@ public partial class IserverService : IIserverService
 			{
 				urlBuilder_.Append(_baseUrl);
 			}
-			urlBuilder_.Append("iserver/secdef/search");
+			urlBuilder_.Append("v1/api/iserver/secdef/search");
 			urlBuilder_.Append('?');
 			if (symbol != null)
 			{
@@ -4370,7 +4379,7 @@ public partial class IserverService : IIserverService
 			{
 				urlBuilder_.Append(_baseUrl);
 			}
-			urlBuilder_.Append("iserver/secdef/search");
+			urlBuilder_.Append("v1/api/iserver/secdef/search");
 			string url_ = urlBuilder_.ToString();
 			request_.RequestUri = new Uri(url_, UriKind.RelativeOrAbsolute);
 			HttpResponseMessage response_ = await client_.SendAsync(request_, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
@@ -4476,7 +4485,7 @@ public partial class IserverService : IIserverService
 			{
 				urlBuilder_.Append(_baseUrl);
 			}
-			urlBuilder_.Append("iserver/account/search/");
+			urlBuilder_.Append("v1/api/iserver/account/search/");
 			urlBuilder_.Append(Uri.EscapeDataString(ConvertToString(searchPattern, CultureInfo.InvariantCulture)));
 			string url_ = urlBuilder_.ToString();
 			request_.RequestUri = new Uri(url_, UriKind.RelativeOrAbsolute);
@@ -4666,7 +4675,7 @@ public partial class IserverService : IIserverService
 			{
 				urlBuilder_.Append(_baseUrl);
 			}
-			urlBuilder_.Append("iserver/marketdata/snapshot");
+			urlBuilder_.Append("v1/api/iserver/marketdata/snapshot");
 			urlBuilder_.Append('?');
 			urlBuilder_.Append(Uri.EscapeDataString("conids")).Append('=').Append(Uri.EscapeDataString(ConvertToString(conids, CultureInfo.InvariantCulture)))
 				.Append('&');
@@ -4781,7 +4790,7 @@ public partial class IserverService : IIserverService
 			{
 				urlBuilder_.Append(_baseUrl);
 			}
-			urlBuilder_.Append("iserver/account/order/status/");
+			urlBuilder_.Append("v1/api/iserver/account/order/status/");
 			urlBuilder_.Append(Uri.EscapeDataString(ConvertToString(orderId, CultureInfo.InvariantCulture)));
 			string url_ = urlBuilder_.ToString();
 			request_.RequestUri = new Uri(url_, UriKind.RelativeOrAbsolute);
@@ -4972,7 +4981,7 @@ public partial class IserverService : IIserverService
 			{
 				urlBuilder_.Append(_baseUrl);
 			}
-			urlBuilder_.Append("iserver/secdef/strikes");
+			urlBuilder_.Append("v1/api/iserver/secdef/strikes");
 			urlBuilder_.Append('?');
 			urlBuilder_.Append(Uri.EscapeDataString("conid")).Append('=').Append(Uri.EscapeDataString(ConvertToString(conid, CultureInfo.InvariantCulture)))
 				.Append('&');
@@ -5091,7 +5100,7 @@ public partial class IserverService : IIserverService
 			{
 				urlBuilder_.Append(_baseUrl);
 			}
-			urlBuilder_.Append("iserver/account/");
+			urlBuilder_.Append("v1/api/iserver/account/");
 			urlBuilder_.Append(Uri.EscapeDataString(ConvertToString(accountId, CultureInfo.InvariantCulture)));
 			urlBuilder_.Append("/summary");
 			string url_ = urlBuilder_.ToString();
@@ -5287,7 +5296,7 @@ public partial class IserverService : IIserverService
 			{
 				urlBuilder_.Append(_baseUrl);
 			}
-			urlBuilder_.Append("iserver/account/trades");
+			urlBuilder_.Append("v1/api/iserver/account/trades");
 			urlBuilder_.Append('?');
 			if (days != null)
 			{
@@ -5599,7 +5608,7 @@ public partial class IserverService : IIserverService
 			{
 				urlBuilder_.Append(_baseUrl);
 			}
-			urlBuilder_.Append("iserver/watchlist");
+			urlBuilder_.Append("v1/api/iserver/watchlist");
 			urlBuilder_.Append('?');
 			urlBuilder_.Append(Uri.EscapeDataString("id")).Append('=').Append(Uri.EscapeDataString(ConvertToString(id, CultureInfo.InvariantCulture)))
 				.Append('&');
@@ -5709,7 +5718,7 @@ public partial class IserverService : IIserverService
 			{
 				urlBuilder_.Append(_baseUrl);
 			}
-			urlBuilder_.Append("iserver/watchlist");
+			urlBuilder_.Append("v1/api/iserver/watchlist");
 			urlBuilder_.Append('?');
 			urlBuilder_.Append(Uri.EscapeDataString("id")).Append('=').Append(Uri.EscapeDataString(ConvertToString(id, CultureInfo.InvariantCulture)))
 				.Append('&');
@@ -5823,7 +5832,7 @@ public partial class IserverService : IIserverService
 			{
 				urlBuilder_.Append(_baseUrl);
 			}
-			urlBuilder_.Append("iserver/watchlist");
+			urlBuilder_.Append("v1/api/iserver/watchlist");
 			string url_ = urlBuilder_.ToString();
 			request_.RequestUri = new Uri(url_, UriKind.RelativeOrAbsolute);
 			HttpResponseMessage response_ = await client_.SendAsync(request_, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(continueOnCapturedContext: false);
@@ -5925,7 +5934,7 @@ public partial class IserverService : IIserverService
 			{
 				urlBuilder_.Append(_baseUrl);
 			}
-			urlBuilder_.Append("iserver/watchlists");
+			urlBuilder_.Append("v1/api/iserver/watchlists");
 			urlBuilder_.Append('?');
 			if (sC.HasValue)
 			{
@@ -6037,7 +6046,7 @@ public partial class IserverService : IIserverService
 			{
 				urlBuilder_.Append(_baseUrl);
 			}
-			urlBuilder_.Append("iserver/account/");
+			urlBuilder_.Append("v1/api/iserver/account/");
 			urlBuilder_.Append(Uri.EscapeDataString(ConvertToString(accountId, CultureInfo.InvariantCulture)));
 			urlBuilder_.Append("/orders/whatif");
 			string url_ = urlBuilder_.ToString();
