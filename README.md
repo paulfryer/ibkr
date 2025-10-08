@@ -98,9 +98,11 @@ dotnet run
 cd ..
 dotnet build IBKR.Api.sln
 
-# Run tests
+# Run tests (uses mocks by default)
 dotnet test IBKR.Api.sln
 ```
+
+See [Testing Guide](docs/TESTING.md) for using real IBKR API credentials.
 
 ## 📝 License
 
