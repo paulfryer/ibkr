@@ -24,16 +24,41 @@ public class MockIserverService : IIserverService
         string? referrer = null,
         CancellationToken cancellationToken = default)
     {
-        // Return mock search results
+        // Return mock search results based on symbol
+        var mockData = new Dictionary<string, (string conid, string companyName)>
+        {
+            { "AAPL", ("265598", "Apple Inc.") },
+            { "AMZN", ("3691937", "Amazon.com Inc.") },
+            { "TSLA", ("76792991", "Tesla Inc.") },
+            { "MSFT", ("272093", "Microsoft Corp.") },
+            { "GOOGL", ("208813719", "Alphabet Inc.") }
+        };
+
+        if (mockData.TryGetValue(symbol?.ToUpper() ?? "", out var data))
+        {
+            return await System.Threading.Tasks.Task.FromResult<ICollection<Anonymous5>>(new List<Anonymous5>
+            {
+                new Anonymous5
+                {
+                    Conid = data.conid,
+                    Symbol = symbol?.ToUpper(),
+                    CompanyName = data.companyName,
+                    CompanyHeader = $"{symbol?.ToUpper()} - NASDAQ",
+                    Description = "NASDAQ"
+                }
+            });
+        }
+
+        // Default fallback
         return await System.Threading.Tasks.Task.FromResult<ICollection<Anonymous5>>(new List<Anonymous5>
         {
             new Anonymous5
             {
-                Conid = "265598",
-                Symbol = "AAPL",
-                CompanyName = "Apple Inc.",
-                CompanyHeader = "AAPL - NASDAQ",
-                Description = "NASDAQ"
+                Conid = "999999",
+                Symbol = symbol?.ToUpper(),
+                CompanyName = $"{symbol} Test Company",
+                CompanyHeader = $"{symbol?.ToUpper()} - NYSE",
+                Description = "NYSE"
             }
         });
     }
@@ -75,6 +100,36 @@ public class MockIserverService : IIserverService
         });
     }
 
+    public async System.Threading.Tasks.Task<ContractInfo> InfoAsync(
+        string conid,
+        CancellationToken cancellationToken = default)
+    {
+        // Return mock contract info based on conid
+        var symbolMap = new Dictionary<string, string>
+        {
+            { "265598", "AAPL" },
+            { "3691937", "AMZN" },
+            { "76792991", "TSLA" },
+            { "272093", "MSFT" },
+            { "208813719", "GOOGL" }
+        };
+
+        var symbol = symbolMap.TryGetValue(conid, out var sym) ? sym : "UNKNOWN";
+
+        return await System.Threading.Tasks.Task.FromResult(new ContractInfo
+        {
+            AdditionalProperties = new Dictionary<string, object>
+            {
+                { "symbol", symbol },
+                { "conid", conid },
+                { "exchange", "NASDAQ" },
+                { "companyName", $"{symbol} Test Company" },
+                { "currency", "USD" },
+                { "secType", "STK" }
+            }
+        });
+    }
+
     public async System.Threading.Tasks.Task<SecDefInfoResponse> Info2Async(
         string? conid = null,
         object? sectype = null,
@@ -90,13 +145,34 @@ public class MockIserverService : IIserverService
         var strikeValue = strike != null ? double.Parse(strike.ToString()!) : 150.0;
         var isPut = right == Right.P;
 
+        // Parse month to determine expiration date
+        var monthStr = month?.ToString() ?? "20250117";
+        string maturityDate;
+
+        if (monthStr.Length == 6) // YYYYMM format
+        {
+            // Convert to third Friday of that month (typical expiration)
+            var year = int.Parse(monthStr.Substring(0, 4));
+            var monthNum = int.Parse(monthStr.Substring(4, 2));
+            var firstDay = new DateTime(year, monthNum, 1);
+            var firstFriday = firstDay;
+            while (firstFriday.DayOfWeek != DayOfWeek.Friday)
+                firstFriday = firstFriday.AddDays(1);
+            var thirdFriday = firstFriday.AddDays(14);
+            maturityDate = thirdFriday.ToString("yyyyMMdd");
+        }
+        else
+        {
+            maturityDate = monthStr;
+        }
+
         return await System.Threading.Tasks.Task.FromResult(new SecDefInfoResponse
         {
-            Conid = 12345,
+            Conid = 12345 + (int)strikeValue, // Unique conid per strike
             Ticker = "AAPL",
             Right = isPut ? SecDefInfoResponseRight.P : SecDefInfoResponseRight.C,
             Strike = strikeValue,
-            MaturityDate = "20250117"
+            MaturityDate = maturityDate
         });
     }
 
@@ -164,8 +240,7 @@ public class MockIserverService : IIserverService
     public Task<Response11> InfoAndRulesAsync(string conid, CancellationToken cancellationToken = default)
         => throw new NotImplementedException("This method is not implemented in the mock.");
 
-    public Task<ContractInfo> InfoAsync(string conid, CancellationToken cancellationToken = default)
-        => throw new NotImplementedException("This method is not implemented in the mock.");
+    // InfoAsync is implemented above in the "Implemented Methods" section
 
     public Task<BrokerageSessionStatus> InitAsync(BrokerageSessionInitRequest body, CancellationToken cancellationToken = default)
         => throw new NotImplementedException("This method is not implemented in the mock.");

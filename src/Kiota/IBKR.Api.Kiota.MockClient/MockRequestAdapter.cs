@@ -131,15 +131,49 @@ public class MockRequestAdapter : IRequestAdapter
         // Stock search - /iserver/secdef/search
         if (path.Contains("/iserver/secdef/search") || path.EndsWith("/search"))
         {
+            // Extract symbol from query string
+            var symbol = "AAPL"; // default
+            if (fullPath.Contains("symbol="))
+            {
+                var symbolParam = fullPath.Split(new[] { "symbol=" }, StringSplitOptions.None)[1].Split('&')[0];
+                symbol = Uri.UnescapeDataString(symbolParam).ToUpper();
+            }
+
+            // Mock data for common symbols
+            var mockData = new Dictionary<string, (string conid, string companyName)>
+            {
+                { "AAPL", ("265598", "Apple Inc.") },
+                { "AMZN", ("3691937", "Amazon.com Inc.") },
+                { "TSLA", ("76792991", "Tesla Inc.") },
+                { "MSFT", ("272093", "Microsoft Corp.") },
+                { "GOOGL", ("208813719", "Alphabet Inc.") }
+            };
+
+            if (mockData.TryGetValue(symbol, out var data))
+            {
+                return new List<SecdefSearchResponse>
+                {
+                    new SecdefSearchResponse
+                    {
+                        Conid = data.conid,
+                        Symbol = symbol,
+                        CompanyName = data.companyName,
+                        CompanyHeader = $"{symbol} - NASDAQ",
+                        Description = "NASDAQ"
+                    }
+                };
+            }
+
+            // Default fallback for unknown symbols
             return new List<SecdefSearchResponse>
             {
                 new SecdefSearchResponse
                 {
-                    Conid = "265598",
-                    Symbol = "AAPL",
-                    CompanyName = "Apple Inc.",
-                    CompanyHeader = "AAPL - NASDAQ",
-                    Description = "NASDAQ"
+                    Conid = "999999",
+                    Symbol = symbol,
+                    CompanyName = $"{symbol} Test Company",
+                    CompanyHeader = $"{symbol} - NYSE",
+                    Description = "NYSE"
                 }
             };
         }
@@ -193,19 +227,53 @@ public class MockRequestAdapter : IRequestAdapter
         // Option contract info - /iserver/secdef/info
         if (path.Contains("/iserver/secdef/info") || path.EndsWith("/info"))
         {
-            // Check query string to determine if it's a call or put
-            // Default to call at strike 150, but support put at 145 for tests
+            // Parse query parameters
             var isPut = fullPath.Contains("right=P") || fullPath.Contains("right%3DP");
-            var strike = isPut ? 145.0 : 150.0;
             var right = isPut ? SecDefInfoResponse_right.P : SecDefInfoResponse_right.C;
+
+            // Extract strike from query string
+            double strike = 150.0; // default
+            if (fullPath.Contains("strike="))
+            {
+                var strikeParam = fullPath.Split(new[] { "strike=" }, StringSplitOptions.None)[1].Split('&')[0];
+                if (double.TryParse(Uri.UnescapeDataString(strikeParam), out var parsedStrike))
+                {
+                    strike = parsedStrike;
+                }
+            }
+
+            // Extract month/expiration from query string
+            string maturityDate = "20250117"; // default
+            if (fullPath.Contains("month="))
+            {
+                var monthParam = fullPath.Split(new[] { "month=" }, StringSplitOptions.None)[1].Split('&')[0];
+                var monthStr = Uri.UnescapeDataString(monthParam);
+
+                // If month is in YYYYMM format, convert to third Friday of that month
+                if (monthStr.Length == 6)
+                {
+                    var year = int.Parse(monthStr.Substring(0, 4));
+                    var monthNum = int.Parse(monthStr.Substring(4, 2));
+                    var firstDay = new DateTime(year, monthNum, 1);
+                    var firstFriday = firstDay;
+                    while (firstFriday.DayOfWeek != DayOfWeek.Friday)
+                        firstFriday = firstFriday.AddDays(1);
+                    var thirdFriday = firstFriday.AddDays(14);
+                    maturityDate = thirdFriday.ToString("yyyyMMdd");
+                }
+                else
+                {
+                    maturityDate = monthStr;
+                }
+            }
 
             return new SecDefInfoResponse
             {
-                Conid = 12345,
+                Conid = 12345 + (int)strike, // Unique conid per strike
                 Ticker = "AAPL",
                 Right = right,
                 Strike = strike,
-                MaturityDate = "20250117"
+                MaturityDate = maturityDate
             };
         }
 

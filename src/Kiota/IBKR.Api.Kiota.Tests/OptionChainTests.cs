@@ -203,7 +203,7 @@ public class OptionChainTests : IClassFixture<TestFixture>
         var conid = "265598"; // AAPL
 
         // Format 1: YYYYMM for getting strikes
-        var monthFormat1 = "202501"; // January 2025
+        var monthFormat1 = "202601"; // January 2025
 
         var strikes = await _client.V1.Api.Iserver.Secdef.Strikes.GetAsStrikesGetResponseAsync(config =>
         {
