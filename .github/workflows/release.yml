@@ -19,8 +19,9 @@ on:
         default: false
 
 permissions:
-  contents: write  # Required for creating releases
-  packages: write  # Required for publishing packages
+  contents: write    # Required for creating releases
+  packages: write    # Required for publishing packages
+  id-token: write    # Required for NuGet Trusted Publishing (OIDC)
 
 env:
   DOTNET_VERSION: '8.0.x'
@@ -782,3 +783,62 @@ jobs:
           files: |
             release-files/*.nupkg
             release-files/*.snupkg
+
+  #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # JOB 12: Publish to NuGet.org (Optional)
+  #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  publish-nuget:
+    name: 📤 Publish to NuGet.org
+    needs: [validate, build-nswag, build-kiota, build-clean-api, test-nswag, test-kiota, test-clean-api]
+    if: inputs.create_github_release  # Only publish when creating a GitHub release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Download all packages
+        uses: actions/download-artifact@v4
+        with:
+          pattern: '*-SDK-v*'
+          path: packages-to-publish
+
+      - name: 📦 Consolidate packages
+        run: |
+          mkdir -p nuget-packages
+          find packages-to-publish -name "*.nupkg" -exec cp {} nuget-packages/ \;
+          find packages-to-publish -name "*.snupkg" -exec cp {} nuget-packages/ \;
+
+          echo "📦 Packages to publish:"
+          ls -lh nuget-packages/
+
+      - name: 🚀 Publish to NuGet.org using Trusted Publishing
+        run: |
+          echo "🚀 Publishing packages to NuGet.org using Trusted Publishing (OIDC)..."
+
+          for package in nuget-packages/*.nupkg; do
+            if [ -f "$package" ]; then
+              echo "📤 Publishing: $(basename $package)"
+              dotnet nuget push "$package" \
+                --source https://api.nuget.org/v3/index.json \
+                --skip-duplicate
+            fi
+          done
+
+          echo "✅ All packages published successfully!"
+
+      - name: 📊 Publication Summary
+        run: |
+          echo "# 📦 NuGet Publication Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Successfully published to NuGet.org:" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## IBKR SDK Packages" >> $GITHUB_STEP_SUMMARY
+          echo "- [IBKR.Sdk.Contract ${{ needs.validate.outputs.version }}](https://www.nuget.org/packages/IBKR.Sdk.Contract/${{ needs.validate.outputs.version }})" >> $GITHUB_STEP_SUMMARY
+          echo "- [IBKR.Sdk.Client ${{ needs.validate.outputs.version }}](https://www.nuget.org/packages/IBKR.Sdk.Client/${{ needs.validate.outputs.version }})" >> $GITHUB_STEP_SUMMARY
+          echo "- [IBKR.Sdk.Authentication ${{ needs.validate.outputs.version }}](https://www.nuget.org/packages/IBKR.Sdk.Authentication/${{ needs.validate.outputs.version }})" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## NSwag SDK Packages" >> $GITHUB_STEP_SUMMARY
+          echo "- [IBKR.Api.NSwag.Contract ${{ needs.validate.outputs.version }}](https://www.nuget.org/packages/IBKR.Api.NSwag.Contract/${{ needs.validate.outputs.version }})" >> $GITHUB_STEP_SUMMARY
+          echo "- [IBKR.Api.NSwag.Client ${{ needs.validate.outputs.version }}](https://www.nuget.org/packages/IBKR.Api.NSwag.Client/${{ needs.validate.outputs.version }})" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## Kiota SDK Packages" >> $GITHUB_STEP_SUMMARY
+          echo "- [IBKR.Api.Kiota.Contract ${{ needs.validate.outputs.version }}](https://www.nuget.org/packages/IBKR.Api.Kiota.Contract/${{ needs.validate.outputs.version }})" >> $GITHUB_STEP_SUMMARY
+          echo "- [IBKR.Api.Kiota.Client ${{ needs.validate.outputs.version }}](https://www.nuget.org/packages/IBKR.Api.Kiota.Client/${{ needs.validate.outputs.version }})" >> $GITHUB_STEP_SUMMARY
