@@ -45,55 +45,63 @@ dotnet add package IBKR.Api.Kiota.Client
 
 ## Authentication Setup
 
-Interactive Brokers uses **session-based authentication** via the Client Portal Gateway.
+Interactive Brokers uses **OAuth2 authentication** with client credentials and RSA key signing.
 
-### 1. Start the Client Portal Gateway
+### 1. Get OAuth2 Credentials from IBKR
 
-Download and run the Client Portal Gateway from Interactive Brokers:
+1. Log in to the [IBKR Web Portal](https://www.interactivebrokers.com/)
+2. Navigate to **Settings** → **API** → **OAuth Applications**
+3. Create a new OAuth application
+4. Download the RSA private key (PEM file)
+5. Note your Client ID and Key ID
 
-1. Download from: https://www.interactivebrokers.com/en/trading/ibportal.php
-2. Extract and run: `bin/run.sh` (Unix) or `bin\run.bat` (Windows)
-3. Gateway runs on `https://localhost:5000` by default
-4. Log in via browser at `https://localhost:5000`
+### 2. Create Configuration File
 
-### 2. Configure Base URL
+Create `appsettings.json` with your credentials:
 
-```csharp
-// Base URL for Client Portal Gateway
-const string baseUrl = "https://localhost:5000";
+```json
+{
+  "IBKR": {
+    "ClientId": "YOUR_CLIENT_ID",
+    "Credential": "YOUR_USERNAME",
+    "ClientKeyId": "YOUR_KEY_ID_FROM_PORTAL",
+    "ClientPemPath": "/path/to/your/private-key.pem",
+    "BaseUrl": "https://api.ibkr.com"
+  }
+}
 ```
 
-⚠️ **Important:** The Gateway uses a self-signed certificate. You'll need to:
-- Accept the certificate in your browser first
-- Or configure your HttpClient to allow self-signed certificates (see below)
+⚠️ **Important:** Never commit credentials to source control. Use environment variables in production:
+
+```bash
+export IBKR_CLIENT_ID="YOUR_CLIENT_ID"
+export IBKR_CREDENTIAL="YOUR_USERNAME"
+export IBKR_CLIENT_KEY_ID="YOUR_KEY_ID"
+export IBKR_CLIENT_PEM_PATH="/path/to/key.pem"
+```
 
 ## Your First API Call
 
 ### IBKR SDK Example ⭐ (Recommended)
 
 ```csharp
-using IBKR.Sdk.Authentication;
-using IBKR.Sdk.Client.Services;
-using IBKR.Sdk.Contract.Services;
+using IBKR.Sdk.Client;
+using IBKR.Sdk.Contract.Interfaces;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 
-// Configure services
+// Build configuration from appsettings.json
+var configuration = new ConfigurationBuilder()
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("appsettings.json", optional: false)
+    .AddEnvironmentVariables() // Environment variables override appsettings.json
+    .Build();
+
+// Setup dependency injection
 var services = new ServiceCollection();
 
-// Configure IBKR settings
-services.Configure<IBKRSettings>(options =>
-{
-    options.ClientId = "your-client-id";
-    options.ClientSecret = "your-client-secret";
-    options.BaseUrl = "https://localhost:5000/v1/api";
-});
-
-// Register authentication
-services.AddSingleton<IIBKRAuthenticationProvider, IBKRAuthenticationProvider>();
-
-// Register option service
-services.AddTransient<IOptionService, OptionService>();
+// ⭐ AWS SDK-like setup - ONE LINE!
+services.AddIBKRSdk(configuration.GetSection("IBKR"));
 
 var serviceProvider = services.BuildServiceProvider();
 
@@ -136,11 +144,15 @@ AAPL Put Strike: $95.00 Exp: 2025-10-17
 ```
 
 **Why use IBKR SDK?**
+- ✅ **One-line setup**: `services.AddIBKRSdk(config)` - just like AWS SDK!
+- ✅ **Configuration-based**: appsettings.json + environment variables
 - ✅ Strongly-typed models (DateTime, decimal, enums)
 - ✅ Comprehensive error handling
 - ✅ API quirks handled automatically
 - ✅ Thread-safe authentication
 - ✅ Production-ready from day one
+
+**Complete example:** See [examples/QuickStart](../examples/QuickStart/)
 
 ---
 

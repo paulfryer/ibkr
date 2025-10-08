@@ -18,7 +18,10 @@ dotnet add package IBKR.Sdk.Authentication
 ```
 
 ```csharp
-// Strongly-typed, IBKR SDK - no magic strings!
+// ⭐ One-line setup - just like AWS SDK!
+services.AddIBKRSdk(configuration.GetSection("IBKR"));
+
+// Use the SDK
 var optionService = serviceProvider.GetRequiredService<IOptionService>();
 var chain = await optionService.GetOptionChainAsync(
     "AAPL",
@@ -32,6 +35,21 @@ foreach (var contract in chain.Contracts)
                      $"Strike: {contract.Strike:C} Exp: {contract.Expiration:yyyy-MM-dd}");
 }
 ```
+
+**Configuration (appsettings.json):**
+```json
+{
+  "IBKR": {
+    "ClientId": "YOUR_CLIENT_ID",
+    "Credential": "YOUR_USERNAME",
+    "ClientKeyId": "YOUR_KEY_ID",
+    "ClientPemPath": "/path/to/private-key.pem",
+    "BaseUrl": "https://api.ibkr.com"
+  }
+}
+```
+
+Or use environment variables: `IBKR_CLIENT_ID`, `IBKR_CREDENTIAL`, `IBKR_CLIENT_KEY_ID`, `IBKR_CLIENT_PEM_PATH`
 
 ### Alternative: Lower-Level SDKs
 
@@ -107,7 +125,7 @@ Three SDK layers offering different levels of abstraction:
 
 ### Getting Started
 - **[Getting Started](docs/GETTING-STARTED.md)** - Installation, first API call, authentication
-- **[IBKR SDK Guide](docs/CLEAN-API.md)** - Production-ready abstraction layer (recommended)
+- **[IBKR SDK Guide](docs/IBKR-SDK.md)** - Production-ready abstraction layer (recommended)
 - **[SDK Comparison](docs/SDK-COMPARISON.md)** - Side-by-side code examples and decision guide
 
 ### SDK-Specific Guides

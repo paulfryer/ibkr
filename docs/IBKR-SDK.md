@@ -57,34 +57,46 @@ dotnet add package IBKR.Sdk.Authentication
 
 ## Quick Start
 
-### 1. Configure Dependency Injection
+### 1. Configure Authentication
+
+Create `appsettings.json`:
+
+```json
+{
+  "IBKR": {
+    "ClientId": "YOUR_CLIENT_ID",
+    "Credential": "YOUR_USERNAME",
+    "ClientKeyId": "YOUR_KEY_ID_FROM_PORTAL",
+    "ClientPemPath": "/path/to/your/private-key.pem",
+    "BaseUrl": "https://api.ibkr.com"
+  }
+}
+```
+
+### 2. Setup Dependency Injection
 
 ```csharp
-using IBKR.Sdk.Authentication;
-using IBKR.Sdk.Client.Services;
-using IBKR.Sdk.Contract.Services;
+using IBKR.Sdk.Client;
+using IBKR.Sdk.Contract.Interfaces;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+
+// Build configuration
+var configuration = new ConfigurationBuilder()
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("appsettings.json")
+    .AddEnvironmentVariables()
+    .Build();
 
 var services = new ServiceCollection();
 
-// Configure IBKR settings
-services.Configure<IBKRSettings>(options =>
-{
-    options.ClientId = "your-client-id";
-    options.ClientSecret = "your-client-secret";
-    options.BaseUrl = "https://localhost:5000/v1/api";
-});
-
-// Register authentication
-services.AddSingleton<IIBKRAuthenticationProvider, IBKRAuthenticationProvider>();
-
-// Register IBKR SDK services
-services.AddTransient<IOptionService, OptionService>();
+// ⭐ One-line setup - just like AWS SDK!
+services.AddIBKRSdk(configuration.GetSection("IBKR"));
 
 var serviceProvider = services.BuildServiceProvider();
 ```
 
-### 2. Use the Option Service
+### 3. Use the Option Service
 
 ```csharp
 var optionService = serviceProvider.GetRequiredService<IOptionService>();

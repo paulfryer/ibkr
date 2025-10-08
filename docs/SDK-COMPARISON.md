@@ -545,6 +545,6 @@ All three SDK layers are **production-ready** and **fully supported**. Your choi
 
 **Next Steps:**
 - [Getting Started Guide](GETTING-STARTED.md) - Install and make your first API call
-- [IBKR SDK Guide](CLEAN-API.md) - Production-ready abstraction layer (recommended)
+- [IBKR SDK Guide](IBKR-SDK.md) - Production-ready abstraction layer (recommended)
 - [NSwag SDK Guide](NSWAG-SDK.md) - Deep dive into service-oriented architecture
 - [Kiota SDK Guide](KIOTA-SDK.md) - Deep dive into fluent API architecture
