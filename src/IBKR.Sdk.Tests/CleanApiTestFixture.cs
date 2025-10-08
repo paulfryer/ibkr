@@ -1,13 +1,13 @@
-using IBKR.Api.Authentication;
-using IBKR.Api.Client.Services;
-using IBKR.Api.Contract.Interfaces;
+using IBKR.Sdk.Authentication;
+using IBKR.Sdk.Client.Services;
+using IBKR.Sdk.Contract.Interfaces;
 using IBKR.Api.NSwag.Authentication;
 using IBKR.Api.NSwag.Client.Services;
 using IBKR.Api.NSwag.Contract.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace IBKR.Api.Tests;
+namespace IBKR.Sdk.Tests;
 
 /// <summary>
 /// Test fixture for the CLEAN API.

@@ -1,6 +1,6 @@
-using IBKR.Api.Contract.Enums;
+using IBKR.Sdk.Contract.Enums;
 
-namespace IBKR.Api.Contract.Models;
+namespace IBKR.Sdk.Contract.Models;
 
 /// <summary>
 /// Represents a single option contract with clean, strongly-typed properties.

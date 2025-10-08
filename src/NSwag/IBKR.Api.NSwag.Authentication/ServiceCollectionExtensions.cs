@@ -1,4 +1,4 @@
-using IBKR.Api.Authentication;
+using IBKR.Sdk.Authentication;
 using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
 

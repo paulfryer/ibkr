@@ -1,12 +1,12 @@
-# Release Workflow Updates for Clean API
+# Release Workflow Updates for IBKR SDK
 
-This document summarizes the changes made to `.github/workflows/release.yml` to support the new clean API layer.
+This document summarizes the changes made to `.github/workflows/release.yml` to support the new IBKR SDK layer.
 
 ## Overview
 
 The workflow now builds, tests, and releases **three distinct SDK layers**:
 
-1. **Clean API** (IBKR.Api.*) - Production-ready abstraction ⭐ **Recommended**
+1. **IBKR SDK** (IBKR.Api.*) - Production-ready abstraction ⭐ **Recommended**
 2. **NSwag SDK** (IBKR.Api.NSwag.*) - Lower-level generated SDK
 3. **Kiota SDK** (IBKR.Api.Kiota.*) - Lower-level generated SDK
 
@@ -15,30 +15,30 @@ The workflow now builds, tests, and releases **three distinct SDK layers**:
 ### 1. Updated JOB 3: scaffold-tests
 
 **What changed:**
-- Added clean API projects to artifact upload
+- Added IBKR SDK projects to artifact upload
 
 **Why:**
-- Ensures IBKR.Api.Contract, IBKR.Api.Client, IBKR.Api.Authentication, and IBKR.Api.Tests are available to downstream jobs
+- Ensures IBKR.Sdk.Contract, IBKR.Sdk.Client, IBKR.Sdk.Authentication, and IBKR.Sdk.Tests are available to downstream jobs
 
 **Files included:**
 ```yaml
 path: |
   src/NSwag/
   src/Kiota/
-  src/IBKR.Api.Contract/         # ← NEW
-  src/IBKR.Api.Client/            # ← NEW
-  src/IBKR.Api.Authentication/    # ← NEW
-  src/IBKR.Api.Tests/             # ← NEW
+  src/IBKR.Sdk.Contract/         # ← NEW
+  src/IBKR.Sdk.Client/            # ← NEW
+  src/IBKR.Sdk.Authentication/    # ← NEW
+  src/IBKR.Sdk.Tests/             # ← NEW
   src/Directory.Build.props
 ```
 
 ### 2. Added JOB 6: build-clean-api
 
-**Purpose:** Build and package the clean API layer as NuGet packages
+**Purpose:** Build and package the IBKR SDK layer as NuGet packages
 
 **Dependencies:**
 - Needs: `validate`, `scaffold-tests`, `build-nswag`
-- Waits for NSwag because IBKR.Api.Client depends on NSwag packages
+- Waits for NSwag because IBKR.Sdk.Client depends on NSwag packages
 
 **What it does:**
 1. Restores dependencies for Contract, Authentication, and Client
@@ -47,13 +47,13 @@ path: |
 4. Uploads packages as artifact: `CleanAPI-SDK-v{version}`
 
 **Packages created:**
-- `IBKR.Api.Contract.{version}.nupkg`
-- `IBKR.Api.Authentication.{version}.nupkg`
-- `IBKR.Api.Client.{version}.nupkg`
+- `IBKR.Sdk.Contract.{version}.nupkg`
+- `IBKR.Sdk.Authentication.{version}.nupkg`
+- `IBKR.Sdk.Client.{version}.nupkg`
 
 ### 3. Added JOB 9: test-clean-api
 
-**Purpose:** Run comprehensive test suite for clean API
+**Purpose:** Run comprehensive test suite for IBKR SDK
 
 **Dependencies:**
 - Needs: `validate`, `build-clean-api`, `scaffold-tests`
@@ -66,7 +66,7 @@ env:
 
 **What it does:**
 1. Downloads SDKs with tests
-2. Runs IBKR.Api.Tests with mocks (no real API credentials needed)
+2. Runs IBKR.Sdk.Tests with mocks (no real API credentials needed)
 3. Generates detailed test results with logging
 4. Uploads test results as artifact
 
@@ -79,18 +79,18 @@ env:
 
 **What changed:**
 - Added `build-clean-api` and `test-clean-api` to needs array
-- Updated installation instructions to feature clean API first
+- Updated installation instructions to feature IBKR SDK first
 - Added descriptions for each SDK layer
 
 **New summary structure:**
 ```markdown
 ## 🚀 Installation
 
-### ⭐ Clean API (Recommended)
+### ⭐ IBKR SDK (Recommended)
 Strongly-typed, production-ready abstraction...
-dotnet add package IBKR.Api.Contract
-dotnet add package IBKR.Api.Client
-dotnet add package IBKR.Api.Authentication
+dotnet add package IBKR.Sdk.Contract
+dotnet add package IBKR.Sdk.Client
+dotnet add package IBKR.Sdk.Authentication
 
 ### NSwag SDK (Lower-level)
 Service-oriented architecture...
@@ -103,13 +103,13 @@ Fluent API architecture...
 
 **What changed:**
 - Added `build-clean-api` to needs array
-- Updated release body to feature clean API prominently
-- Added "What's New in Clean API" section
+- Updated release body to feature IBKR SDK prominently
+- Added "What's New in IBKR SDK" section
 
 **New release highlights:**
-- ⭐ Marks clean API as recommended
+- ⭐ Marks IBKR SDK as recommended
 - Explains benefits: strongly-typed, comprehensive error handling, built-in workarounds
-- Shows clean API first in installation instructions
+- Shows IBKR SDK first in installation instructions
 - Maintains backward compatibility with NSwag/Kiota SDKs
 
 ## Workflow Flow Diagram
@@ -125,7 +125,7 @@ Fluent API architecture...
                           │
 ┌─────────────────────────┴───────────────────────────┐
 │ 3. scaffold-tests - Create Mock + Test projects    │
-│    Uploads: NSwag, Kiota, + Clean API projects     │
+│    Uploads: NSwag, Kiota, + IBKR SDK projects     │
 └────┬──────────────────────────────────────┬─────────┘
      │                                       │
 ┌────┴─────────────┐          ┌─────────────┴──────────┐
@@ -155,7 +155,7 @@ Fluent API architecture...
                     │
 ┌───────────────────┴──────────────────────────────────┐
 │ 11. create-release (optional) - GitHub Release       │
-│     Publishes: All NuGet packages with clean API     │
+│     Publishes: All NuGet packages with IBKR SDK     │
 └──────────────────────────────────────────────────────┘
 ```
 
@@ -190,14 +190,14 @@ After a successful workflow run, three artifact sets are created:
    - IBKR.Api.Kiota.Client.{version}.nupkg
 
 3. **CleanAPI-SDK-v{version}** (90-day retention) ⭐
-   - IBKR.Api.Contract.{version}.nupkg
-   - IBKR.Api.Authentication.{version}.nupkg
-   - IBKR.Api.Client.{version}.nupkg
+   - IBKR.Sdk.Contract.{version}.nupkg
+   - IBKR.Sdk.Authentication.{version}.nupkg
+   - IBKR.Sdk.Client.{version}.nupkg
 
 ## Benefits
 
 ### For Developers
-- ✅ Clean API is now the default recommendation
+- ✅ IBKR SDK is now the default recommendation
 - ✅ Strongly-typed models (DateTime, enums, decimals)
 - ✅ Comprehensive error messages with context
 - ✅ All API quirks handled automatically
@@ -213,11 +213,11 @@ After a successful workflow run, three artifact sets are created:
 - ✅ Single workflow publishes all three SDK layers
 - ✅ Clear guidance on which SDK to use
 - ✅ Backward compatible with existing NSwag/Kiota consumers
-- ✅ Clean API highlighted as recommended approach
+- ✅ IBKR SDK highlighted as recommended approach
 
 ## Migration Path
 
-Existing users can continue using NSwag/Kiota SDKs without changes. New users are guided toward the clean API:
+Existing users can continue using NSwag/Kiota SDKs without changes. New users are guided toward the IBKR SDK:
 
 **Existing (still supported):**
 ```csharp
@@ -237,8 +237,8 @@ var chain = await optionService.GetOptionChainAsync("AAPL", start, end);
 
 As new clean methods are added to `IOptionService`:
 
-1. Development happens in `IBKR.Api.Contract` + `IBKR.Api.Client`
-2. Tests are added to `IBKR.Api.Tests`
+1. Development happens in `IBKR.Sdk.Contract` + `IBKR.Sdk.Client`
+2. Tests are added to `IBKR.Sdk.Tests`
 3. Workflow automatically builds, tests, and publishes updates
 4. No workflow changes needed for new methods
 

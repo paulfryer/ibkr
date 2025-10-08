@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\IBKR.Api.Contract\IBKR.Api.Contract.csproj" />
+    <ProjectReference Include="..\IBKR.Sdk.Contract\IBKR.Sdk.Contract.csproj" />
     <ProjectReference Include="..\NSwag\IBKR.Api.NSwag.Contract\IBKR.Api.NSwag.Contract.csproj" />
     <ProjectReference Include="..\NSwag\IBKR.Api.NSwag.Client\IBKR.Api.NSwag.Client.csproj" />
   </ItemGroup>

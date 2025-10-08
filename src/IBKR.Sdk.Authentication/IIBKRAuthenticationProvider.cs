@@ -1,4 +1,4 @@
-namespace IBKR.Api.Authentication;
+namespace IBKR.Sdk.Authentication;
 
 /// <summary>
 /// Interface for IBKR OAuth2 authentication provider

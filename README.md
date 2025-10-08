@@ -8,17 +8,17 @@
 
 ## 🚀 Quick Start
 
-### ⭐ Clean API (Recommended)
+### ⭐ IBKR SDK (Recommended)
 Production-ready abstraction with comprehensive error handling and strongly-typed models:
 
 ```bash
-dotnet add package IBKR.Api.Contract
-dotnet add package IBKR.Api.Client
-dotnet add package IBKR.Api.Authentication
+dotnet add package IBKR.Sdk.Contract
+dotnet add package IBKR.Sdk.Client
+dotnet add package IBKR.Sdk.Authentication
 ```
 
 ```csharp
-// Strongly-typed, clean API - no magic strings!
+// Strongly-typed, IBKR SDK - no magic strings!
 var optionService = serviceProvider.GetRequiredService<IOptionService>();
 var chain = await optionService.GetOptionChainAsync(
     "AAPL",
@@ -71,11 +71,11 @@ Three SDK layers offering different levels of abstraction:
 
 ```
 📁 src/
-├── ⭐ Clean API/        # Production-ready abstraction (Recommended)
-│   ├── IBKR.Api.Contract       # Clean interfaces & strongly-typed models
-│   ├── IBKR.Api.Client         # Implementation with built-in workarounds
-│   ├── IBKR.Api.Authentication # Thread-safe session management
-│   └── IBKR.Api.Tests          # Comprehensive test suite
+├── ⭐ IBKR SDK/        # Production-ready abstraction (Recommended)
+│   ├── IBKR.Sdk.Contract       # Clean interfaces & strongly-typed models
+│   ├── IBKR.Sdk.Client         # Implementation with built-in workarounds
+│   ├── IBKR.Sdk.Authentication # Thread-safe session management
+│   └── IBKR.Sdk.Tests          # Comprehensive test suite
 │
 ├── 🔷 NSwag/            # Lower-level generated SDK
 │   ├── Contract         # Generated models + service interfaces
@@ -94,9 +94,9 @@ Three SDK layers offering different levels of abstraction:
 
 | Scenario | Recommended SDK | Why? |
 |----------|----------------|------|
-| **Production applications** | **Clean API** ⭐ | Strongly-typed, built-in error handling, API quirks handled |
-| **Quick prototypes** | **Clean API** ⭐ | Minimal setup, comprehensive documentation |
-| **Enterprise .NET apps** | **Clean API** ⭐ | DI-friendly, production-ready abstractions |
+| **Production applications** | **IBKR SDK** ⭐ | Strongly-typed, built-in error handling, API quirks handled |
+| **Quick prototypes** | **IBKR SDK** ⭐ | Minimal setup, comprehensive documentation |
+| **Enterprise .NET apps** | **IBKR SDK** ⭐ | DI-friendly, production-ready abstractions |
 | **Need lower-level control** | **NSwag** | Direct API access, service interfaces |
 | **Fluent API preference** | **Kiota** | Discoverable API surface, smaller footprint |
 | **SDK development/testing** | **NSwag/Kiota** | Full mock infrastructure, quirk discovery |
@@ -107,7 +107,7 @@ Three SDK layers offering different levels of abstraction:
 
 ### Getting Started
 - **[Getting Started](docs/GETTING-STARTED.md)** - Installation, first API call, authentication
-- **[Clean API Guide](docs/CLEAN-API.md)** - Production-ready abstraction layer (recommended)
+- **[IBKR SDK Guide](docs/CLEAN-API.md)** - Production-ready abstraction layer (recommended)
 - **[SDK Comparison](docs/SDK-COMPARISON.md)** - Side-by-side code examples and decision guide
 
 ### SDK-Specific Guides
@@ -122,7 +122,7 @@ Three SDK layers offering different levels of abstraction:
 
 ## 🏗️ Architecture Highlights
 
-- ✅ **Three-Layer Architecture** - Clean API → NSwag/Kiota → OpenAPI spec
+- ✅ **Three-Layer Architecture** - IBKR SDK → NSwag/Kiota → OpenAPI spec
 - ✅ **Production-Ready Abstractions** - Built-in error handling and API quirk workarounds
 - ✅ **Dual SDK Generation** - NSwag + Kiota from single OpenAPI spec
 - ✅ **Automated Reorganization** - Splits generated code into Contract/Client projects
@@ -143,10 +143,10 @@ dotnet run
 
 # Build everything
 cd ..
-dotnet build IBKR.Api.sln
+dotnet build IBKR.Sdk.sln
 
 # Run tests (uses mocks by default)
-dotnet test IBKR.Api.sln
+dotnet test IBKR.Sdk.sln
 ```
 
 See [Testing Guide](docs/TESTING.md) for using real IBKR API credentials.

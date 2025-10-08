@@ -1,4 +1,4 @@
-using IBKR.Api.Authentication;
+using IBKR.Sdk.Authentication;
 
 namespace IBKR.Api.NSwag.Authentication;
 

@@ -11,14 +11,14 @@ This guide walks you through installing and making your first API call with the 
 
 ## Installation
 
-### ⭐ Recommended: Clean API
+### ⭐ Recommended: IBKR SDK
 
 Production-ready abstraction with comprehensive error handling and strongly-typed models:
 
 ```bash
-dotnet add package IBKR.Api.Contract
-dotnet add package IBKR.Api.Client
-dotnet add package IBKR.Api.Authentication
+dotnet add package IBKR.Sdk.Contract
+dotnet add package IBKR.Sdk.Client
+dotnet add package IBKR.Sdk.Authentication
 ```
 
 ### Alternative: Lower-Level SDKs
@@ -41,7 +41,7 @@ dotnet add package IBKR.Api.Kiota.Client
 ```
 </details>
 
-**Not sure which to choose?** Read the [SDK Comparison](SDK-COMPARISON.md) or start with the **Clean API** for the best experience.
+**Not sure which to choose?** Read the [SDK Comparison](SDK-COMPARISON.md) or start with the **IBKR SDK** for the best experience.
 
 ## Authentication Setup
 
@@ -69,12 +69,12 @@ const string baseUrl = "https://localhost:5000";
 
 ## Your First API Call
 
-### Clean API Example ⭐ (Recommended)
+### IBKR SDK Example ⭐ (Recommended)
 
 ```csharp
-using IBKR.Api.Authentication;
-using IBKR.Api.Client.Services;
-using IBKR.Api.Contract.Services;
+using IBKR.Sdk.Authentication;
+using IBKR.Sdk.Client.Services;
+using IBKR.Sdk.Contract.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
@@ -135,7 +135,7 @@ AAPL Put Strike: $95.00 Exp: 2025-10-17
 ...
 ```
 
-**Why use Clean API?**
+**Why use IBKR SDK?**
 - ✅ Strongly-typed models (DateTime, decimal, enums)
 - ✅ Comprehensive error handling
 - ✅ API quirks handled automatically

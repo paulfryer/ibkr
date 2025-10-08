@@ -21,7 +21,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IBKR.Api.NSwag.Tests", "NSw
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IBKR.Api.Kiota.MockClient", "Kiota\IBKR.Api.Kiota.MockClient\IBKR.Api.Kiota.MockClient.csproj", "{C993D70D-0030-4750-B874-0E2A44701AA4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IBKR.Api.Authentication", "IBKR.Api.Authentication\IBKR.Api.Authentication.csproj", "{403C40AC-86DB-4B5B-AABA-1D17F916F17B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IBKR.Sdk.Authentication", "IBKR.Sdk.Authentication\IBKR.Sdk.Authentication.csproj", "{403C40AC-86DB-4B5B-AABA-1D17F916F17B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IBKR.Api.NSwag.Authentication", "NSwag\IBKR.Api.NSwag.Authentication\IBKR.Api.NSwag.Authentication.csproj", "{00B1BD26-935D-47DB-9AD5-30DB25BBB299}"
 EndProject
@@ -33,11 +33,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IBKR.Api.NSwag.Contract", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IBKR.Api.NSwag.Client", "NSwag\IBKR.Api.NSwag.Client\IBKR.Api.NSwag.Client.csproj", "{B6AF2E72-3932-4E63-BCFB-17B1ACB19F91}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IBKR.Api.Contract", "IBKR.Api.Contract\IBKR.Api.Contract.csproj", "{8A31CB0D-3529-4D94-B676-98D3EFB68833}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IBKR.Sdk.Contract", "IBKR.Sdk.Contract\IBKR.Sdk.Contract.csproj", "{8A31CB0D-3529-4D94-B676-98D3EFB68833}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IBKR.Api.Client", "IBKR.Api.Client\IBKR.Api.Client.csproj", "{D7C32CF2-5865-4150-89E8-CD7E47967F3E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IBKR.Sdk.Client", "IBKR.Sdk.Client\IBKR.Sdk.Client.csproj", "{D7C32CF2-5865-4150-89E8-CD7E47967F3E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IBKR.Api.Tests", "IBKR.Api.Tests\IBKR.Api.Tests.csproj", "{B426C184-169B-4D37-A17A-5E9FCEF445BE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IBKR.Sdk.Tests", "IBKR.Sdk.Tests\IBKR.Sdk.Tests.csproj", "{B426C184-169B-4D37-A17A-5E9FCEF445BE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

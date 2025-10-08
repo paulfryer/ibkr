@@ -1,6 +1,6 @@
-using IBKR.Api.Client.Services;
-using IBKR.Api.Contract.Enums;
-using IBKR.Api.Contract.Interfaces;
+using IBKR.Sdk.Client.Services;
+using IBKR.Sdk.Contract.Enums;
+using IBKR.Sdk.Contract.Interfaces;
 using IBKR.Api.NSwag.Contract.Interfaces;
 using Xunit;
 

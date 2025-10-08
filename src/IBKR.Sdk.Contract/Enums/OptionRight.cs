@@ -1,4 +1,4 @@
-namespace IBKR.Api.Contract.Enums;
+namespace IBKR.Sdk.Contract.Enums;
 
 /// <summary>
 /// Option right (Call or Put)

@@ -1,18 +1,18 @@
 # Release Workflow
 
-This document describes the automated CI/CD pipeline for building, testing, and publishing all three SDK layers: Clean API, NSwag, and Kiota.
+This document describes the automated CI/CD pipeline for building, testing, and publishing all three SDK layers: IBKR SDK, NSwag, and Kiota.
 
 ## Overview
 
 The release workflow is a **manual GitHub Actions workflow** that:
 - ✅ Generates NSwag and Kiota SDKs from the latest OpenAPI spec
-- ✅ Builds and packages Clean API, NSwag, and Kiota as NuGet packages
+- ✅ Builds and packages IBKR SDK, NSwag, and Kiota as NuGet packages
 - ✅ Runs comprehensive test suites with mock implementations
 - ✅ Creates GitHub releases (optional)
 - ✅ Publishes downloadable artifacts
 
 **Three SDK layers published:**
-1. **Clean API** (IBKR.Api.Contract, IBKR.Api.Client, IBKR.Api.Authentication) ⭐
+1. **IBKR SDK** (IBKR.Sdk.Contract, IBKR.Sdk.Client, IBKR.Sdk.Authentication) ⭐
 2. **NSwag SDK** (IBKR.Api.NSwag.Contract, IBKR.Api.NSwag.Client)
 3. **Kiota SDK** (IBKR.Api.Kiota.Contract, IBKR.Api.Kiota.Client)
 
@@ -103,18 +103,18 @@ For detailed job descriptions, see [WORKFLOW-UPDATES.md](WORKFLOW-UPDATES.md).
 
 ### Key Jobs
 
-#### Job 6: Build Clean API
+#### Job 6: Build IBKR SDK
 
-**Purpose:** Build and package the production-ready Clean API layer
+**Purpose:** Build and package the production-ready IBKR SDK layer
 
-**Dependencies:** Needs NSwag to be built first (Clean API uses NSwag packages)
+**Dependencies:** Needs NSwag to be built first (IBKR SDK uses NSwag packages)
 
 **Outputs:**
-- `IBKR.Api.Contract.{version}.nupkg`
-- `IBKR.Api.Authentication.{version}.nupkg`
-- `IBKR.Api.Client.{version}.nupkg`
+- `IBKR.Sdk.Contract.{version}.nupkg`
+- `IBKR.Sdk.Authentication.{version}.nupkg`
+- `IBKR.Sdk.Client.{version}.nupkg`
 
-#### Job 9: Test Clean API
+#### Job 9: Test IBKR SDK
 
 **Purpose:** Run comprehensive test suite with high-quality logging
 

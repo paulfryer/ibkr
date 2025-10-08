@@ -1,10 +1,10 @@
-# Clean API Guide
+# IBKR SDK Guide
 
 > Production-ready abstraction layer for Interactive Brokers Client Portal Web API
 
 ## Overview
 
-The Clean API is a **production-ready abstraction layer** built on top of the generated NSwag and Kiota SDKs. It provides:
+The IBKR SDK is a **production-ready abstraction layer** built on top of the generated NSwag and Kiota SDKs. It provides:
 
 - ✅ **Strongly-typed models** - DateTime, enums, decimals instead of strings
 - ✅ **Comprehensive error handling** - Detailed error messages with context
@@ -20,16 +20,16 @@ The Clean API is a **production-ready abstraction layer** built on top of the ge
 │  Your Application                           │
 │  ↓ Uses strongly-typed interfaces           │
 ├─────────────────────────────────────────────┤
-│  IBKR.Api.Contract                          │
+│  IBKR.Sdk.Contract                          │
 │  • IOptionService                           │
 │  • OptionContract, OptionChain              │
 │  • OptionRight, OptionType (enums)          │
 ├─────────────────────────────────────────────┤
-│  IBKR.Api.Client                            │
+│  IBKR.Sdk.Client                            │
 │  • OptionService (implementation)           │
 │  • OptionMapper (handles quirks)            │
 ├─────────────────────────────────────────────┤
-│  IBKR.Api.Authentication                    │
+│  IBKR.Sdk.Authentication                    │
 │  • IBKRAuthenticationProvider               │
 │  • Thread-safe session management           │
 ├─────────────────────────────────────────────┤
@@ -43,16 +43,16 @@ The Clean API is a **production-ready abstraction layer** built on top of the ge
 
 | Package | Purpose | Dependencies |
 |---------|---------|--------------|
-| **IBKR.Api.Contract** | Interfaces and models | None (pure contracts) |
-| **IBKR.Api.Authentication** | Session management | NSwag.Contract |
-| **IBKR.Api.Client** | Service implementations | Contract, Authentication, NSwag.Client |
+| **IBKR.Sdk.Contract** | Interfaces and models | None (pure contracts) |
+| **IBKR.Sdk.Authentication** | Session management | NSwag.Contract |
+| **IBKR.Sdk.Client** | Service implementations | Contract, Authentication, NSwag.Client |
 
 ## Installation
 
 ```bash
-dotnet add package IBKR.Api.Contract
-dotnet add package IBKR.Api.Client
-dotnet add package IBKR.Api.Authentication
+dotnet add package IBKR.Sdk.Contract
+dotnet add package IBKR.Sdk.Client
+dotnet add package IBKR.Sdk.Authentication
 ```
 
 ## Quick Start
@@ -60,9 +60,9 @@ dotnet add package IBKR.Api.Authentication
 ### 1. Configure Dependency Injection
 
 ```csharp
-using IBKR.Api.Authentication;
-using IBKR.Api.Client.Services;
-using IBKR.Api.Contract.Services;
+using IBKR.Sdk.Authentication;
+using IBKR.Sdk.Client.Services;
+using IBKR.Sdk.Contract.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 var services = new ServiceCollection();
@@ -78,7 +78,7 @@ services.Configure<IBKRSettings>(options =>
 // Register authentication
 services.AddSingleton<IIBKRAuthenticationProvider, IBKRAuthenticationProvider>();
 
-// Register clean API services
+// Register IBKR SDK services
 services.AddTransient<IOptionService, OptionService>();
 
 var serviceProvider = services.BuildServiceProvider();
@@ -169,7 +169,7 @@ public enum OptionRight
 
 ## API Quirks Handled Automatically
 
-The Clean API handles several quirks in the Interactive Brokers API:
+The IBKR SDK handles several quirks in the Interactive Brokers API:
 
 ### 1. Symbol Field Mismatch
 
@@ -234,7 +234,7 @@ private string[] ParseValidExchanges(string? exchanges)
 
 ## Error Handling
 
-The Clean API provides comprehensive error handling with detailed context:
+The IBKR SDK provides comprehensive error handling with detailed context:
 
 ```csharp
 try
@@ -256,7 +256,7 @@ catch (IBKRAuthenticationException ex)
 
 ## Authentication
 
-The Clean API uses thread-safe authentication with automatic session management:
+The IBKR SDK uses thread-safe authentication with automatic session management:
 
 ### Thread Safety
 
@@ -298,7 +298,7 @@ public class IBKRAuthenticationProvider : IIBKRAuthenticationProvider
 
 ## Testing
 
-The Clean API is designed for testability with comprehensive mock support.
+The IBKR SDK is designed for testability with comprehensive mock support.
 
 ### Local Development (Real API)
 
@@ -309,14 +309,14 @@ export IBKR__ClientSecret="your-client-secret"
 export IBKR__BaseUrl="https://localhost:5000/v1/api"
 
 # Run tests with real API
-dotnet test src/IBKR.Api.Tests
+dotnet test src/IBKR.Sdk.Tests
 ```
 
 ### CI/CD (Mock Mode)
 
 ```bash
 # Force mock mode (no credentials needed)
-dotnet test src/IBKR.Api.Tests -e Testing:UseMockClient=true
+dotnet test src/IBKR.Sdk.Tests -e Testing:UseMockClient=true
 ```
 
 ### Test Configuration
@@ -333,9 +333,9 @@ public class CleanApiTestFixture : IDisposable
         var useMock = forceMock || !hasCredentials;
 
         if (useMock)
-            Console.WriteLine("[Clean API Tests] Using MOCK implementation");
+            Console.WriteLine("[IBKR SDK Tests] Using MOCK implementation");
         else
-            Console.WriteLine("[Clean API Tests] Using REAL IBKR API");
+            Console.WriteLine("[IBKR SDK Tests] Using REAL IBKR API");
     }
 }
 ```
@@ -391,7 +391,7 @@ _logger.LogInformation(
 
 ## Comparison with Lower-Level SDKs
 
-### Clean API (Recommended)
+### IBKR SDK (Recommended)
 
 ```csharp
 // Strongly-typed, clean
@@ -419,14 +419,14 @@ var info = await service.InfoAsync(conid);
 // Manual error handling
 ```
 
-## Extending the Clean API
+## Extending the IBKR SDK
 
-To add new methods to the Clean API:
+To add new methods to the IBKR SDK:
 
 ### 1. Add to Contract
 
 ```csharp
-// IBKR.Api.Contract/Services/IOptionService.cs
+// IBKR.Sdk.Contract/Services/IOptionService.cs
 public interface IOptionService
 {
     Task<OptionChain> GetOptionChainAsync(
@@ -442,7 +442,7 @@ public interface IOptionService
 ### 2. Implement in Client
 
 ```csharp
-// IBKR.Api.Client/Services/OptionService.cs
+// IBKR.Sdk.Client/Services/OptionService.cs
 public async Task<OptionQuote> GetOptionQuoteAsync(int contractId)
 {
     // Implementation with error handling and mapping
@@ -452,7 +452,7 @@ public async Task<OptionQuote> GetOptionQuoteAsync(int contractId)
 ### 3. Add Tests
 
 ```csharp
-// IBKR.Api.Tests/OptionServiceTests.cs
+// IBKR.Sdk.Tests/OptionServiceTests.cs
 [Fact]
 public async Task GetOptionQuoteAsync_ReturnsValidQuote()
 {
@@ -492,13 +492,13 @@ services.Configure<IBKRSettings>(options =>
 ## Further Reading
 
 - **[Testing Guide](TESTING.md)** - Comprehensive testing patterns with mocks
-- **[SDK Comparison](SDK-COMPARISON.md)** - Compare Clean API with NSwag/Kiota
+- **[SDK Comparison](SDK-COMPARISON.md)** - Compare IBKR SDK with NSwag/Kiota
 - **[Architecture](ARCHITECTURE.md)** - Deep dive into SDK architecture
-- **[Contributing](CONTRIBUTING.md)** - How to extend the Clean API
+- **[Contributing](CONTRIBUTING.md)** - How to extend the IBKR SDK
 
 ## Summary
 
-The Clean API provides:
+The IBKR SDK provides:
 
 ✅ **Production-ready** - Built-in error handling, thread safety, comprehensive logging
 ✅ **Strongly-typed** - DateTime, enums, decimals instead of strings
@@ -507,4 +507,4 @@ The Clean API provides:
 ✅ **Well-documented** - Extensive examples and guides
 ✅ **Testable** - Full mock support for CI/CD and local development
 
-**Start building with the Clean API today for the best Interactive Brokers development experience!**
+**Start building with the IBKR SDK today for the best Interactive Brokers development experience!**

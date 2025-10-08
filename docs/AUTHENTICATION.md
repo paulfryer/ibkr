@@ -54,10 +54,10 @@ Register your application in the [IBKR API Portal](https://api.ibkr.com):
 
 ### Shared Authentication Library
 
-`IBKR.Api.Authentication` provides core OAuth2 functionality:
+`IBKR.Sdk.Authentication` provides core OAuth2 functionality:
 
 ```
-IBKR.Api.Authentication/
+IBKR.Sdk.Authentication/
 ├── IBKRAuthenticationOptions.cs      # Configuration
 ├── IIBKRAuthenticationProvider.cs    # Interface
 ├── IBKRAuthenticationProvider.cs     # Real OAuth2 implementation
@@ -132,7 +132,7 @@ IBKR__ClientPemPath=/Users/you/.ibkr/private.pem
 #### Setup in Program.cs
 
 ```csharp
-using IBKR.Api.Authentication;
+using IBKR.Sdk.Authentication;
 using IBKR.Api.NSwag.Authentication;
 using IBKR.Api.NSwag.Contract.Interfaces;
 using IBKR.Api.NSwag.Client.Services;
@@ -190,7 +190,7 @@ public class NotificationController : ControllerBase
 #### Setup in Program.cs
 
 ```csharp
-using IBKR.Api.Authentication;
+using IBKR.Sdk.Authentication;
 using IBKR.Api.Kiota.Authentication;
 using IBKR.Api.Kiota.Client;
 

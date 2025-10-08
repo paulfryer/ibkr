@@ -24,10 +24,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!-- Clean API - only reference Contract and Client -->
-    <ProjectReference Include="..\IBKR.Api.Contract\IBKR.Api.Contract.csproj" />
-    <ProjectReference Include="..\IBKR.Api.Client\IBKR.Api.Client.csproj" />
-    <ProjectReference Include="..\IBKR.Api.Authentication\IBKR.Api.Authentication.csproj" />
+    <!-- IBKR SDK - only reference Contract and Client -->
+    <ProjectReference Include="..\IBKR.Sdk.Contract\IBKR.Sdk.Contract.csproj" />
+    <ProjectReference Include="..\IBKR.Sdk.Client\IBKR.Sdk.Client.csproj" />
+    <ProjectReference Include="..\IBKR.Sdk.Authentication\IBKR.Sdk.Authentication.csproj" />
 
     <!-- Need NSwag for real API implementation - but tests don't know about it -->
     <ProjectReference Include="..\NSwag\IBKR.Api.NSwag.Authentication\IBKR.Api.NSwag.Authentication.csproj" />

@@ -1,4 +1,4 @@
-# SDK Comparison: Clean API vs NSwag vs Kiota
+# SDK Comparison: IBKR SDK vs NSwag vs Kiota
 
 This guide helps you choose between the three SDK layers by comparing their design philosophies, code patterns, and ideal use cases.
 
@@ -6,13 +6,13 @@ This guide helps you choose between the three SDK layers by comparing their desi
 
 | Your Situation | Choose This SDK |
 |----------------|-----------------|
-| **Production applications** | **Clean API** ⭐ (strongly-typed, error handling included) |
-| **Quick prototypes** | **Clean API** ⭐ (minimal setup, comprehensive docs) |
-| **Enterprise .NET apps** | **Clean API** ⭐ (DI-friendly, production-ready) |
+| **Production applications** | **IBKR SDK** ⭐ (strongly-typed, error handling included) |
+| **Quick prototypes** | **IBKR SDK** ⭐ (minimal setup, comprehensive docs) |
+| **Enterprise .NET apps** | **IBKR SDK** ⭐ (DI-friendly, production-ready) |
 | Need lower-level API control | **NSwag** 🔷 (direct API access) |
 | Want IntelliSense-driven API discovery | **Kiota** 🔶 (fluent API surface) |
 | Testing with service mocks is critical | **All** ✅ (all have full mock support) |
-| Building microservices with minimal dependencies | **Clean API** ⭐ or **Kiota** 🔶 |
+| Building microservices with minimal dependencies | **IBKR SDK** ⭐ or **Kiota** 🔶 |
 | SDK development/quirk discovery | **NSwag** 🔷 or **Kiota** 🔶 |
 
 ## Three-Layer Architecture
@@ -20,9 +20,9 @@ This guide helps you choose between the three SDK layers by comparing their desi
 ```
 ┌─────────────────────────────────────────────┐
 │  Your Application                           │
-│  ↓ Recommended: Use Clean API               │
+│  ↓ Recommended: Use IBKR SDK               │
 ├─────────────────────────────────────────────┤
-│  ⭐ Clean API Layer                         │
+│  ⭐ IBKR SDK Layer                         │
 │  • Strongly-typed models (DateTime, enums)  │
 │  • Comprehensive error handling             │
 │  • Built-in API quirk workarounds           │
@@ -39,7 +39,7 @@ This guide helps you choose between the three SDK layers by comparing their desi
 
 ### Example: Get Option Chain for AAPL
 
-#### Clean API ⭐ (Recommended)
+#### IBKR SDK ⭐ (Recommended)
 ```csharp
 // Strongly-typed, production-ready
 var optionService = serviceProvider.GetRequiredService<IOptionService>();
@@ -384,7 +384,7 @@ public class Service
 
 ## Pros & Cons Summary
 
-### Clean API ⭐
+### IBKR SDK ⭐
 
 **Pros:**
 ✅ Strongly-typed models (DateTime, decimal, enums)
@@ -442,7 +442,7 @@ public class Service
 
 ## Real-World Use Case Recommendations
 
-### Use Clean API ⭐ When:
+### Use IBKR SDK ⭐ When:
 
 1. **Building Production Applications**
    - Need strongly-typed models and comprehensive error handling
@@ -459,7 +459,7 @@ public class Service
    - Need production-ready abstractions
    - Want high-quality test coverage
 
-**Note:** Clean API currently covers option-related endpoints. For other endpoints, use NSwag or Kiota (we're expanding coverage over time).
+**Note:** IBKR SDK currently covers option-related endpoints. For other endpoints, use NSwag or Kiota (we're expanding coverage over time).
 
 ### Use NSwag 🔷 When:
 
@@ -506,24 +506,24 @@ public class Service
 
 ```xml
 <ItemGroup>
-  <!-- Clean API for option trading -->
-  <PackageReference Include="IBKR.Api.Contract" Version="1.0.0" />
-  <PackageReference Include="IBKR.Api.Client" Version="1.0.0" />
-  <PackageReference Include="IBKR.Api.Authentication" Version="1.0.0" />
+  <!-- IBKR SDK for option trading -->
+  <PackageReference Include="IBKR.Sdk.Contract" Version="1.0.0" />
+  <PackageReference Include="IBKR.Sdk.Client" Version="1.0.0" />
+  <PackageReference Include="IBKR.Sdk.Authentication" Version="1.0.0" />
 
-  <!-- NSwag for other endpoints not yet in Clean API -->
+  <!-- NSwag for other endpoints not yet in IBKR SDK -->
   <PackageReference Include="IBKR.Api.NSwag.Contract" Version="1.0.0" />
   <PackageReference Include="IBKR.Api.NSwag.Client" Version="1.0.0" />
 </ItemGroup>
 ```
 
 **Why would you do this?**
-- Use Clean API for supported endpoints (options)
-- Use NSwag/Kiota for endpoints not yet in Clean API
-- Gradual migration as Clean API coverage expands
+- Use IBKR SDK for supported endpoints (options)
+- Use NSwag/Kiota for endpoints not yet in IBKR SDK
+- Gradual migration as IBKR SDK coverage expands
 - Different teams prefer different patterns
 
-⚠️ **Caution:** Clean API already includes NSwag dependencies, so combining Clean API + NSwag doesn't add much overhead.
+⚠️ **Caution:** IBKR SDK already includes NSwag dependencies, so combining IBKR SDK + NSwag doesn't add much overhead.
 
 ## Conclusion
 
@@ -531,20 +531,20 @@ All three SDK layers are **production-ready** and **fully supported**. Your choi
 
 | Priority | Choose |
 |----------|--------|
-| **Production-ready abstractions** | **Clean API** ⭐ |
-| **Strongly-typed models** | **Clean API** ⭐ |
-| **Quick setup** | **Clean API** ⭐ |
+| **Production-ready abstractions** | **IBKR SDK** ⭐ |
+| **Strongly-typed models** | **IBKR SDK** ⭐ |
+| **Quick setup** | **IBKR SDK** ⭐ |
 | Lower-level API control | NSwag 🔷 |
 | API discoverability | Kiota 🔶 |
 | Smallest package size | Kiota 🔶 |
 | SDK development | NSwag 🔷 or Kiota 🔶 |
 
-**Recommendation for most developers:** Start with **Clean API** ⭐ for the best experience. Use NSwag or Kiota for endpoints not yet covered by the Clean API.
+**Recommendation for most developers:** Start with **IBKR SDK** ⭐ for the best experience. Use NSwag or Kiota for endpoints not yet covered by the IBKR SDK.
 
 ---
 
 **Next Steps:**
 - [Getting Started Guide](GETTING-STARTED.md) - Install and make your first API call
-- [Clean API Guide](CLEAN-API.md) - Production-ready abstraction layer (recommended)
+- [IBKR SDK Guide](CLEAN-API.md) - Production-ready abstraction layer (recommended)
 - [NSwag SDK Guide](NSWAG-SDK.md) - Deep dive into service-oriented architecture
 - [Kiota SDK Guide](KIOTA-SDK.md) - Deep dive into fluent API architecture

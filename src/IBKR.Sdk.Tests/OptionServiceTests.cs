@@ -1,9 +1,9 @@
-using IBKR.Api.Contract.Enums;
-using IBKR.Api.Contract.Interfaces;
+using IBKR.Sdk.Contract.Enums;
+using IBKR.Sdk.Contract.Interfaces;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace IBKR.Api.Tests;
+namespace IBKR.Sdk.Tests;
 
 /// <summary>
 /// Tests for IOptionService - the CLEAN API.

@@ -185,10 +185,10 @@ jobs:
           path: |
             src/NSwag/
             src/Kiota/
-            src/IBKR.Api.Contract/
-            src/IBKR.Api.Client/
-            src/IBKR.Api.Authentication/
-            src/IBKR.Api.Tests/
+            src/IBKR.Sdk.Contract/
+            src/IBKR.Sdk.Client/
+            src/IBKR.Sdk.Authentication/
+            src/IBKR.Sdk.Tests/
             src/Directory.Build.props
           retention-days: 1
           if-no-files-found: error
@@ -398,27 +398,27 @@ jobs:
 
       - name: 🔄 Restore dependencies
         run: |
-          dotnet restore src/IBKR.Api.Contract/IBKR.Api.Contract.csproj
-          dotnet restore src/IBKR.Api.Authentication/IBKR.Api.Authentication.csproj
-          dotnet restore src/IBKR.Api.Client/IBKR.Api.Client.csproj
+          dotnet restore src/IBKR.Sdk.Contract/IBKR.Sdk.Contract.csproj
+          dotnet restore src/IBKR.Sdk.Authentication/IBKR.Sdk.Authentication.csproj
+          dotnet restore src/IBKR.Sdk.Client/IBKR.Sdk.Client.csproj
 
       - name: 🏗️ Build Clean API Contract
         run: |
-          dotnet build src/IBKR.Api.Contract/IBKR.Api.Contract.csproj \
+          dotnet build src/IBKR.Sdk.Contract/IBKR.Sdk.Contract.csproj \
             --configuration ${{ env.CONFIGURATION }} \
             --no-restore \
             /p:Version=${{ needs.validate.outputs.version }}
 
       - name: 🏗️ Build Authentication
         run: |
-          dotnet build src/IBKR.Api.Authentication/IBKR.Api.Authentication.csproj \
+          dotnet build src/IBKR.Sdk.Authentication/IBKR.Sdk.Authentication.csproj \
             --configuration ${{ env.CONFIGURATION }} \
             --no-restore \
             /p:Version=${{ needs.validate.outputs.version }}
 
       - name: 🏗️ Build Clean API Client
         run: |
-          dotnet build src/IBKR.Api.Client/IBKR.Api.Client.csproj \
+          dotnet build src/IBKR.Sdk.Client/IBKR.Sdk.Client.csproj \
             --configuration ${{ env.CONFIGURATION }} \
             --no-restore \
             /p:Version=${{ needs.validate.outputs.version }}
@@ -427,22 +427,22 @@ jobs:
         run: |
           mkdir -p packages/CleanAPI
 
-          echo "📦 Packing IBKR.Api.Contract..."
-          dotnet pack src/IBKR.Api.Contract/IBKR.Api.Contract.csproj \
+          echo "📦 Packing IBKR.Sdk.Contract..."
+          dotnet pack src/IBKR.Sdk.Contract/IBKR.Sdk.Contract.csproj \
             --configuration ${{ env.CONFIGURATION }} \
             --no-build \
             --output packages/CleanAPI \
             /p:PackageVersion=${{ needs.validate.outputs.version }}
 
-          echo "📦 Packing IBKR.Api.Authentication..."
-          dotnet pack src/IBKR.Api.Authentication/IBKR.Api.Authentication.csproj \
+          echo "📦 Packing IBKR.Sdk.Authentication..."
+          dotnet pack src/IBKR.Sdk.Authentication/IBKR.Sdk.Authentication.csproj \
             --configuration ${{ env.CONFIGURATION }} \
             --no-build \
             --output packages/CleanAPI \
             /p:PackageVersion=${{ needs.validate.outputs.version }}
 
-          echo "📦 Packing IBKR.Api.Client..."
-          dotnet pack src/IBKR.Api.Client/IBKR.Api.Client.csproj \
+          echo "📦 Packing IBKR.Sdk.Client..."
+          dotnet pack src/IBKR.Sdk.Client/IBKR.Sdk.Client.csproj \
             --configuration ${{ env.CONFIGURATION }} \
             --no-build \
             --output packages/CleanAPI \
@@ -584,7 +584,7 @@ jobs:
           echo "🧪 Running Clean API tests with mocks..."
           echo "   Testing:UseMockClient = $Testing__UseMockClient"
 
-          dotnet test src/IBKR.Api.Tests/IBKR.Api.Tests.csproj \
+          dotnet test src/IBKR.Sdk.Tests/IBKR.Sdk.Tests.csproj \
             --configuration ${{ env.CONFIGURATION }} \
             --logger "trx;LogFileName=test-results.trx" \
             --logger "console;verbosity=detailed"
@@ -596,7 +596,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: clean-api-test-results
-          path: src/IBKR.Api.Tests/TestResults/*.trx
+          path: src/IBKR.Sdk.Tests/TestResults/*.trx
           retention-days: 30
           if-no-files-found: ignore
 
@@ -657,9 +657,9 @@ jobs:
           echo "### ⭐ Clean API (Recommended)" >> $GITHUB_STEP_SUMMARY
           echo "Strongly-typed, production-ready abstraction with comprehensive error handling:" >> $GITHUB_STEP_SUMMARY
           echo "\`\`\`bash" >> $GITHUB_STEP_SUMMARY
-          echo "dotnet add package IBKR.Api.Contract --version ${{ needs.validate.outputs.version }}" >> $GITHUB_STEP_SUMMARY
-          echo "dotnet add package IBKR.Api.Client --version ${{ needs.validate.outputs.version }}" >> $GITHUB_STEP_SUMMARY
-          echo "dotnet add package IBKR.Api.Authentication --version ${{ needs.validate.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "dotnet add package IBKR.Sdk.Contract --version ${{ needs.validate.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "dotnet add package IBKR.Sdk.Client --version ${{ needs.validate.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "dotnet add package IBKR.Sdk.Authentication --version ${{ needs.validate.outputs.version }}" >> $GITHUB_STEP_SUMMARY
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### NSwag SDK (Lower-level)" >> $GITHUB_STEP_SUMMARY
@@ -729,9 +729,9 @@ jobs:
 
             ### ⭐ Clean API (Recommended)
             Production-ready abstraction with comprehensive error handling and logging:
-            - **IBKR.Api.Contract** - Clean interfaces and strongly-typed models
-            - **IBKR.Api.Client** - Production-ready implementation with built-in workarounds
-            - **IBKR.Api.Authentication** - Thread-safe authentication provider
+            - **IBKR.Sdk.Contract** - Clean interfaces and strongly-typed models
+            - **IBKR.Sdk.Client** - Production-ready implementation with built-in workarounds
+            - **IBKR.Sdk.Authentication** - Thread-safe authentication provider
 
             ### NSwag SDK (Lower-level)
             Service-oriented architecture with direct API access:
@@ -747,9 +747,9 @@ jobs:
 
             ### Recommended: Clean API
             ```bash
-            dotnet add package IBKR.Api.Contract --version ${{ needs.validate.outputs.version }}
-            dotnet add package IBKR.Api.Client --version ${{ needs.validate.outputs.version }}
-            dotnet add package IBKR.Api.Authentication --version ${{ needs.validate.outputs.version }}
+            dotnet add package IBKR.Sdk.Contract --version ${{ needs.validate.outputs.version }}
+            dotnet add package IBKR.Sdk.Client --version ${{ needs.validate.outputs.version }}
+            dotnet add package IBKR.Sdk.Authentication --version ${{ needs.validate.outputs.version }}
             ```
 
             ### Alternative: NSwag SDK

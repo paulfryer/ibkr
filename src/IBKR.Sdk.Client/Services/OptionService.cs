@@ -1,12 +1,12 @@
-using IBKR.Api.Contract.Enums;
-using IBKR.Api.Contract.Interfaces;
-using IBKR.Api.Contract.Models;
-using IBKR.Api.Client.Mappers;
+using IBKR.Sdk.Contract.Enums;
+using IBKR.Sdk.Contract.Interfaces;
+using IBKR.Sdk.Contract.Models;
+using IBKR.Sdk.Client.Mappers;
 using IBKR.Api.NSwag.Contract.Interfaces;
 using IBKR.Api.NSwag.Contract.Models;
 using Newtonsoft.Json;
 
-namespace IBKR.Api.Client.Services;
+namespace IBKR.Sdk.Client.Services;
 
 /// <summary>
 /// Clean implementation of IOptionService that wraps messy generated SDKs.

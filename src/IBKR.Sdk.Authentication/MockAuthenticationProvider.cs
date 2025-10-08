@@ -1,4 +1,4 @@
-namespace IBKR.Api.Authentication;
+namespace IBKR.Sdk.Authentication;
 
 /// <summary>
 /// Mock authentication provider for testing without real IBKR credentials.

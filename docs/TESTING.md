@@ -1,6 +1,6 @@
 # Testing Guide
 
-This guide covers testing strategies for all three SDK layers: Clean API, NSwag, and Kiota.
+This guide covers testing strategies for all three SDK layers: IBKR SDK, NSwag, and Kiota.
 
 ## Testing Philosophy
 
@@ -9,18 +9,18 @@ Tests should serve three purposes:
 2. **Document usage** - Show developers how to use the API
 3. **Diagnose failures** - Provide actionable information when things break
 
-The Clean API test suite (`IBKR.Api.Tests`) demonstrates best practices for comprehensive logging and diagnostics.
+The IBKR SDK test suite (`IBKR.Sdk.Tests`) demonstrates best practices for comprehensive logging and diagnostics.
 
 ## Test Architecture Overview
 
 All three SDK layers include comprehensive test infrastructure:
 
 ```
-Clean API:
-├── IBKR.Api.Contract        # Interfaces & models
-├── IBKR.Api.Client          # Implementation
-├── IBKR.Api.Authentication  # Session management
-└── IBKR.Api.Tests          # Comprehensive test suite ⭐
+IBKR SDK:
+├── IBKR.Sdk.Contract        # Interfaces & models
+├── IBKR.Sdk.Client          # Implementation
+├── IBKR.Sdk.Authentication  # Session management
+└── IBKR.Sdk.Tests          # Comprehensive test suite ⭐
 
 NSwag SDK:
 ├── Contract     # Models + service interfaces
@@ -35,9 +35,9 @@ Kiota SDK:
 └── Tests        # Discovery & quirk testing
 ```
 
-## Clean API Testing ⭐
+## IBKR SDK Testing ⭐
 
-The Clean API test suite (`IBKR.Api.Tests`) demonstrates best practices for production-quality testing.
+The IBKR SDK test suite (`IBKR.Sdk.Tests`) demonstrates best practices for production-quality testing.
 
 ### Key Features
 
@@ -116,7 +116,7 @@ public class OptionServiceTests : IClassFixture<CleanApiTestFixture>
 }
 ```
 
-### Clean API Test Configuration
+### IBKR SDK Test Configuration
 
 ```csharp
 public class CleanApiTestFixture : IDisposable
@@ -133,33 +133,33 @@ public class CleanApiTestFixture : IDisposable
 
         if (useMock)
         {
-            Console.WriteLine("[Clean API Tests] Using MOCK implementation");
+            Console.WriteLine("[IBKR SDK Tests] Using MOCK implementation");
             // Register mocks
         }
         else
         {
-            Console.WriteLine("[Clean API Tests] Using REAL IBKR API");
+            Console.WriteLine("[IBKR SDK Tests] Using REAL IBKR API");
             // Register real services
         }
     }
 }
 ```
 
-### Running Clean API Tests
+### Running IBKR SDK Tests
 
 ```bash
 # Local development (uses real API if credentials available)
-dotnet test src/IBKR.Api.Tests
+dotnet test src/IBKR.Sdk.Tests
 
 # Force mock mode (no credentials needed)
-dotnet test src/IBKR.Api.Tests -e Testing:UseMockClient=true
+dotnet test src/IBKR.Sdk.Tests -e Testing:UseMockClient=true
 
 # Run specific test with verbose output
-dotnet test src/IBKR.Api.Tests --filter "DisplayName~AAPL" \\
+dotnet test src/IBKR.Sdk.Tests --filter "DisplayName~AAPL" \\
   --logger "console;verbosity=detailed"
 ```
 
-### Benefits of Clean API Testing Approach
+### Benefits of IBKR SDK Testing Approach
 
 **When tests pass:**
 ```

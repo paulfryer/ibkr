@@ -1,4 +1,4 @@
-namespace IBKR.Api.Contract.Models;
+namespace IBKR.Sdk.Contract.Models;
 
 /// <summary>
 /// Represents a complete option chain for an underlying security within a date range.

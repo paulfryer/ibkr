@@ -1,4 +1,4 @@
-using IBKR.Api.Authentication;
+using IBKR.Sdk.Authentication;
 using IBKR.Api.Kiota.Authentication;
 using IBKR.Api.Kiota.Client;
 using IBKR.Api.Kiota.MockClient;

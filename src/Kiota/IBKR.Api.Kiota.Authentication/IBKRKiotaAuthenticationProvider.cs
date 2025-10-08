@@ -1,4 +1,4 @@
-using IBKR.Api.Authentication;
+using IBKR.Sdk.Authentication;
 using Microsoft.Kiota.Abstractions;
 using Microsoft.Kiota.Abstractions.Authentication;
 

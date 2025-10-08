@@ -1,9 +1,9 @@
-using IBKR.Api.Contract.Enums;
-using IBKR.Api.Contract.Models;
+using IBKR.Sdk.Contract.Enums;
+using IBKR.Sdk.Contract.Models;
 using IBKR.Api.NSwag.Contract.Models;
 using System.Globalization;
 
-namespace IBKR.Api.Client.Mappers;
+namespace IBKR.Sdk.Client.Mappers;
 
 /// <summary>
 /// Maps between generated NSwag models and clean contract models

@@ -1,8 +1,8 @@
-using IBKR.Api.Contract.Enums;
-using IBKR.Api.Contract.Interfaces;
-using IBKR.Api.Contract.Models;
+using IBKR.Sdk.Contract.Enums;
+using IBKR.Sdk.Contract.Interfaces;
+using IBKR.Sdk.Contract.Models;
 
-namespace IBKR.Api.Tests.Mocks;
+namespace IBKR.Sdk.Tests.Mocks;
 
 /// <summary>
 /// Mock implementation of IOptionService for testing without real API calls.

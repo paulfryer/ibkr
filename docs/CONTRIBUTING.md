@@ -78,7 +78,7 @@ dotnet run
 ```bash
 # Build everything
 cd src
-dotnet build IBKR.Api.sln
+dotnet build IBKR.Sdk.sln
 
 # Check for errors
 # All Contract and Client projects should build successfully
@@ -242,7 +242,7 @@ dotnet run
 
 # Verify build
 cd ../
-dotnet build IBKR.Api.sln
+dotnet build IBKR.Sdk.sln
 ```
 
 #### 3. Test Infrastructure Improvements
@@ -264,7 +264,7 @@ dotnet run
 
 # Verify build
 cd ../
-dotnet build IBKR.Api.sln
+dotnet build IBKR.Sdk.sln
 dotnet test
 ```
 
@@ -392,7 +392,7 @@ dotnet run
 
 # 4. Build everything
 cd ../
-dotnet build IBKR.Api.sln
+dotnet build IBKR.Sdk.sln
 
 # 5. Run tests
 dotnet test

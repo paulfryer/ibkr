@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\IBKR.Api.Authentication\IBKR.Api.Authentication.csproj" />
+    <ProjectReference Include="..\..\IBKR.Sdk.Authentication\IBKR.Sdk.Authentication.csproj" />
     <ProjectReference Include="..\IBKR.Api.NSwag.Client\IBKR.Api.NSwag.Client.csproj" />
   </ItemGroup>
 

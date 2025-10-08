@@ -1,6 +1,6 @@
-using IBKR.Api.Contract.Models;
+using IBKR.Sdk.Contract.Models;
 
-namespace IBKR.Api.Contract.Interfaces;
+namespace IBKR.Sdk.Contract.Interfaces;
 
 /// <summary>
 /// Service for option chain discovery and option contract operations.
