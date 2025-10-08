@@ -3,6 +3,8 @@ using Microsoft.Kiota.Abstractions;
 using Microsoft.Kiota.Abstractions.Authentication;
 using Microsoft.Kiota.Abstractions.Serialization;
 using Microsoft.Kiota.Abstractions.Store;
+using Microsoft.Kiota.Serialization.Json;
+using Microsoft.Kiota.Serialization.Text;
 
 namespace IBKR.Api.Kiota.MockClient;
 
@@ -12,10 +14,17 @@ namespace IBKR.Api.Kiota.MockClient;
 /// </summary>
 public class MockRequestAdapter : IRequestAdapter
 {
-    public ISerializationWriterFactory SerializationWriterFactory { get; set; } = null!;
-    public IParseNodeFactory ParseNodeFactory { get; set; } = null!;
+    public ISerializationWriterFactory SerializationWriterFactory { get; set; }
+    public IParseNodeFactory ParseNodeFactory { get; set; }
     public string? BaseUrl { get; set; } = "https://mock.api.ibkr.com";
-    public IAuthenticationProvider AuthenticationProvider { get; set; } = null!;
+    public IAuthenticationProvider AuthenticationProvider { get; set; } = new AnonymousAuthenticationProvider();
+
+    public MockRequestAdapter()
+    {
+        // Initialize the factories to avoid null reference exceptions
+        SerializationWriterFactory = new JsonSerializationWriterFactory();
+        ParseNodeFactory = new JsonParseNodeFactory();
+    }
 
     public Task<T?> ConvertToNativeRequestAsync<T>(RequestInformation requestInfo, CancellationToken cancellationToken = default)
     {

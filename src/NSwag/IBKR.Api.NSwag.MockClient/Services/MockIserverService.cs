@@ -224,8 +224,21 @@ public class MockIserverService : IIserverService
     public Task<IserverScannerRunResponse> Run2Async(IserverScannerRunRequest body, CancellationToken cancellationToken = default)
         => throw new NotImplementedException("This method is not implemented in the mock.");
 
-    public Task<ICollection<Anonymous5>> SearchAllPOSTAsync(Body22 body, CancellationToken cancellationToken = default)
-        => throw new NotImplementedException("This method is not implemented in the mock.");
+    public async System.Threading.Tasks.Task<ICollection<Anonymous5>> SearchAllPOSTAsync(Body22 body, CancellationToken cancellationToken = default)
+    {
+        // Return mock search results based on the symbol in the body
+        return await System.Threading.Tasks.Task.FromResult<ICollection<Anonymous5>>(new List<Anonymous5>
+        {
+            new Anonymous5
+            {
+                Conid = "265598",
+                Symbol = body.Symbol ?? "AAPL",
+                CompanyName = "Apple Inc.",
+                CompanyHeader = "AAPL - NASDAQ",
+                Description = "NASDAQ"
+            }
+        });
+    }
 
     public Task<DynAccountSearchResponse> SearchAsync(string searchPattern, CancellationToken cancellationToken = default)
         => throw new NotImplementedException("This method is not implemented in the mock.");
