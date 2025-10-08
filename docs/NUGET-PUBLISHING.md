@@ -20,10 +20,16 @@ This means **no API keys are needed** - GitHub automatically provides short-live
 2. Select **"Build and Release SDK Packages"** workflow
 3. Click **"Run workflow"** button
 4. Fill in the parameters:
-   - **Release version**: e.g., `1.0.0` (must be valid semver)
-   - **Create GitHub Release**: ✅ **Check this box** (required for NuGet publishing)
-   - **Mark as pre-release**: Check if this is a beta/RC version
+   - **Release version**: e.g., `0.3.1` or `1.0.0-beta.1` (must be valid semver)
+   - **Create GitHub Release**: ✅ (default: checked)
+   - **Publish to NuGet.org**: ✅ (default: checked)
+   - **Mark as pre-release**: Auto-detected from version or check manually
 5. Click **"Run workflow"**
+
+**Default behavior (just enter version and click):**
+- ✅ Creates GitHub Release
+- ✅ Publishes to NuGet.org
+- ✅ Auto-detects pre-release if version contains `-beta`, `-alpha`, `-rc`, or `-preview`
 
 ### Step 2: What Happens
 

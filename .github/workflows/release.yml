@@ -4,16 +4,21 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Release version (semver format, e.g., 1.0.0 or 1.0.0-beta.1)'
+        description: 'Release version (semver: 1.0.0 or 1.0.0-beta.1)'
         required: true
         type: string
       create_github_release:
         description: 'Create GitHub Release with packages'
         required: false
         type: boolean
-        default: false
+        default: true
+      publish_to_nuget:
+        description: 'Publish packages to NuGet.org'
+        required: false
+        type: boolean
+        default: true
       prerelease:
-        description: 'Mark as pre-release'
+        description: 'Mark as pre-release (auto-detected from version if contains -beta, -alpha, -rc)'
         required: false
         type: boolean
         default: false
@@ -713,13 +718,34 @@ jobs:
           echo "📦 Release files:"
           ls -lh release-files/
 
+      - name: 🎯 Detect pre-release from version
+        id: detect-prerelease
+        run: |
+          VERSION="${{ needs.validate.outputs.version }}"
+
+          # Auto-detect pre-release from version string
+          if [[ "$VERSION" =~ -(beta|alpha|rc|preview) ]]; then
+            echo "✅ Auto-detected pre-release version (contains -beta, -alpha, -rc, or -preview)"
+            IS_PRERELEASE=true
+          else
+            # Use manual checkbox input
+            IS_PRERELEASE=${{ inputs.prerelease }}
+            if [ "$IS_PRERELEASE" = "true" ]; then
+              echo "✅ Manually marked as pre-release"
+            else
+              echo "✅ Stable release"
+            fi
+          fi
+
+          echo "is_prerelease=$IS_PRERELEASE" >> $GITHUB_OUTPUT
+
       - name: 🚀 Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ needs.validate.outputs.version_tag }}
           name: IBKR API SDK ${{ needs.validate.outputs.version_tag }}
           draft: false
-          prerelease: ${{ inputs.prerelease }}
+          prerelease: ${{ steps.detect-prerelease.outputs.is_prerelease }}
           generate_release_notes: true
           body: |
             # IBKR API SDK ${{ needs.validate.outputs.version_tag }}
@@ -790,7 +816,7 @@ jobs:
   publish-nuget:
     name: 📤 Publish to NuGet.org
     needs: [validate, build-nswag, build-kiota, build-clean-api, test-nswag, test-kiota, test-clean-api]
-    if: inputs.create_github_release  # Only publish when creating a GitHub release
+    if: inputs.publish_to_nuget  # Publish to NuGet when checkbox is selected
     runs-on: ubuntu-latest
 
     steps:
