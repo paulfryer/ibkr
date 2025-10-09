@@ -274,24 +274,7 @@ This is the high-level SDK. For lower-level access or different code generators:
 - **[IBKR.Api.Kiota.Client](https://www.nuget.org/packages/IBKR.Api.Kiota.Client)** - Kiota-generated client (alternative)
 - **[IBKR.Api.Kiota.Authentication](https://www.nuget.org/packages/IBKR.Api.Kiota.Authentication)** - Kiota authentication adapter
 
-## Roadmap
-
-- [ ] Market data streaming
-- [ ] Order placement and management
-- [ ] Portfolio and account information
-- [ ] Watchlist management
-- [ ] Scanner support
-
-## Contributing
-
-Contributions welcome! This SDK is actively developed. See [CONTRIBUTING.md](../../CONTRIBUTING.md).
-
-## License
-
-MIT License - see [LICENSE](../../LICENSE)
-
 ## Support
 
 - **Issues**: [GitHub Issues](https://github.com/paulfryer/ibkr/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/paulfryer/ibkr/discussions)
-- **IBKR API Docs**: https://www.interactivebrokers.com/api/doc.html
+- **Repository**: [github.com/paulfryer/ibkr](https://github.com/paulfryer/ibkr)

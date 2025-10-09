@@ -6,7 +6,7 @@ using Xunit.Abstractions;
 namespace IBKR.Sdk.Tests;
 
 /// <summary>
-/// Tests for IOptionService - the CLEAN API.
+/// Tests for IOptionService - the SDK interface.
 ///
 /// Notice what's NOT here:
 /// - No try/catch blocks
@@ -19,14 +19,14 @@ namespace IBKR.Sdk.Tests;
 ///
 /// This is production-ready code showing developers how to use the API.
 /// </summary>
-public class OptionServiceTests : IClassFixture<CleanApiTestFixture>
+public class OptionServiceTests : IClassFixture<TestFixture>
 {
     private readonly IOptionService _optionService;
     private readonly ITestOutputHelper _output;
 
-    public OptionServiceTests(CleanApiTestFixture fixture, ITestOutputHelper output)
+    public OptionServiceTests(TestFixture fixture, ITestOutputHelper output)
     {
-        // Get the clean service - no knowledge of underlying implementation
+        // Get the service - no knowledge of underlying implementation
         _optionService = fixture.GetService<IOptionService>();
         _output = output;
     }
@@ -52,7 +52,7 @@ public class OptionServiceTests : IClassFixture<CleanApiTestFixture>
         _output.WriteLine($"  Days:  {daysAhead}");
         _output.WriteLine("");
 
-        // Act - LOOK HOW CLEAN THIS IS!
+        // Act
         _output.WriteLine($"Calling GetOptionChainAsync('{symbol}', ...)");
         var optionChain = await _optionService.GetOptionChainAsync(
             symbol,
@@ -60,7 +60,7 @@ public class OptionServiceTests : IClassFixture<CleanApiTestFixture>
             expirationEnd);
         _output.WriteLine($"✓ API call completed\n");
 
-        // Assert - Clean, strongly-typed models
+        // Assert - Strongly-typed models
         Assert.NotNull(optionChain);
 
         _output.WriteLine($"Option Chain Summary:");
@@ -77,7 +77,7 @@ public class OptionServiceTests : IClassFixture<CleanApiTestFixture>
         Assert.Equal(expirationStart, optionChain.RequestedExpirationStart);
         Assert.Equal(expirationEnd, optionChain.RequestedExpirationEnd);
 
-        // Verify all contracts have clean, properly typed data
+        // Verify all contracts have properly typed data
         _output.WriteLine($"Validating {optionChain.Contracts.Count} contracts...");
 
         int contractIndex = 0;
@@ -108,7 +108,7 @@ public class OptionServiceTests : IClassFixture<CleanApiTestFixture>
                     $"Contract #{contractIndex}: ContractId should be > 0, was: {contract.ContractId}");
                 Assert.Equal(optionChain.UnderlyingContractId, contract.UnderlyingContractId);
 
-                // Clean strings
+                // String validation
                 Assert.False(string.IsNullOrEmpty(contract.Symbol),
                     $"Contract #{contractIndex} (ConId: {contract.ContractId}): Symbol is null or empty. " +
                     $"Full contract: Strike={contract.Strike}, Right={contract.Right}, Exp={contract.Expiration:yyyy-MM-dd}, " +
@@ -260,7 +260,7 @@ public class OptionServiceTests : IClassFixture<CleanApiTestFixture>
             DateTime.UtcNow,
             DateTime.UtcNow.AddDays(30));
 
-        // Look at the results - clean, intuitive, strongly-typed:
+        // Look at the results - intuitive, strongly-typed:
         foreach (var contract in chain.Contracts.Take(5))
         {
             Console.WriteLine($"Contract: {contract.Symbol} " +
@@ -272,7 +272,7 @@ public class OptionServiceTests : IClassFixture<CleanApiTestFixture>
         }
 
         // This is production-ready code!
-        // No try/catch, no parsing, no workarounds - just clean business logic
+        // No try/catch, no parsing, no workarounds - just business logic
         Assert.NotNull(chain);
         Assert.True(chain.Contracts.Count > 0);
     }

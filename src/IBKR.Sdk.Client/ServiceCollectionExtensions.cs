@@ -46,16 +46,25 @@ public static class ServiceCollectionExtensions
         if (services == null) throw new ArgumentNullException(nameof(services));
         if (configuration == null) throw new ArgumentNullException(nameof(configuration));
 
-        // Bind configuration to IBKRAuthenticationOptions
-        var options = new IBKRAuthenticationOptions();
-        configuration.Bind(options);
-
-        // Support environment variable overrides
-        options.ClientId = Environment.GetEnvironmentVariable("IBKR_CLIENT_ID") ?? options.ClientId;
-        options.Credential = Environment.GetEnvironmentVariable("IBKR_CREDENTIAL") ?? options.Credential;
-        options.ClientKeyId = Environment.GetEnvironmentVariable("IBKR_CLIENT_KEY_ID") ?? options.ClientKeyId;
-        options.ClientPemPath = Environment.GetEnvironmentVariable("IBKR_CLIENT_PEM_PATH") ?? options.ClientPemPath;
-        options.BaseUrl = Environment.GetEnvironmentVariable("IBKR_BASE_URL") ?? options.BaseUrl;
+        // Load credentials: ENV variables first, then configuration
+        var options = new IBKRAuthenticationOptions
+        {
+            ClientId = Environment.GetEnvironmentVariable(ConfigurationKeys.ClientId)
+                      ?? configuration[ConfigurationKeys.ClientId]
+                      ?? throw new InvalidOperationException($"{ConfigurationKeys.ClientId} not configured"),
+            Credential = Environment.GetEnvironmentVariable(ConfigurationKeys.Credential)
+                        ?? configuration[ConfigurationKeys.Credential]
+                        ?? throw new InvalidOperationException($"{ConfigurationKeys.Credential} not configured"),
+            ClientKeyId = Environment.GetEnvironmentVariable(ConfigurationKeys.ClientKeyId)
+                         ?? configuration[ConfigurationKeys.ClientKeyId]
+                         ?? throw new InvalidOperationException($"{ConfigurationKeys.ClientKeyId} not configured"),
+            ClientPemPath = Environment.GetEnvironmentVariable(ConfigurationKeys.ClientPemPath)
+                           ?? configuration[ConfigurationKeys.ClientPemPath]
+                           ?? throw new InvalidOperationException($"{ConfigurationKeys.ClientPemPath} not configured"),
+            BaseUrl = Environment.GetEnvironmentVariable(ConfigurationKeys.BaseUrl)
+                     ?? configuration[ConfigurationKeys.BaseUrl]
+                     ?? "https://api.ibkr.com"
+        };
 
         // Validate options
         options.Validate();
@@ -116,7 +125,8 @@ public static class ServiceCollectionExtensions
         {
             var nswagIserver = sp.GetRequiredService<IIserverService>();
             var logger = sp.GetRequiredService<ILogger<OptionService>>();
-            return new OptionService(nswagIserver, logger);
+            var optionServiceOptions = new OptionServiceOptions(); // Use default options (10 parallel calls)
+            return new OptionService(nswagIserver, logger, optionServiceOptions);
         });
 
         // Future: Add more high-level services here as they're developed
@@ -145,15 +155,15 @@ public static class ServiceCollectionExtensions
 
         return services.AddIBKRSdk(options =>
         {
-            options.ClientId = Environment.GetEnvironmentVariable("IBKR_CLIENT_ID")
-                ?? throw new InvalidOperationException("IBKR_CLIENT_ID environment variable is required");
-            options.Credential = Environment.GetEnvironmentVariable("IBKR_CREDENTIAL")
-                ?? throw new InvalidOperationException("IBKR_CREDENTIAL environment variable is required");
-            options.ClientKeyId = Environment.GetEnvironmentVariable("IBKR_CLIENT_KEY_ID")
-                ?? throw new InvalidOperationException("IBKR_CLIENT_KEY_ID environment variable is required");
-            options.ClientPemPath = Environment.GetEnvironmentVariable("IBKR_CLIENT_PEM_PATH")
-                ?? throw new InvalidOperationException("IBKR_CLIENT_PEM_PATH environment variable is required");
-            options.BaseUrl = Environment.GetEnvironmentVariable("IBKR_BASE_URL") ?? "https://api.ibkr.com";
+            options.ClientId = Environment.GetEnvironmentVariable(ConfigurationKeys.ClientId)
+                ?? throw new InvalidOperationException($"{ConfigurationKeys.ClientId} environment variable is required");
+            options.Credential = Environment.GetEnvironmentVariable(ConfigurationKeys.Credential)
+                ?? throw new InvalidOperationException($"{ConfigurationKeys.Credential} environment variable is required");
+            options.ClientKeyId = Environment.GetEnvironmentVariable(ConfigurationKeys.ClientKeyId)
+                ?? throw new InvalidOperationException($"{ConfigurationKeys.ClientKeyId} environment variable is required");
+            options.ClientPemPath = Environment.GetEnvironmentVariable(ConfigurationKeys.ClientPemPath)
+                ?? throw new InvalidOperationException($"{ConfigurationKeys.ClientPemPath} environment variable is required");
+            options.BaseUrl = Environment.GetEnvironmentVariable(ConfigurationKeys.BaseUrl) ?? "https://api.ibkr.com";
         });
     }
 }

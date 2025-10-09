@@ -6,27 +6,36 @@ using IBKR.Api.NSwag.Contract.Interfaces;
 using IBKR.Api.NSwag.Contract.Models;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using System.Collections.Concurrent;
 
 namespace IBKR.Sdk.Client.Services;
 
 /// <summary>
-/// Clean implementation of IOptionService that wraps messy generated SDKs.
-/// Handles array deserialization workarounds and maps to clean models.
+/// Production implementation of IOptionService that wraps generated SDKs.
+/// Handles array deserialization workarounds and maps to strongly-typed models.
+/// Uses controlled parallelism for optimal performance.
 /// </summary>
-public class OptionService : IOptionService
+public class OptionService : IOptionService, IDisposable
 {
     private readonly IIserverService _nswagIserver;
     private readonly OptionMapper _mapper;
     private readonly ILogger<OptionService> _logger;
+    private readonly OptionServiceOptions _options;
+    private readonly SemaphoreSlim _rateLimiter;
 
-    public OptionService(IIserverService nswagIserver, ILogger<OptionService> logger)
+    public OptionService(IIserverService nswagIserver, ILogger<OptionService> logger, OptionServiceOptions? options = null)
     {
         _nswagIserver = nswagIserver ?? throw new ArgumentNullException(nameof(nswagIserver));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _options = options ?? new OptionServiceOptions();
+        _options.Validate();
         _mapper = new OptionMapper();
+
+        // Rate limiter to control concurrent API calls
+        _rateLimiter = new SemaphoreSlim(_options.MaxDegreeOfParallelism, _options.MaxDegreeOfParallelism);
     }
 
-    public async Task<OptionChain> GetOptionChainAsync(
+    public async System.Threading.Tasks.Task<OptionChain> GetOptionChainAsync(
         string symbol,
         DateTime expirationStart,
         DateTime expirationEnd,
@@ -48,7 +57,8 @@ public class OptionService : IOptionService
         // 2. Calculate months to query
         var months = GetMonthsInRange(expirationStart, expirationEnd);
 
-        var allContracts = new List<OptionContract>();
+        // Use thread-safe collection for parallel processing
+        var allContracts = new ConcurrentBag<OptionContract>();
 
         foreach (var month in months)
         {
@@ -61,24 +71,61 @@ public class OptionService : IOptionService
                     month: month,
                     cancellationToken: cancellationToken);
 
-                // 4. Sample strikes (take first 2 for demo - in production, process all or filter)
-                var sampleStrikes = strikes.Call?.Take(2).ToList() ?? new List<double>();
-
-                foreach (var strike in sampleStrikes)
+                // 4. Process ALL call strikes (with controlled parallelism)
+                var callStrikes = strikes.Call?.ToList() ?? new List<double>();
+                if (_options.EnableParallelProcessing && callStrikes.Count > 0)
                 {
-                    // 5. Get contract details WITH WORKAROUND for array response
-                    var contractDetails = await GetOptionDetailsWithWorkaround(
-                        conidStr, month, strike, OptionRight.Call, cancellationToken);
-
-                    foreach (var detail in contractDetails)
-                    {
-                        var cleanContract = _mapper.ToCleanModel(detail, conid);
-
-                        // Filter by expiration range
-                        if (cleanContract.Expiration >= expirationStart && cleanContract.Expiration <= expirationEnd)
+                    await Parallel.ForEachAsync(
+                        callStrikes,
+                        new ParallelOptions
                         {
-                            allContracts.Add(cleanContract);
-                        }
+                            MaxDegreeOfParallelism = _options.MaxDegreeOfParallelism,
+                            CancellationToken = cancellationToken
+                        },
+                        async (strike, ct) =>
+                        {
+                            await ProcessStrikeAsync(
+                                conidStr, month, strike, OptionRight.Call, conid,
+                                expirationStart, expirationEnd, allContracts, ct);
+                        });
+                }
+                else
+                {
+                    // Sequential fallback
+                    foreach (var strike in callStrikes)
+                    {
+                        await ProcessStrikeAsync(
+                            conidStr, month, strike, OptionRight.Call, conid,
+                            expirationStart, expirationEnd, allContracts, cancellationToken);
+                    }
+                }
+
+                // 5. Process ALL put strikes (with controlled parallelism)
+                var putStrikes = strikes.Put?.ToList() ?? new List<double>();
+                if (_options.EnableParallelProcessing && putStrikes.Count > 0)
+                {
+                    await Parallel.ForEachAsync(
+                        putStrikes,
+                        new ParallelOptions
+                        {
+                            MaxDegreeOfParallelism = _options.MaxDegreeOfParallelism,
+                            CancellationToken = cancellationToken
+                        },
+                        async (strike, ct) =>
+                        {
+                            await ProcessStrikeAsync(
+                                conidStr, month, strike, OptionRight.Put, conid,
+                                expirationStart, expirationEnd, allContracts, ct);
+                        });
+                }
+                else
+                {
+                    // Sequential fallback
+                    foreach (var strike in putStrikes)
+                    {
+                        await ProcessStrikeAsync(
+                            conidStr, month, strike, OptionRight.Put, conid,
+                            expirationStart, expirationEnd, allContracts, cancellationToken);
                     }
                 }
             }
@@ -93,7 +140,7 @@ public class OptionService : IOptionService
         {
             Symbol = symbol,
             UnderlyingContractId = conid,
-            Contracts = allContracts,
+            Contracts = allContracts.ToList(),
             RequestedExpirationStart = expirationStart,
             RequestedExpirationEnd = expirationEnd,
             RetrievedAt = DateTime.UtcNow
@@ -101,10 +148,49 @@ public class OptionService : IOptionService
     }
 
     /// <summary>
+    /// Processes a single strike (call or put) and adds results to the collection.
+    /// Uses rate limiter to control API call concurrency.
+    /// </summary>
+    private async System.Threading.Tasks.Task ProcessStrikeAsync(
+        string conid,
+        string month,
+        double strike,
+        OptionRight right,
+        int underlyingConid,
+        DateTime expirationStart,
+        DateTime expirationEnd,
+        ConcurrentBag<OptionContract> contracts,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            // Get contract details WITH WORKAROUND for array response
+            var contractDetails = await GetOptionDetailsWithWorkaround(
+                conid, month, strike, right, cancellationToken);
+
+            foreach (var detail in contractDetails)
+            {
+                var contract = _mapper.ToCleanModel(detail, underlyingConid);
+
+                // Filter by expiration range
+                if (contract.Expiration >= expirationStart && contract.Expiration <= expirationEnd)
+                {
+                    contracts.Add(contract);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            // Log but continue processing other strikes
+            _logger.LogWarning(ex, "Error processing strike {Strike} {Right} for month {Month}", strike, right, month);
+        }
+    }
+
+    /// <summary>
     /// WORKAROUND: API returns array but SDK expects single object.
     /// This method isolates the messy try/catch logic.
     /// </summary>
-    private async Task<List<SecDefInfoResponse>> GetOptionDetailsWithWorkaround(
+    private async System.Threading.Tasks.Task<List<SecDefInfoResponse>> GetOptionDetailsWithWorkaround(
         string conid,
         string month,
         double strike,
@@ -151,5 +237,10 @@ public class OptionService : IOptionService
         }
 
         return months.OrderBy(m => m).ToList();
+    }
+
+    public void Dispose()
+    {
+        _rateLimiter?.Dispose();
     }
 }

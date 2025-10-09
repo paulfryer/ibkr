@@ -16,10 +16,10 @@ public static class SdkTestExtensions
 {
     /// <summary>
     /// Adds IBKR SDK test services (IOptionService, etc.) using mock or real implementation
-    /// based on Testing:UseMockClient configuration and credential availability.
+    /// based on IBKR_USE_MOCKS flag and credential availability.
     /// </summary>
     /// <param name="services">The service collection</param>
-    /// <param name="configuration">Configuration containing IBKR credentials and Testing settings</param>
+    /// <param name="configuration">Configuration containing IBKR credentials and settings</param>
     /// <param name="mockOptionService">Factory for creating mock OptionService implementation (optional)</param>
     public static IServiceCollection AddSdkTestServices(
         this IServiceCollection services,
@@ -44,13 +44,13 @@ public static class SdkTestExtensions
             {
                 throw new InvalidOperationException(
                     "Mock IOptionService factory must be provided when using mock mode. " +
-                    "Pass mockOptionService parameter or set Testing:UseMockClient=false to use real API.");
+                    $"Pass mockOptionService parameter or set {ConfigurationKeys.UseMocks}=false to use real API.");
             }
         }
         else
         {
             // Register real SDK services
-            var authOptions = BuildAuthOptions(configuration);
+            var authOptions = TestConfiguration.GetAuthOptions(configuration);
             authOptions.Validate();
 
             // Register underlying NSwag IserverService
@@ -61,26 +61,11 @@ public static class SdkTestExtensions
             {
                 var nswagIserver = sp.GetRequiredService<IIserverService>();
                 var logger = sp.GetRequiredService<ILogger<OptionService>>();
-                return new OptionService(nswagIserver, logger);
+                var optionServiceOptions = new IBKR.Sdk.Client.OptionServiceOptions(); // Use default options
+                return new OptionService(nswagIserver, logger, optionServiceOptions);
             });
         }
 
         return services;
-    }
-
-    private static IBKRAuthenticationOptions BuildAuthOptions(IConfiguration configuration)
-    {
-        return new IBKRAuthenticationOptions
-        {
-            ClientId = configuration["IBKR:ClientId"]
-                ?? throw new InvalidOperationException("IBKR:ClientId not configured"),
-            Credential = configuration["IBKR:Credential"]
-                ?? throw new InvalidOperationException("IBKR:Credential not configured"),
-            ClientKeyId = configuration["IBKR:ClientKeyId"]
-                ?? throw new InvalidOperationException("IBKR:ClientKeyId not configured"),
-            ClientPemPath = configuration["IBKR:ClientPemPath"]
-                ?? throw new InvalidOperationException("IBKR:ClientPemPath not configured"),
-            BaseUrl = configuration["IBKR:BaseUrl"] ?? "https://api.ibkr.com"
-        };
     }
 }

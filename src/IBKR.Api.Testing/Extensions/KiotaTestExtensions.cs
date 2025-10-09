@@ -14,10 +14,10 @@ public static class KiotaTestExtensions
 {
     /// <summary>
     /// Adds Kiota test services (IBKRClient via IRequestAdapter) using mock or real implementation
-    /// based on Testing:UseMockClient configuration and credential availability.
+    /// based on IBKR_USE_MOCKS flag and credential availability.
     /// </summary>
     /// <param name="services">The service collection</param>
-    /// <param name="configuration">Configuration containing IBKR credentials and Testing settings</param>
+    /// <param name="configuration">Configuration containing IBKR credentials and settings</param>
     /// <param name="mockRequestAdapter">Factory for creating mock request adapter (optional)</param>
     public static IServiceCollection AddKiotaTestServices(
         this IServiceCollection services,
@@ -42,7 +42,7 @@ public static class KiotaTestExtensions
             {
                 throw new InvalidOperationException(
                     "Mock IRequestAdapter factory must be provided when using mock mode. " +
-                    "Pass mockRequestAdapter parameter or set Testing:UseMockClient=false to use real API.");
+                    $"Pass mockRequestAdapter parameter or set {ConfigurationKeys.UseMocks}=false to use real API.");
             }
 
             // Register IBKRClient with mock adapter
@@ -55,28 +55,12 @@ public static class KiotaTestExtensions
         else
         {
             // Register real services with authentication
-            var authOptions = BuildAuthOptions(configuration);
+            var authOptions = TestConfiguration.GetAuthOptions(configuration);
             authOptions.Validate();
 
             services.AddIBKRAuthenticatedKiotaClient(authOptions);
         }
 
         return services;
-    }
-
-    private static IBKRAuthenticationOptions BuildAuthOptions(IConfiguration configuration)
-    {
-        return new IBKRAuthenticationOptions
-        {
-            ClientId = configuration["IBKR:ClientId"]
-                ?? throw new InvalidOperationException("IBKR:ClientId not configured"),
-            Credential = configuration["IBKR:Credential"]
-                ?? throw new InvalidOperationException("IBKR:Credential not configured"),
-            ClientKeyId = configuration["IBKR:ClientKeyId"]
-                ?? throw new InvalidOperationException("IBKR:ClientKeyId not configured"),
-            ClientPemPath = configuration["IBKR:ClientPemPath"]
-                ?? throw new InvalidOperationException("IBKR:ClientPemPath not configured"),
-            BaseUrl = configuration["IBKR:BaseUrl"] ?? "https://api.ibkr.com"
-        };
     }
 }

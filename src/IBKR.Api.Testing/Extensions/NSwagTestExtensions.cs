@@ -13,10 +13,10 @@ public static class NSwagTestExtensions
 {
     /// <summary>
     /// Adds NSwag test services (IIserverService, IMdService) using mock or real implementation
-    /// based on Testing:UseMockClient configuration and credential availability.
+    /// based on IBKR_USE_MOCKS flag and credential availability.
     /// </summary>
     /// <param name="services">The service collection</param>
-    /// <param name="configuration">Configuration containing IBKR credentials and Testing settings</param>
+    /// <param name="configuration">Configuration containing IBKR credentials and settings</param>
     /// <param name="mockAuthProvider">Factory for creating mock authentication provider (optional)</param>
     /// <param name="mockIserverService">Factory for creating mock IserverService implementation (optional)</param>
     /// <param name="mockMdService">Factory for creating mock MdService implementation (optional)</param>
@@ -54,7 +54,7 @@ public static class NSwagTestExtensions
             {
                 throw new InvalidOperationException(
                     "Mock IIserverService factory must be provided when using mock mode. " +
-                    "Pass mockIserverService parameter or set Testing:UseMockClient=false to use real API.");
+                    $"Pass mockIserverService parameter or set {ConfigurationKeys.UseMocks}=false to use real API.");
             }
 
             if (mockMdService != null)
@@ -65,13 +65,13 @@ public static class NSwagTestExtensions
             {
                 throw new InvalidOperationException(
                     "Mock IMdService factory must be provided when using mock mode. " +
-                    "Pass mockMdService parameter or set Testing:UseMockClient=false to use real API.");
+                    $"Pass mockMdService parameter or set {ConfigurationKeys.UseMocks}=false to use real API.");
             }
         }
         else
         {
             // Register real services with authentication
-            var authOptions = BuildAuthOptions(configuration);
+            var authOptions = TestConfiguration.GetAuthOptions(configuration);
             authOptions.Validate();
 
             services.AddIBKRAuthenticatedClient<IIserverService, IBKR.Api.NSwag.Client.Services.IserverService>(authOptions);
@@ -79,21 +79,5 @@ public static class NSwagTestExtensions
         }
 
         return services;
-    }
-
-    private static IBKRAuthenticationOptions BuildAuthOptions(IConfiguration configuration)
-    {
-        return new IBKRAuthenticationOptions
-        {
-            ClientId = configuration["IBKR:ClientId"]
-                ?? throw new InvalidOperationException("IBKR:ClientId not configured"),
-            Credential = configuration["IBKR:Credential"]
-                ?? throw new InvalidOperationException("IBKR:Credential not configured"),
-            ClientKeyId = configuration["IBKR:ClientKeyId"]
-                ?? throw new InvalidOperationException("IBKR:ClientKeyId not configured"),
-            ClientPemPath = configuration["IBKR:ClientPemPath"]
-                ?? throw new InvalidOperationException("IBKR:ClientPemPath not configured"),
-            BaseUrl = configuration["IBKR:BaseUrl"] ?? "https://api.ibkr.com"
-        };
     }
 }

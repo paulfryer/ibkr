@@ -12,12 +12,12 @@ namespace IBKR.Sdk.Tests;
 /// Uses real IBKR API if credentials are provided (local dev), otherwise uses mock.
 /// Set Testing:UseMockClient=true to force mock even with credentials (CI/CD).
 /// </summary>
-public class CleanApiTestFixture : IDisposable
+public class TestFixture : IDisposable
 {
     public IServiceProvider ServiceProvider { get; }
     public IConfiguration Configuration { get; }
 
-    public CleanApiTestFixture()
+    public TestFixture()
     {
         // Load configuration
         Configuration = new ConfigurationBuilder()

@@ -23,7 +23,7 @@ public class CleanOptionServiceTests : IClassFixture<TestFixture>
         var nswagIserver = fixture.GetService<IIserverService>();
         var logger = fixture.GetService<ILogger<OptionService>>();
 
-        // Wrap it with our clean service
+        // Wrap it with our SDK service (uses default parallelism settings)
         _optionService = new OptionService(nswagIserver, logger);
     }
 

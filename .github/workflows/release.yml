@@ -418,7 +418,7 @@ jobs:
   #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   # JOB 6: Build and Package IBKR SDK (after NSwag completes)
   #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  build-clean-api:
+  build-ibkr-sdk:
     name: 📦 Build IBKR SDK
     needs: [validate, generate-sdks, build-nswag]
     runs-on: ubuntu-latest
@@ -467,24 +467,24 @@ jobs:
 
       - name: 📦 Pack NuGet packages
         run: |
-          mkdir -p packages/CleanAPI
+          mkdir -p packages/SDK
 
           echo "📦 Packing IBKR.Sdk.Contract..."
           dotnet pack src/IBKR.Sdk.Contract/IBKR.Sdk.Contract.csproj \
             --configuration ${{ env.CONFIGURATION }} \
             --no-build \
-            --output packages/CleanAPI \
+            --output packages/SDK \
             /p:PackageVersion=${{ needs.validate.outputs.version }}
 
           echo "📦 Packing IBKR.Sdk.Client..."
           dotnet pack src/IBKR.Sdk.Client/IBKR.Sdk.Client.csproj \
             --configuration ${{ env.CONFIGURATION }} \
             --no-build \
-            --output packages/CleanAPI \
+            --output packages/SDK \
             /p:PackageVersion=${{ needs.validate.outputs.version }}
 
       - name: 📋 List generated packages
-        working-directory: packages/CleanAPI
+        working-directory: packages/SDK
         run: |
           echo "📦 IBKR SDK packages created:"
           ls -lh *.nupkg
@@ -492,13 +492,13 @@ jobs:
       - name: 🔏 Generate build attestation
         uses: actions/attest-build-provenance@v2
         with:
-          subject-path: 'packages/CleanAPI/*.nupkg'
+          subject-path: 'packages/SDK/*.nupkg'
 
       - name: 📤 Upload IBKR SDK packages
         uses: actions/upload-artifact@v4
         with:
           name: IBKR-SDK-v${{ needs.validate.outputs.version }}
-          path: packages/CleanAPI/*.nupkg
+          path: packages/SDK/*.nupkg
           retention-days: 90
           if-no-files-found: error
 
@@ -510,7 +510,7 @@ jobs:
     needs: [validate, build-nswag]
     runs-on: ubuntu-latest
     env:
-      Testing__UseMockClient: true
+      IBKR_USE_MOCKS: true
 
     steps:
       - name: 📥 Checkout repository
@@ -558,7 +558,7 @@ jobs:
     needs: [validate, build-kiota]
     runs-on: ubuntu-latest
     env:
-      Testing__UseMockClient: true
+      IBKR_USE_MOCKS: true
 
     steps:
       - name: 📥 Checkout repository
@@ -601,12 +601,12 @@ jobs:
   #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   # JOB 9: Test IBKR SDK (Parallel)
   #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  test-clean-api:
+  test-ibkr-sdk:
     name: ✅ Test IBKR SDK
-    needs: [validate, build-clean-api]
+    needs: [validate, build-ibkr-sdk]
     runs-on: ubuntu-latest
     env:
-      Testing__UseMockClient: true
+      IBKR_USE_MOCKS: true
 
     steps:
       - name: 📥 Checkout repository
@@ -626,7 +626,7 @@ jobs:
       - name: 🧪 Run IBKR SDK tests (with mocks)
         run: |
           echo "🧪 Running IBKR SDK tests with mocks..."
-          echo "   Testing:UseMockClient = $Testing__UseMockClient"
+          echo "   IBKR_USE_MOCKS = $IBKR_USE_MOCKS"
 
           dotnet test src/IBKR.Sdk.Tests/IBKR.Sdk.Tests.csproj \
             --configuration ${{ env.CONFIGURATION }} \
@@ -649,7 +649,7 @@ jobs:
   #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   create-summary:
     name: 📊 Create Release Summary
-    needs: [validate, build-nswag, build-kiota, build-clean-api, test-nswag, test-kiota, test-clean-api]
+    needs: [validate, build-nswag, build-kiota, build-ibkr-sdk, test-nswag, test-kiota, test-ibkr-sdk]
     runs-on: ubuntu-latest
 
     steps:
@@ -733,7 +733,7 @@ jobs:
   #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   create-release:
     name: 🚀 Create GitHub Release
-    needs: [validate, build-nswag, build-kiota, build-clean-api]
+    needs: [validate, build-nswag, build-kiota, build-ibkr-sdk]
     if: inputs.create_github_release
     runs-on: ubuntu-latest
 
@@ -855,7 +855,7 @@ jobs:
   #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   publish-nuget:
     name: 📤 Publish to NuGet.org
-    needs: [validate, build-auth, build-nswag, build-kiota, build-clean-api, test-nswag, test-kiota, test-clean-api]
+    needs: [validate, build-auth, build-nswag, build-kiota, build-ibkr-sdk, test-nswag, test-kiota, test-ibkr-sdk]
     if: inputs.publish_to_nuget  # Publish to NuGet when checkbox is selected
     runs-on: ubuntu-latest
 
