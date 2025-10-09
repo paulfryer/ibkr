@@ -509,6 +509,8 @@ jobs:
     name: ✅ Test NSwag SDK
     needs: [validate, build-nswag]
     runs-on: ubuntu-latest
+    env:
+      Testing__UseMockClient: true
 
     steps:
       - name: 📥 Checkout repository
@@ -555,6 +557,8 @@ jobs:
     name: ✅ Test Kiota SDK
     needs: [validate, build-kiota]
     runs-on: ubuntu-latest
+    env:
+      Testing__UseMockClient: true
 
     steps:
       - name: 📥 Checkout repository

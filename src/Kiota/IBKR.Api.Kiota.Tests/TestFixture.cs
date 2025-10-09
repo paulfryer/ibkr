@@ -1,19 +1,15 @@
-using IBKR.Api.Authentication;
-using IBKR.Api.Kiota.Authentication;
-using IBKR.Api.Kiota.Client;
 using IBKR.Api.Kiota.MockClient;
+using IBKR.Api.Testing;
+using IBKR.Api.Testing.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Kiota.Abstractions;
-using Microsoft.Kiota.Abstractions.Authentication;
-using Microsoft.Kiota.Http.HttpClientLibrary;
 
 namespace IBKR.Api.Kiota.Tests;
 
 /// <summary>
 /// Test fixture for dependency injection setup.
-/// Uses Mock client by default. Set Testing:UseMockClient=false to test against real IBKR API.
-/// Credentials can be provided via appsettings.json or environment variables (IBKR_CLIENT_ID, etc.)
+/// Uses real IBKR API if credentials are provided (local dev), otherwise uses mock.
+/// Set Testing:UseMockClient=true to force mock even with credentials (CI/CD).
 /// </summary>
 public class TestFixture : IDisposable
 {
@@ -26,57 +22,20 @@ public class TestFixture : IDisposable
         Configuration = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
             .AddJsonFile("appsettings.json", optional: false)
-            .AddEnvironmentVariables()  // Environment variables override config file
+            .AddEnvironmentVariables()
             .Build();
 
         // Setup DI container
         var services = new ServiceCollection();
-        ConfigureServices(services);
-        ServiceProvider = services.BuildServiceProvider();
-    }
-
-    private void ConfigureServices(IServiceCollection services)
-    {
-        // Add configuration
         services.AddSingleton(Configuration);
 
-        // Determine which implementation to use
-        var useMockClient = Configuration.GetValue<bool>("Testing:UseMockClient", defaultValue: true);
+        // Use shared test infrastructure - automatically decides mock vs real based on config + credentials
+        services.AddKiotaTestServices(
+            Configuration,
+            mockRequestAdapter: () => new MockRequestAdapter()
+        );
 
-        if (useMockClient)
-        {
-            Console.WriteLine("[Test Setup] Using MOCK client - no credentials required");
-
-            // Register mock request adapter
-            services.AddSingleton<IRequestAdapter>(sp => new MockRequestAdapter());
-
-            // Register IBKRClient with mock adapter
-            services.AddTransient<IBKRClient>(sp =>
-            {
-                var adapter = sp.GetRequiredService<IRequestAdapter>();
-                return new IBKRClient(adapter);
-            });
-        }
-        else
-        {
-            Console.WriteLine("[Test Setup] Using REAL IBKR API - credentials required");
-
-            // Load authentication options from configuration or environment variables
-            var authOptions = new IBKRAuthenticationOptions
-            {
-                ClientId = Configuration["IBKR:ClientId"] ?? throw new InvalidOperationException("IBKR:ClientId not configured. Set via appsettings.json or environment variable IBKR_CLIENT_ID"),
-                Credential = Configuration["IBKR:Credential"] ?? throw new InvalidOperationException("IBKR:Credential not configured. Set via appsettings.json or environment variable IBKR_CREDENTIAL"),
-                ClientKeyId = Configuration["IBKR:ClientKeyId"] ?? throw new InvalidOperationException("IBKR:ClientKeyId not configured. Set via appsettings.json or environment variable IBKR_CLIENT_KEY_ID"),
-                ClientPemPath = Configuration["IBKR:ClientPemPath"] ?? throw new InvalidOperationException("IBKR:ClientPemPath not configured. Set via appsettings.json or environment variable IBKR_CLIENT_PEM_PATH"),
-                BaseUrl = Configuration["IBKR:BaseUrl"] ?? "https://api.ibkr.com"
-            };
-
-            // Validate credentials are complete
-            authOptions.Validate();
-
-            // Use extension method to register authenticated Kiota client
-            services.AddIBKRAuthenticatedKiotaClient(authOptions);
-        }
+        ServiceProvider = services.BuildServiceProvider();
     }
 
     public T GetService<T>() where T : notnull
