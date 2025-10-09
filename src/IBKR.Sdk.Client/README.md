@@ -117,15 +117,17 @@ builder.Services.AddIBKRSdk(options =>
 
 The SDK uses OAuth2 with JWT signing. You'll need:
 
-1. **OAuth2 Credentials** from IBKR Web Portal:
-   - Go to https://www.interactivebrokers.com/portal
-   - Navigate to Settings → API → OAuth2
-   - Create consumer app → Generate RSA key pair
-   - Save `kid` (Key ID) and download private key PEM file
+1. **OAuth2 Credentials from IBKR**:
+   - Contact IBKR API team (api-solutions@interactivebrokers.com) to request OAuth2 access
+   - Generate a 3072-bit RSA key pair for signing JWTs
+   - Register your public key with IBKR and receive your `kid` (Key ID)
+   - Download/save your private key PEM file
 
-2. **Client ID**: Usually "TESTCONS" for paper trading, your real consumer ID for live
+2. **Client ID**: Usually "TESTCONS" for paper trading, your assigned consumer ID for live
 
-3. **Credential**: Your IBKR username
+3. **Credential**: Your IBKR account username
+
+See [IBKR OAuth Documentation](https://www.interactivebrokers.com/campus/ibkr-api-page/oauth-1-0a-extended/) for details.
 
 ## Available Services
 
