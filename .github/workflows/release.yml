@@ -24,9 +24,10 @@ on:
         default: false
 
 permissions:
-  contents: write    # Required for creating releases
-  packages: write    # Required for publishing packages
-  id-token: write    # Required for NuGet Trusted Publishing (OIDC)
+  contents: write      # Required for creating releases
+  packages: write      # Required for publishing packages
+  id-token: write      # Required for NuGet Trusted Publishing (OIDC)
+  attestations: write  # Required for build provenance attestations
 
 env:
   DOTNET_VERSION: '8.0.x'
@@ -187,6 +188,11 @@ jobs:
           echo "📦 Core Authentication package created:"
           ls -lh *.nupkg
 
+      - name: 🔏 Generate build attestation
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: 'packages/Auth/*.nupkg'
+
       - name: 📤 Upload Authentication package
         uses: actions/upload-artifact@v4
         with:
@@ -288,6 +294,11 @@ jobs:
         run: |
           echo "📦 NSwag packages created:"
           ls -lh *.nupkg
+
+      - name: 🔏 Generate build attestation
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: 'packages/NSwag/*.nupkg'
 
       - name: 📤 Upload NSwag packages
         uses: actions/upload-artifact@v4
@@ -391,6 +402,11 @@ jobs:
           echo "📦 Kiota packages created:"
           ls -lh *.nupkg
 
+      - name: 🔏 Generate build attestation
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: 'packages/Kiota/*.nupkg'
+
       - name: 📤 Upload Kiota packages
         uses: actions/upload-artifact@v4
         with:
@@ -472,6 +488,11 @@ jobs:
         run: |
           echo "📦 IBKR SDK packages created:"
           ls -lh *.nupkg
+
+      - name: 🔏 Generate build attestation
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: 'packages/CleanAPI/*.nupkg'
 
       - name: 📤 Upload IBKR SDK packages
         uses: actions/upload-artifact@v4

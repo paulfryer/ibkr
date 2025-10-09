@@ -4,6 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <Description>Auto-generated data models for Interactive Brokers Client Portal API using Microsoft Kiota</Description>
   </PropertyGroup>
 
   <ItemGroup>

@@ -309,6 +309,6 @@ MIT License - see [LICENSE](../../LICENSE)
 
 ## Support
 
-- **Issues**: [GitHub Issues](https://github.com/USERNAME/REPO/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/USERNAME/REPO/discussions)
+- **Issues**: [GitHub Issues](https://github.com/paulfryer/ibkr/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/paulfryer/ibkr/discussions)
 - **IBKR API Docs**: https://www.interactivebrokers.com/api/doc.html
