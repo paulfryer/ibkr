@@ -21,39 +21,36 @@ export IBKR_CLIENT_KEY_ID="your-kid-from-ibkr"
 export IBKR_CLIENT_PEM_PATH="/path/to/private-key.pem"
 ```
 
-**3. Configure in Program.cs:**
+**3. Create a console app in Program.cs:**
 ```csharp
 using IBKR.Sdk.Client;
 using IBKR.Sdk.Contract.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
-var builder = WebApplication.CreateBuilder(args);
+var builder = Host.CreateApplicationBuilder(args);
 
-// Add IBKR SDK - automatically uses environment variables
+// Add IBKR SDK - automatically reads environment variables
 builder.Services.AddIBKRSdk();
 
-var app = builder.Build();
-app.Run();
-```
+var host = builder.Build();
 
-**4. Inject and use:**
-```csharp
-public class MyService
+// Get service and fetch option chain
+var optionService = host.Services.GetRequiredService<IOptionService>();
+
+var chain = await optionService.GetOptionChainAsync(
+    symbol: "AAPL",
+    expirationStart: DateTime.Today,
+    expirationEnd: DateTime.Today.AddDays(30)
+);
+
+foreach (var contract in chain.Contracts)
 {
-    private readonly IOptionService _options;
-
-    public MyService(IOptionService options) => _options = options;
-
-    public async Task GetOptions()
-    {
-        var chain = await _options.GetOptionChainAsync("AAPL", DateTime.Today, DateTime.Today.AddDays(30));
-
-        foreach (var contract in chain.Contracts)
-        {
-            Console.WriteLine($"{contract.Symbol} - IV: {contract.ImpliedVolatility:P2}");
-        }
-    }
+    Console.WriteLine($"{contract.Symbol} {contract.Expiration:yyyy-MM-dd} {contract.Strike:F2} {contract.Right}");
 }
 ```
+
+> **Note**: For ASP.NET Core web applications, use `WebApplication.CreateBuilder(args)` instead of `Host.CreateApplicationBuilder(args)`.
 
 ## Packages
 
@@ -89,7 +86,7 @@ This repository contains 9 NuGet packages organized by layer:
 - ✅ **AWS SDK-like DX** - Simple `AddIBKRSdk()` setup
 - ✅ **Production-ready** - Handles auth, token refresh, session management automatically
 - ✅ **Dependency Injection** - Built for modern .NET
-- ✅ **Comprehensive Options** - Full option chain support with Greeks, IV, volume
+- ✅ **Option Chain Discovery** - Find available strikes and expirations for any symbol
 - ✅ **Auto-generated** - Stays up-to-date with IBKR API changes
 - ✅ **Dual generators** - Both NSwag and Kiota support
 

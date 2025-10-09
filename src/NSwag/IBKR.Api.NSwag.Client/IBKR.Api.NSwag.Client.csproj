@@ -15,4 +15,8 @@
     <ProjectReference Include="..\IBKR.Api.NSwag.Contract\IBKR.Api.NSwag.Contract.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\"/>
+  </ItemGroup>
+
 </Project>

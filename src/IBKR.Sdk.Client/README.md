@@ -13,7 +13,7 @@ The IBKR Client Portal API is powerful but has a complex, inconsistent surface. 
 - **AWS SDK-like DX** - Simple setup with `services.AddIBKRSdk()`
 - **Production-ready** - Handles authentication, token refresh, session management automatically
 - **Dependency injection native** - Built for modern .NET with full DI support
-- **Comprehensive option chain support** - Simplified option trading workflows
+- **Option chain discovery** - Find available strikes and expirations for any symbol
 
 ## Quick Start
 
@@ -33,49 +33,36 @@ export IBKR_CLIENT_KEY_ID="your-kid-from-ibkr"
 export IBKR_CLIENT_PEM_PATH="/path/to/private-key.pem"
 ```
 
-**2. Configure in Program.cs:**
+**2. Create a console app in Program.cs:**
 ```csharp
 using IBKR.Sdk.Client;
 using IBKR.Sdk.Contract.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
-// Standard .NET web application setup
-var builder = WebApplication.CreateBuilder(args);
+var builder = Host.CreateApplicationBuilder(args);
 
 // Add IBKR SDK - automatically reads environment variables
 builder.Services.AddIBKRSdk();
 
-var app = builder.Build();
-app.Run();
-```
+var host = builder.Build();
 
-> **Note**: `builder` is from .NET's standard `WebApplication.CreateBuilder()`. For console apps, use `HostApplicationBuilder` or a `ServiceCollection` directly.
+// Get service and fetch option chain
+var optionService = host.Services.GetRequiredService<IOptionService>();
 
-**3. Inject and use in your services:**
-```csharp
-public class MyService
+var chain = await optionService.GetOptionChainAsync(
+    symbol: "AAPL",
+    expirationStart: DateTime.Today,
+    expirationEnd: DateTime.Today.AddDays(30)
+);
+
+foreach (var contract in chain.Contracts)
 {
-    private readonly IOptionService _options;
-
-    public MyService(IOptionService options)
-    {
-        _options = options;
-    }
-
-    public async Task GetOptions()
-    {
-        var chain = await _options.GetOptionChainAsync(
-            symbol: "AAPL",
-            expirationStart: DateTime.Today,
-            expirationEnd: DateTime.Today.AddDays(30)
-        );
-
-        foreach (var contract in chain.Contracts)
-        {
-            Console.WriteLine($"{contract.Strike} {contract.Right} - IV: {contract.ImpliedVolatility:P2}");
-        }
-    }
+    Console.WriteLine($"{contract.Symbol} {contract.Expiration:yyyy-MM-dd} {contract.Strike:F2} {contract.Right}");
 }
 ```
+
+> **Note**: For ASP.NET Core web applications, use `WebApplication.CreateBuilder(args)` instead of `Host.CreateApplicationBuilder(args)`. For simple scripts without the host, you can use `ServiceCollection` directly.
 
 ## Configuration Options
 
@@ -170,50 +157,46 @@ public interface IOptionService
 ```csharp
 public class OptionChain
 {
-    public string UnderlyingSymbol { get; set; }
-    public int UnderlyingConid { get; set; }
+    public string Symbol { get; set; }
+    public int UnderlyingContractId { get; set; }
     public List<OptionContract> Contracts { get; set; }
+    public DateTime RequestedExpirationStart { get; set; }
+    public DateTime RequestedExpirationEnd { get; set; }
+    public DateTime RetrievedAt { get; set; }
 }
 
 public class OptionContract
 {
-    public int Conid { get; set; }
-    public string Symbol { get; set; }        // "AAPL  250117C00150000"
-    public DateTime Expiration { get; set; }
+    public int ContractId { get; set; }
+    public int UnderlyingContractId { get; set; }
+    public string Symbol { get; set; }
+    public OptionRight Right { get; set; }         // Call or Put enum
     public decimal Strike { get; set; }
-    public string Right { get; set; }         // "C" or "P"
-
-    // Greeks
-    public decimal? Delta { get; set; }
-    public decimal? Gamma { get; set; }
-    public decimal? Theta { get; set; }
-    public decimal? Vega { get; set; }
-
-    // Pricing
-    public decimal? ImpliedVolatility { get; set; }
-    public decimal? Bid { get; set; }
-    public decimal? Ask { get; set; }
-    public decimal? Last { get; set; }
-
-    // Volume
-    public int? Volume { get; set; }
-    public int? OpenInterest { get; set; }
+    public DateTime Expiration { get; set; }
+    public string TradingClass { get; set; }
+    public string Exchange { get; set; }
+    public string Currency { get; set; }
+    public decimal Multiplier { get; set; }
+    public string[] ValidExchanges { get; set; }
+    public int? DaysUntilExpiration { get; set; }
 }
 ```
 
-### Example: Find Highest IV Options
+> **Note**: Current version returns contract metadata only. Market data support (Greeks, IV, Bid/Ask, Volume) coming in future release.
+
+### Example: Filter Options by Strike Range
 
 ```csharp
 var chain = await _options.GetOptionChainAsync("TSLA", DateTime.Today, DateTime.Today.AddDays(7));
 
-var highestIV = chain.Contracts
-    .Where(c => c.ImpliedVolatility.HasValue)
-    .OrderByDescending(c => c.ImpliedVolatility)
-    .Take(10);
+var nearMoneyOptions = chain.Contracts
+    .Where(c => c.Strike >= 200 && c.Strike <= 250)
+    .OrderBy(c => c.Expiration)
+    .ThenBy(c => c.Strike);
 
-foreach (var contract in highestIV)
+foreach (var contract in nearMoneyOptions)
 {
-    Console.WriteLine($"{contract.Symbol} - IV: {contract.ImpliedVolatility:P2}");
+    Console.WriteLine($"{contract.Expiration:yyyy-MM-dd} {contract.Strike:F2} {contract.Right}");
 }
 ```
 

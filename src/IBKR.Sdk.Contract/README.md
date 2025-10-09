@@ -30,11 +30,12 @@ public interface IOptionService
 
 public class OptionContract
 {
-    public int Conid { get; set; }
+    public int ContractId { get; set; }
+    public string Symbol { get; set; }
     public DateTime Expiration { get; set; }
     public decimal Strike { get; set; }
-    public decimal? Delta { get; set; }
-    public decimal? ImpliedVolatility { get; set; }
+    public OptionRight Right { get; set; } // Call or Put
+    public string Exchange { get; set; }
     // ... and more
 }
 ```
