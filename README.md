@@ -3,7 +3,7 @@
 A comprehensive, production-ready .NET SDK for Interactive Brokers Client Portal API.
 
 [![NuGet](https://img.shields.io/nuget/v/IBKR.Sdk.Client.svg)](https://www.nuget.org/packages/IBKR.Sdk.Client/)
-[![Build](https://github.com/paulfryer/ibkr/workflows/Build%20and%20Release/badge.svg)](https://github.com/paulfryer/ibkr/actions)
+[![Build](https://github.com/paulfryer/ibkr/actions/workflows/release.yml/badge.svg)](https://github.com/paulfryer/ibkr/actions)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 ## Quick Start
