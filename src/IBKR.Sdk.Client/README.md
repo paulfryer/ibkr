@@ -137,7 +137,7 @@ builder.Services.AddIBKRSdk(options =>
 The SDK uses OAuth2 with JWT signing. You'll need:
 
 1. **OAuth2 Credentials from IBKR**:
-   - Contact IBKR API team (api-solutions@interactivebrokers.com) to request OAuth2 access
+   - Contact IBKR API team through their API support channels to request OAuth2 access
    - Generate a 3072-bit RSA key pair for signing JWTs
    - Register your public key with IBKR and receive your `kid` (Key ID)
    - Download/save your private key PEM file

@@ -140,7 +140,7 @@ This repository contains 9 NuGet packages organized by layer:
 
 You'll need OAuth2 credentials with RSA key pair from IBKR:
 
-1. **Contact IBKR API Team**: Email api-solutions@interactivebrokers.com to request OAuth2 access
+1. **Contact IBKR API Team**: Request OAuth2 access through IBKR's API support channels
 2. **Generate RSA Key Pair**: Create a 3072-bit RSA key pair for signing JWTs
 3. **Register with IBKR**: Provide your public key and receive your `kid` (Key ID)
 4. **Get Client ID**: Use "TESTCONS" for paper trading, or your assigned consumer ID for live
