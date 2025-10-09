@@ -136,71 +136,7 @@ jobs:
           if-no-files-found: error
 
   #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  # JOB 3: Scaffold Test Infrastructure
-  #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  scaffold-tests:
-    name: 🧪 Scaffold Test Projects
-    needs: [validate, generate-sdks]
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: 📥 Checkout repository
-        uses: actions/checkout@v4
-
-      - name: 📥 Download generated SDKs
-        uses: actions/download-artifact@v4
-        with:
-          name: generated-sdks
-          path: src/
-
-      - name: 🔨 Setup .NET SDK
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
-
-      - name: 🧪 Run test scaffold generator
-        working-directory: src/IBKR.Api.TestScaffold
-        run: |
-          echo "🧪 Creating MockClient and Test projects..."
-          dotnet run --configuration ${{ env.CONFIGURATION }}
-          echo "✅ Test infrastructure scaffolding complete"
-
-      - name: ✅ Verify test projects created
-        run: |
-          echo "🔍 Verifying test projects..."
-
-          EXPECTED_PROJECTS=(
-            "src/NSwag/IBKR.Api.NSwag.MockClient/IBKR.Api.NSwag.MockClient.csproj"
-            "src/NSwag/IBKR.Api.NSwag.Tests/IBKR.Api.NSwag.Tests.csproj"
-            "src/Kiota/IBKR.Api.Kiota.MockClient/IBKR.Api.Kiota.MockClient.csproj"
-            "src/Kiota/IBKR.Api.Kiota.Tests/IBKR.Api.Kiota.Tests.csproj"
-          )
-
-          for proj in "${EXPECTED_PROJECTS[@]}"; do
-            if [ -f "$proj" ]; then
-              echo "  ✅ $proj"
-            else
-              echo "  ℹ️  $proj (may already exist - preserved)"
-            fi
-          done
-
-      - name: 📤 Upload complete source (with tests)
-        uses: actions/upload-artifact@v4
-        with:
-          name: sdks-with-tests
-          path: |
-            src/NSwag/
-            src/Kiota/
-            src/IBKR.Sdk.Contract/
-            src/IBKR.Sdk.Client/
-            src/IBKR.Sdk.Authentication/
-            src/IBKR.Sdk.Tests/
-            src/Directory.Build.props
-          retention-days: 1
-          if-no-files-found: error
-
-  #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  # JOB 4: Build and Package Core Authentication Library
+  # JOB 3: Build and Package Core Authentication Library
   #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   build-auth:
     name: 📦 Build Core Authentication
@@ -260,21 +196,21 @@ jobs:
           if-no-files-found: error
 
   #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  # JOB 5: Build and Package NSwag SDK (Parallel)
+  # JOB 4: Build and Package NSwag SDK (Parallel)
   #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   build-nswag:
     name: 📦 Build NSwag SDK
-    needs: [validate, scaffold-tests, build-auth]
+    needs: [validate, generate-sdks, build-auth]
     runs-on: ubuntu-latest
 
     steps:
       - name: 📥 Checkout repository
         uses: actions/checkout@v4
 
-      - name: 📥 Download generated SDKs (with tests)
+      - name: 📥 Download generated SDKs
         uses: actions/download-artifact@v4
         with:
-          name: sdks-with-tests
+          name: generated-sdks
           path: src/
 
       - name: 🔨 Setup .NET SDK
@@ -362,21 +298,21 @@ jobs:
           if-no-files-found: error
 
   #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  # JOB 6: Build and Package Kiota SDK (Parallel)
+  # JOB 5: Build and Package Kiota SDK (Parallel)
   #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   build-kiota:
     name: 📦 Build Kiota SDK
-    needs: [validate, scaffold-tests, build-auth]
+    needs: [validate, generate-sdks, build-auth]
     runs-on: ubuntu-latest
 
     steps:
       - name: 📥 Checkout repository
         uses: actions/checkout@v4
 
-      - name: 📥 Download generated SDKs (with tests)
+      - name: 📥 Download generated SDKs
         uses: actions/download-artifact@v4
         with:
-          name: sdks-with-tests
+          name: generated-sdks
           path: src/
 
       - name: 🔨 Setup .NET SDK
@@ -464,21 +400,21 @@ jobs:
           if-no-files-found: error
 
   #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  # JOB 7: Build and Package IBKR SDK (after NSwag completes)
+  # JOB 6: Build and Package IBKR SDK (after NSwag completes)
   #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   build-clean-api:
     name: 📦 Build IBKR SDK
-    needs: [validate, scaffold-tests, build-nswag]
+    needs: [validate, generate-sdks, build-nswag]
     runs-on: ubuntu-latest
 
     steps:
       - name: 📥 Checkout repository
         uses: actions/checkout@v4
 
-      - name: 📥 Download generated SDKs (with tests)
+      - name: 📥 Download generated SDKs
         uses: actions/download-artifact@v4
         with:
-          name: sdks-with-tests
+          name: generated-sdks
           path: src/
 
       - name: 🔨 Setup .NET SDK
@@ -546,11 +482,11 @@ jobs:
           if-no-files-found: error
 
   #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  # JOB 8: Test NSwag SDK (Parallel)
+  # JOB 7: Test NSwag SDK (Parallel)
   #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   test-nswag:
     name: ✅ Test NSwag SDK
-    needs: [validate, build-nswag, scaffold-tests]
+    needs: [validate, build-nswag]
     runs-on: ubuntu-latest
 
     steps:
@@ -592,11 +528,11 @@ jobs:
           if-no-files-found: ignore
 
   #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  # JOB 9: Test Kiota SDK (Parallel)
+  # JOB 8: Test Kiota SDK (Parallel)
   #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   test-kiota:
     name: ✅ Test Kiota SDK
-    needs: [validate, build-kiota, scaffold-tests]
+    needs: [validate, build-kiota]
     runs-on: ubuntu-latest
 
     steps:
@@ -638,11 +574,11 @@ jobs:
           if-no-files-found: ignore
 
   #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  # JOB 10: Test IBKR SDK (Parallel)
+  # JOB 9: Test IBKR SDK (Parallel)
   #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   test-clean-api:
     name: ✅ Test IBKR SDK
-    needs: [validate, build-clean-api, scaffold-tests]
+    needs: [validate, build-clean-api]
     runs-on: ubuntu-latest
     env:
       Testing__UseMockClient: true
@@ -684,7 +620,7 @@ jobs:
           if-no-files-found: ignore
 
   #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  # JOB 11: Create Release Summary
+  # JOB 10: Create Release Summary
   #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   create-summary:
     name: 📊 Create Release Summary
@@ -768,7 +704,7 @@ jobs:
           echo "4. Download the SDK packages (90-day retention)" >> $GITHUB_STEP_SUMMARY
 
   #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  # JOB 12: Create GitHub Release (Optional)
+  # JOB 11: Create GitHub Release (Optional)
   #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   create-release:
     name: 🚀 Create GitHub Release
@@ -890,7 +826,7 @@ jobs:
             release-files/*.snupkg
 
   #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  # JOB 13: Publish to NuGet.org (Optional)
+  # JOB 12: Publish to NuGet.org (Optional)
   #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   publish-nuget:
     name: 📤 Publish to NuGet.org
