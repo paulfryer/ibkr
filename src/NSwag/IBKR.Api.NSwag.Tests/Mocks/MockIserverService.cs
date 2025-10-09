@@ -11,6 +11,10 @@ namespace IBKR.Api.NSwag.MockClient.Services;
 /// </summary>
 public class MockIserverService : IIserverService
 {
+    // Track which conids have had successful snapshot requests (simulates IBKR pre-flight behavior)
+    private readonly HashSet<string> _initializedConids = new HashSet<string>();
+    private readonly object _lock = new object();
+
     #region Implemented Methods (Used in Tests)
 
     public async System.Threading.Tasks.Task<ICollection<Anonymous5>> SearchAllGETAsync(
@@ -68,21 +72,88 @@ public class MockIserverService : IIserverService
         MdFields? fields = null,
         CancellationToken cancellationToken = default)
     {
-        // Return mock market data snapshot (as array)
-        return await System.Threading.Tasks.Task.FromResult<ICollection<FyiVT>>(new List<FyiVT>
+        // Parse conids - could be comma-separated for batch requests
+        var conidList = conids.Split(',', StringSplitOptions.RemoveEmptyEntries);
+        var results = new List<FyiVT>();
+
+        foreach (var conid in conidList)
         {
-            new FyiVT
+            // Simulate IBKR pre-flight behavior: first request returns empty data (pre-flight initialization)
+            bool isFirstRequest;
+            lock (_lock)
             {
-                AdditionalProperties = new Dictionary<string, object>
+                isFirstRequest = !_initializedConids.Contains(conid);
+                if (isFirstRequest)
                 {
-                    { "31", "150.25" },  // Last Price
-                    { "84", "150.20" },  // Bid
-                    { "86", "150.30" },  // Ask
-                    { "85", "100" },     // Ask Size
-                    { "88", "200" }      // Bid Size
+                    _initializedConids.Add(conid);
                 }
             }
-        });
+
+            // On first request, return empty FyiVT (simulates pre-flight)
+            if (isFirstRequest)
+            {
+                results.Add(new FyiVT
+                {
+                    AdditionalProperties = new Dictionary<string, object>() // Empty - pre-flight response
+                });
+                continue;
+            }
+            // Determine if this is an option or stock
+            // Options typically have conids > 400000000, stocks are typically < 500000000
+            // For testing, use a simple heuristic: known stock conids vs others
+            var knownStockConids = new[] { 265598, 3691937, 76792991, 272093, 208813719 }; // AAPL, AMZN, TSLA, MSFT, GOOGL
+            var isOption = int.TryParse(conid.Trim(), out var conidInt) && !knownStockConids.Contains(conidInt);
+
+            if (isOption)
+            {
+                // Return mock option quote WITH Greeks
+                results.Add(new FyiVT
+                {
+                    AdditionalProperties = new Dictionary<string, object>
+                    {
+                        // Basic price fields
+                        { "31", "5.25" },      // Last Price
+                        { "84", "5.20" },      // Bid
+                        { "86", "5.30" },      // Ask
+                        { "85", "50" },        // Ask Size
+                        { "88", "100" },       // Bid Size
+                        { "87", "1234" },      // Volume
+
+                        // Option-specific fields
+                        { "7289", "5678" },    // Open Interest
+
+                        // Greeks
+                        { "7295", "0.28" },    // Implied Volatility (28%)
+                        { "7308", "0.52" },    // Delta
+                        { "7309", "0.03" },    // Gamma
+                        { "7310", "0.15" },    // Vega
+                        { "7311", "-0.05" }    // Theta
+                    }
+                });
+            }
+            else
+            {
+                // Return mock stock quote (no Greeks)
+                results.Add(new FyiVT
+                {
+                    AdditionalProperties = new Dictionary<string, object>
+                    {
+                        { "31", "150.25" },    // Last Price
+                        { "84", "150.20" },    // Bid
+                        { "86", "150.30" },    // Ask
+                        { "85", "100" },       // Ask Size
+                        { "88", "200" },       // Bid Size
+                        { "87", "12345678" },  // Volume
+                        { "70", "151.50" },    // High
+                        { "71", "149.75" },    // Low
+                        { "82", "149.50" },    // Close
+                        { "83", "0.50" }       // Percent Change
+                    }
+                });
+            }
+        }
+
+        return await System.Threading.Tasks.Task.FromResult<ICollection<FyiVT>>(results);
     }
 
     public async System.Threading.Tasks.Task<Response18> StrikesAsync(
@@ -114,20 +185,52 @@ public class MockIserverService : IIserverService
             { "208813719", "GOOGL" }
         };
 
-        var symbol = symbolMap.TryGetValue(conid, out var sym) ? sym : "UNKNOWN";
+        // Parse conid to determine if it's an option or stock
+        var isOption = int.TryParse(conid, out var conidInt) && conidInt > 100000;
 
-        return await System.Threading.Tasks.Task.FromResult(new ContractInfo
+        if (isOption)
         {
-            AdditionalProperties = new Dictionary<string, object>
+            // Mock option contract info
+            var underlyingSymbol = "AAPL"; // Default
+            var strike = 150.0 + (conidInt % 50); // Vary strike based on conid
+            var isCall = (conidInt % 2) == 0;
+            var daysOut = 30 + (conidInt % 60);
+            var expiration = DateTime.Today.AddDays(daysOut).ToString("yyyyMMdd");
+
+            return await System.Threading.Tasks.Task.FromResult(new ContractInfo
             {
-                { "symbol", symbol },
-                { "conid", conid },
-                { "exchange", "NASDAQ" },
-                { "companyName", $"{symbol} Test Company" },
-                { "currency", "USD" },
-                { "secType", "STK" }
-            }
-        });
+                AdditionalProperties = new Dictionary<string, object>
+                {
+                    { "symbol", underlyingSymbol },
+                    { "conid", conid },
+                    { "exchange", "SMART" },
+                    { "currency", "USD" },
+                    { "secType", "OPT" },
+                    { "strike", strike.ToString() },
+                    { "right", isCall ? "C" : "P" },
+                    { "maturity_date", expiration },
+                    { "multiplier", "100" }
+                }
+            });
+        }
+        else
+        {
+            // Mock stock contract info
+            var symbol = symbolMap.TryGetValue(conid, out var sym) ? sym : "UNKNOWN";
+
+            return await System.Threading.Tasks.Task.FromResult(new ContractInfo
+            {
+                AdditionalProperties = new Dictionary<string, object>
+                {
+                    { "symbol", symbol },
+                    { "conid", conid },
+                    { "exchange", "NASDAQ" },
+                    { "companyName", $"{symbol} Test Company" },
+                    { "currency", "USD" },
+                    { "secType", "STK" }
+                }
+            });
+        }
     }
 
     public async System.Threading.Tasks.Task<SecDefInfoResponse> Info2Async(

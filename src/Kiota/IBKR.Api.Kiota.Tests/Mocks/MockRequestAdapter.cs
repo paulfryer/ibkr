@@ -181,19 +181,64 @@ public class MockRequestAdapter : IRequestAdapter
         // Market data snapshot - /iserver/marketdata/snapshot
         if (path.Contains("/iserver/marketdata/snapshot") || path.EndsWith("/snapshot"))
         {
-            return new FyiVT
+            // Extract conids from query string and determine if option or stock
+            // Known stock conids vs others
+            var knownStockConids = new[] { 265598, 3691937, 76792991, 272093, 208813719 }; // AAPL, AMZN, TSLA, MSFT, GOOGL
+            var isOption = fullPath.Contains("conids=") &&
+                          int.TryParse(fullPath.Split(new[] { "conids=" }, StringSplitOptions.None)[1].Split('&')[0], out var conidInt) &&
+                          !knownStockConids.Contains(conidInt);
+
+            if (isOption)
             {
-                V = 1,
-                T = 100,
-                AdditionalData = new Dictionary<string, object>
+                // Return mock option quote WITH Greeks
+                return new FyiVT
                 {
-                    { "31", "150.25" },  // Last Price
-                    { "84", "150.20" },  // Bid
-                    { "86", "150.30" },  // Ask
-                    { "85", 100 },       // Ask Size
-                    { "88", 200 }        // Bid Size
-                }
-            };
+                    V = 1,
+                    T = 100,
+                    AdditionalData = new Dictionary<string, object>
+                    {
+                        // Basic price fields
+                        { "31", "5.25" },      // Last Price
+                        { "84", "5.20" },      // Bid
+                        { "86", "5.30" },      // Ask
+                        { "85", 50 },          // Ask Size
+                        { "88", 100 },         // Bid Size
+                        { "87", 1234 },        // Volume
+
+                        // Option-specific fields
+                        { "7289", 5678 },      // Open Interest
+
+                        // Greeks
+                        { "7295", "0.28" },    // Implied Volatility (28%)
+                        { "7308", "0.52" },    // Delta
+                        { "7309", "0.03" },    // Gamma
+                        { "7310", "0.15" },    // Vega
+                        { "7311", "-0.05" }    // Theta
+                    }
+                };
+            }
+            else
+            {
+                // Return mock stock quote (no Greeks)
+                return new FyiVT
+                {
+                    V = 1,
+                    T = 100,
+                    AdditionalData = new Dictionary<string, object>
+                    {
+                        { "31", "150.25" },    // Last Price
+                        { "84", "150.20" },    // Bid
+                        { "86", "150.30" },    // Ask
+                        { "85", 100 },         // Ask Size
+                        { "88", 200 },         // Bid Size
+                        { "87", 12345678 },    // Volume
+                        { "70", "151.50" },    // High
+                        { "71", "149.75" },    // Low
+                        { "82", "149.50" },    // Close
+                        { "83", "0.50" }       // Percent Change
+                    }
+                };
+            }
         }
 
         // Regulatory snapshot - /md/regsnapshot

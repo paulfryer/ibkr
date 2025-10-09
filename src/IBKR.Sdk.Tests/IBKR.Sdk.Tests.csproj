@@ -33,6 +33,7 @@
     <ProjectReference Include="..\NSwag\IBKR.Api.NSwag.Authentication\IBKR.Api.NSwag.Authentication.csproj" />
     <ProjectReference Include="..\NSwag\IBKR.Api.NSwag.Contract\IBKR.Api.NSwag.Contract.csproj" />
     <ProjectReference Include="..\NSwag\IBKR.Api.NSwag.Client\IBKR.Api.NSwag.Client.csproj" />
+    <ProjectReference Include="..\NSwag\IBKR.Api.NSwag.Tests\IBKR.Api.NSwag.Tests.csproj" />
     <ProjectReference Include="..\IBKR.Api.Testing\IBKR.Api.Testing.csproj" />
   </ItemGroup>
 

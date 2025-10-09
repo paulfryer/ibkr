@@ -70,9 +70,25 @@ public class OptionQuoteTests : IClassFixture<TestFixture>
 
         // Assert
         Assert.NotNull(quote);
+        Assert.NotNull(quote.AdditionalData);
 
-        // In a real response, fields like "31", "84", "86", "7295" (IV), "7308" (Delta) would be present
-        // In mock response, the FyiVT model will contain test data
+        // Verify all price fields are present
+        Assert.True(quote.AdditionalData.ContainsKey("31"), "Last price missing");
+        Assert.True(quote.AdditionalData.ContainsKey("84"), "Bid missing");
+        Assert.True(quote.AdditionalData.ContainsKey("86"), "Ask missing");
+        Assert.True(quote.AdditionalData.ContainsKey("85"), "Ask size missing");
+        Assert.True(quote.AdditionalData.ContainsKey("88"), "Bid size missing");
+
+        // Verify Greeks are present
+        Assert.True(quote.AdditionalData.ContainsKey("7295"), "IV missing");
+        Assert.True(quote.AdditionalData.ContainsKey("7308"), "Delta missing");
+        Assert.True(quote.AdditionalData.ContainsKey("7309"), "Gamma missing");
+        Assert.True(quote.AdditionalData.ContainsKey("7310"), "Vega missing");
+        Assert.True(quote.AdditionalData.ContainsKey("7311"), "Theta missing");
+
+        // Verify values can be parsed
+        Assert.Equal("5.25", quote.AdditionalData["31"].ToString());
+        Assert.Equal("0.52", quote.AdditionalData["7308"].ToString()); // Delta
     }
 
     [Fact(Skip = "Requires mock implementation of Info2 and Snapshot endpoints")]
@@ -155,7 +171,7 @@ public class OptionQuoteTests : IClassFixture<TestFixture>
         // In a real response, each FyiVT object would contain the market data for one option
     }
 
-    [Fact(Skip = "Requires mock implementation demonstrating option greeks")]
+    [Fact]
     public async Task GetOptionQuote_WithGreeks_ReturnsRiskMetrics()
     {
         // Arrange
@@ -177,10 +193,27 @@ public class OptionQuoteTests : IClassFixture<TestFixture>
 
         // Assert
         Assert.NotNull(quote);
+        Assert.NotNull(quote.AdditionalData);
 
-        // In a real response, you would extract greeks from the FyiVT model:
-        // The V property would contain field values
-        // The T property would contain timestamps
+        // Extract and verify Greeks from AdditionalData
+        Assert.True(quote.AdditionalData.ContainsKey("7308"), "Delta missing");
+        Assert.True(quote.AdditionalData.ContainsKey("7309"), "Gamma missing");
+        Assert.True(quote.AdditionalData.ContainsKey("7310"), "Vega missing");
+        Assert.True(quote.AdditionalData.ContainsKey("7311"), "Theta missing");
+        Assert.True(quote.AdditionalData.ContainsKey("7295"), "IV missing");
+
+        var delta = decimal.Parse(quote.AdditionalData["7308"].ToString()!);
+        var gamma = decimal.Parse(quote.AdditionalData["7309"].ToString()!);
+        var vega = decimal.Parse(quote.AdditionalData["7310"].ToString()!);
+        var theta = decimal.Parse(quote.AdditionalData["7311"].ToString()!);
+        var iv = decimal.Parse(quote.AdditionalData["7295"].ToString()!);
+
+        // Verify Greeks have reasonable values
+        Assert.True(delta >= -1 && delta <= 1, $"Delta out of range: {delta}");
+        Assert.True(gamma >= 0, $"Gamma should be positive: {gamma}");
+        Assert.True(vega >= 0, $"Vega should be positive: {vega}");
+        Assert.True(theta <= 0, $"Theta should be negative: {theta}");
+        Assert.True(iv > 0 && iv < 5, $"IV out of reasonable range: {iv}");
     }
 
     [Fact]

@@ -84,9 +84,23 @@ public class StockQuoteTests : IClassFixture<TestFixture>
 
         // Assert
         Assert.NotNull(quote);
+        Assert.NotNull(quote.AdditionalData);
 
-        // Note: FyiVT model is used for market data snapshots
-        // Market data fields are returned in V (value) and T (time) properties
+        // Verify all basic price fields are present
+        Assert.True(quote.AdditionalData.ContainsKey("31"), "Last price missing");
+        Assert.True(quote.AdditionalData.ContainsKey("84"), "Bid missing");
+        Assert.True(quote.AdditionalData.ContainsKey("86"), "Ask missing");
+        Assert.True(quote.AdditionalData.ContainsKey("85"), "Ask size missing");
+        Assert.True(quote.AdditionalData.ContainsKey("88"), "Bid size missing");
+
+        // Verify additional stock fields
+        Assert.True(quote.AdditionalData.ContainsKey("87"), "Volume missing");
+        Assert.True(quote.AdditionalData.ContainsKey("70"), "High missing");
+        Assert.True(quote.AdditionalData.ContainsKey("71"), "Low missing");
+
+        // Verify values can be parsed
+        Assert.Equal("150.25", quote.AdditionalData["31"].ToString());
+        Assert.Equal("150.20", quote.AdditionalData["84"].ToString());
     }
 
     [Fact]
@@ -106,7 +120,7 @@ public class StockQuoteTests : IClassFixture<TestFixture>
         Assert.Equal(265598, snapshot.Conid);
     }
 
-    [Fact(Skip = "Requires mock implementation of search and snapshot endpoints")]
+    [Fact]
     public async Task FullWorkflow_SearchAndGetQuote_Succeeds()
     {
         // Arrange
@@ -133,6 +147,21 @@ public class StockQuoteTests : IClassFixture<TestFixture>
 
         // Assert
         Assert.NotNull(quote);
+        Assert.NotNull(quote.AdditionalData);
+
+        // Verify we got valid quote data
+        Assert.True(quote.AdditionalData.ContainsKey("31"), "Last price missing");
+        Assert.True(quote.AdditionalData.ContainsKey("84"), "Bid missing");
+        Assert.True(quote.AdditionalData.ContainsKey("86"), "Ask missing");
+
+        // Verify prices are numeric
+        var last = decimal.Parse(quote.AdditionalData["31"].ToString()!);
+        var bid = decimal.Parse(quote.AdditionalData["84"].ToString()!);
+        var ask = decimal.Parse(quote.AdditionalData["86"].ToString()!);
+
+        Assert.True(last > 0, "Last price should be positive");
+        Assert.True(bid > 0, "Bid should be positive");
+        Assert.True(ask > bid, "Ask should be greater than bid");
     }
 
     [Fact]

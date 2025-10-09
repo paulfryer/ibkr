@@ -30,6 +30,9 @@ public class OptionQuoteTests : IClassFixture<TestFixture>
         // In practice, you'd get this from Info2Async after selecting a strike
         var optionConid = "12345678"; // Example option conid
 
+        // Act - Pre-flight request (initializes data stream)
+        await _iserverService.SnapshotAsync(conids: optionConid, fields: MdFields._31);
+
         // Act - Get market data snapshot for the option
         var quotes = await _iserverService.SnapshotAsync(
             conids: optionConid,
@@ -59,7 +62,10 @@ public class OptionQuoteTests : IClassFixture<TestFixture>
         // 7295 = Implied Volatility, 7308 = Delta, 7309 = Gamma
         // 7310 = Vega, 7311 = Theta
 
-        // Act
+        // Act - Pre-flight request (initializes data stream)
+        await _iserverService.SnapshotAsync(conids: optionConid, fields: null);
+
+        // Act - Get actual option data with Greeks
         var quotes = await _iserverService.SnapshotAsync(
             conids: optionConid,
             fields: null // Could pass string like "31,84,86,85,88,7295,7308,7309,7310,7311"
@@ -72,8 +78,23 @@ public class OptionQuoteTests : IClassFixture<TestFixture>
         var quote = quotes.First();
         Assert.NotNull(quote.AdditionalProperties);
 
-        // In a real response, fields like "31", "84", "86", "7295" (IV), "7308" (Delta) would be present
-        // In mock response, AdditionalProperties will contain test data
+        // Verify all price fields are present
+        Assert.True(quote.AdditionalProperties.ContainsKey("31")); // Last
+        Assert.True(quote.AdditionalProperties.ContainsKey("84")); // Bid
+        Assert.True(quote.AdditionalProperties.ContainsKey("86")); // Ask
+        Assert.True(quote.AdditionalProperties.ContainsKey("85")); // Ask Size
+        Assert.True(quote.AdditionalProperties.ContainsKey("88")); // Bid Size
+
+        // Verify Greeks are present
+        Assert.True(quote.AdditionalProperties.ContainsKey("7295")); // IV
+        Assert.True(quote.AdditionalProperties.ContainsKey("7308")); // Delta
+        Assert.True(quote.AdditionalProperties.ContainsKey("7309")); // Gamma
+        Assert.True(quote.AdditionalProperties.ContainsKey("7310")); // Vega
+        Assert.True(quote.AdditionalProperties.ContainsKey("7311")); // Theta
+
+        // Verify values can be parsed
+        Assert.Equal("5.25", quote.AdditionalProperties["31"].ToString());
+        Assert.Equal("0.52", quote.AdditionalProperties["7308"].ToString()); // Delta
     }
 
     [Fact(Skip = "Requires mock implementation of Info2Async and SnapshotAsync")]
@@ -118,7 +139,10 @@ public class OptionQuoteTests : IClassFixture<TestFixture>
         // Arrange
         var putOptionConid = "87654321"; // Example put option conid
 
-        // Act
+        // Act - Pre-flight request (initializes data stream)
+        await _iserverService.SnapshotAsync(conids: putOptionConid, fields: MdFields._31);
+
+        // Act - Get actual data
         var quotes = await _iserverService.SnapshotAsync(
             conids: putOptionConid,
             fields: MdFields._31
@@ -139,6 +163,9 @@ public class OptionQuoteTests : IClassFixture<TestFixture>
         // Multiple option conids separated by comma
         var optionConids = "12345678,87654321";
 
+        // Act - Pre-flight request (initializes data stream)
+        await _iserverService.SnapshotAsync(conids: optionConids, fields: MdFields._31);
+
         // Act - Get quotes for multiple options at once
         var quotes = await _iserverService.SnapshotAsync(
             conids: optionConids,
@@ -153,7 +180,7 @@ public class OptionQuoteTests : IClassFixture<TestFixture>
         // Each object would contain the market data for one option
     }
 
-    [Fact(Skip = "Requires mock implementation demonstrating option greeks")]
+    [Fact]
     public async Task GetOptionQuote_WithGreeks_ReturnsRiskMetrics()
     {
         // Arrange
@@ -163,7 +190,10 @@ public class OptionQuoteTests : IClassFixture<TestFixture>
         // 7308 = Delta, 7309 = Gamma, 7310 = Vega
         // 7311 = Theta, 7295 = Implied Volatility
 
-        // Act
+        // Act - Pre-flight request (initializes data stream)
+        await _iserverService.SnapshotAsync(conids: optionConid, fields: null);
+
+        // Act - Get actual data with Greeks
         var quotes = await _iserverService.SnapshotAsync(
             conids: optionConid,
             fields: null // Could pass string like "7308,7309,7310,7311,7295"
@@ -176,12 +206,25 @@ public class OptionQuoteTests : IClassFixture<TestFixture>
         var quote = quotes.First();
         Assert.NotNull(quote.AdditionalProperties);
 
-        // In a real response, you would extract greeks from AdditionalProperties:
-        // var delta = quote.AdditionalProperties["7308"];
-        // var gamma = quote.AdditionalProperties["7309"];
-        // var vega = quote.AdditionalProperties["7310"];
-        // var theta = quote.AdditionalProperties["7311"];
-        // var iv = quote.AdditionalProperties["7295"];
+        // Extract and verify Greeks from AdditionalProperties
+        Assert.True(quote.AdditionalProperties.ContainsKey("7308"), "Delta missing");
+        Assert.True(quote.AdditionalProperties.ContainsKey("7309"), "Gamma missing");
+        Assert.True(quote.AdditionalProperties.ContainsKey("7310"), "Vega missing");
+        Assert.True(quote.AdditionalProperties.ContainsKey("7311"), "Theta missing");
+        Assert.True(quote.AdditionalProperties.ContainsKey("7295"), "IV missing");
+
+        var delta = decimal.Parse(quote.AdditionalProperties["7308"].ToString()!);
+        var gamma = decimal.Parse(quote.AdditionalProperties["7309"].ToString()!);
+        var vega = decimal.Parse(quote.AdditionalProperties["7310"].ToString()!);
+        var theta = decimal.Parse(quote.AdditionalProperties["7311"].ToString()!);
+        var iv = decimal.Parse(quote.AdditionalProperties["7295"].ToString()!);
+
+        // Verify Greeks have reasonable values
+        Assert.True(delta >= -1 && delta <= 1, $"Delta out of range: {delta}");
+        Assert.True(gamma >= 0, $"Gamma should be positive: {gamma}");
+        Assert.True(vega >= 0, $"Vega should be positive: {vega}");
+        Assert.True(theta <= 0, $"Theta should be negative: {theta}");
+        Assert.True(iv > 0 && iv < 5, $"IV out of reasonable range: {iv}");
     }
 
     [Fact]
@@ -217,6 +260,10 @@ public class OptionQuoteTests : IClassFixture<TestFixture>
 
         var optionConid = "12345678";
 
+        // Act - Pre-flight request (initializes data stream)
+        await _iserverService.SnapshotAsync(conids: optionConid, fields: MdFields._31);
+
+        // Act - Get actual data
         var quotes = await _iserverService.SnapshotAsync(
             conids: optionConid,
             fields: MdFields._31

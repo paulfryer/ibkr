@@ -87,7 +87,10 @@ public class StockQuoteTests : IClassFixture<TestFixture>
         // 31 = Last Price, 84 = Bid Price, 86 = Ask Price
         // 85 = Ask Size, 88 = Bid Size
 
-        // Act
+        // Act - First call (pre-flight initialization)
+        await _iserverService.SnapshotAsync(conids: conid, fields: null);
+
+        // Act - Second call (actual data)
         var quotes = await _iserverService.SnapshotAsync(
             conids: conid,
             fields: null // Could pass MdFields enum or string like "31,84,86,85,88"
@@ -100,9 +103,22 @@ public class StockQuoteTests : IClassFixture<TestFixture>
         var quote = quotes.First();
         Assert.NotNull(quote.AdditionalProperties);
 
-        // Verify we can access market data fields
-        // In a real response, fields like "31", "84", "86" would be present
-        // In mock response, AdditionalProperties will contain test data
+        // Verify all basic price fields are present
+        Assert.True(quote.AdditionalProperties.ContainsKey("31"), "Last price missing");
+        Assert.True(quote.AdditionalProperties.ContainsKey("84"), "Bid missing");
+        Assert.True(quote.AdditionalProperties.ContainsKey("86"), "Ask missing");
+        Assert.True(quote.AdditionalProperties.ContainsKey("85"), "Ask size missing");
+        Assert.True(quote.AdditionalProperties.ContainsKey("88"), "Bid size missing");
+
+        // Verify additional stock fields
+        Assert.True(quote.AdditionalProperties.ContainsKey("87"), "Volume missing");
+        Assert.True(quote.AdditionalProperties.ContainsKey("70"), "High missing");
+        Assert.True(quote.AdditionalProperties.ContainsKey("71"), "Low missing");
+
+        // Verify values can be parsed
+        Assert.Equal("150.25", quote.AdditionalProperties["31"].ToString());
+        Assert.Equal("150.20", quote.AdditionalProperties["84"].ToString());
+        Assert.Equal("150.30", quote.AdditionalProperties["86"].ToString());
     }
 
     [Fact]
@@ -119,7 +135,7 @@ public class StockQuoteTests : IClassFixture<TestFixture>
         Assert.Equal(265598, snapshot.Conid);
     }
 
-    [Fact(Skip = "Requires mock implementation of SearchAllGETAsync and SnapshotAsync")]
+    [Fact]
     public async Task FullWorkflow_SearchAndGetQuote_Succeeds()
     {
         // Arrange
@@ -135,7 +151,10 @@ public class StockQuoteTests : IClassFixture<TestFixture>
         var conid = stock.Conid?.ToString();
         Assert.NotNull(conid);
 
-        // Act - Step 2: Get quote
+        // Act - Step 2a: Pre-flight request (initializes data stream)
+        await _iserverService.SnapshotAsync(conids: conid, fields: MdFields._31);
+
+        // Act - Step 2b: Get actual quote data
         var quotes = await _iserverService.SnapshotAsync(
             conids: conid,
             fields: MdFields._31
@@ -147,5 +166,20 @@ public class StockQuoteTests : IClassFixture<TestFixture>
 
         var quote = quotes.First();
         Assert.NotNull(quote.AdditionalProperties);
+
+        // Verify we got valid quote data
+        Assert.True(quote.AdditionalProperties.ContainsKey("31"), "Last price missing");
+        Assert.True(quote.AdditionalProperties.ContainsKey("84"), "Bid missing");
+        Assert.True(quote.AdditionalProperties.ContainsKey("86"), "Ask missing");
+
+        // Verify prices are numeric
+        var last = decimal.Parse(quote.AdditionalProperties["31"].ToString()!);
+        var bid = decimal.Parse(quote.AdditionalProperties["84"].ToString()!);
+        var ask = decimal.Parse(quote.AdditionalProperties["86"].ToString()!);
+
+        Assert.True(last > 0, "Last price should be positive");
+        Assert.True(bid > 0, "Bid should be positive");
+        Assert.True(ask > bid, "Ask should be greater than bid");
     }
 }
+

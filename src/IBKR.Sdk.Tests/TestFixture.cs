@@ -30,11 +30,14 @@ public class TestFixture : IDisposable
         // Setup DI container
         var services = new ServiceCollection();
         services.AddSingleton(Configuration);
+        services.AddLogging(); // Add logging for ILogger<T> dependencies
 
         // Use shared test infrastructure - automatically decides mock vs real based on config + credentials
         services.AddSdkTestServices(
             Configuration,
-            mockOptionService: () => new MockOptionService()
+            mockOptionService: () => new MockOptionService(),
+            mockIserverService: () => new IBKR.Api.NSwag.MockClient.Services.MockIserverService(),
+            mockMdService: () => new IBKR.Api.NSwag.MockClient.Services.MockMdService()
         );
 
         ServiceProvider = services.BuildServiceProvider();

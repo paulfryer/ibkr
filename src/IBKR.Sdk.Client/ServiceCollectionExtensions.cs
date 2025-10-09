@@ -127,6 +127,21 @@ public static class ServiceCollectionExtensions
             return new OptionService(nswagIserver, logger, optionServiceOptions);
         });
 
+        services.AddTransient<IStockQuoteService>(sp =>
+        {
+            var nswagIserver = sp.GetRequiredService<IIserverService>();
+            var logger = sp.GetRequiredService<ILogger<StockQuoteService>>();
+            return new StockQuoteService(nswagIserver, logger);
+        });
+
+        services.AddTransient<IOptionQuoteService>(sp =>
+        {
+            var nswagIserver = sp.GetRequiredService<IIserverService>();
+            var optionService = sp.GetRequiredService<IOptionService>();
+            var logger = sp.GetRequiredService<ILogger<OptionQuoteService>>();
+            return new OptionQuoteService(nswagIserver, optionService, logger);
+        });
+
         // Future: Add more high-level services here as they're developed
         // services.AddTransient<IMarketDataService, MarketDataService>();
         // services.AddTransient<IAccountService, AccountService>();
