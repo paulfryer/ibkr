@@ -10,7 +10,12 @@ This document explains how to publish the IBKR SDK packages to NuGet.org using t
 - Repository: `ibkr`
 - Workflow: `release.yml`
 
-This means **no API keys are needed** - GitHub automatically provides short-lived OIDC tokens for secure publishing.
+✅ **GitHub Secret is configured**:
+- Secret name: `NUGET_USER`
+- Secret value: `pfryer` (your NuGet.org username)
+- Location: Repository Settings → Secrets and variables → Actions
+
+This means **no long-lived API keys are needed** - GitHub automatically provides short-lived OIDC tokens for secure publishing.
 
 ## How to Publish
 
@@ -104,17 +109,19 @@ Follow [Semantic Versioning (semver)](https://semver.org/):
 
 ### How It Works
 
-1. **No API keys stored in GitHub Secrets** - More secure than traditional API keys
-2. **Short-lived OIDC tokens** - GitHub generates tokens that expire in ~1 hour
-3. **Automatic authentication** - `dotnet nuget push` automatically uses OIDC when available
+1. **GitHub generates OIDC token** - Short-lived token with repository identity
+2. **NuGet/login action** - Exchanges OIDC token for temporary NuGet API key (~1 hour lifetime)
+3. **Publish with temp key** - `dotnet nuget push` uses the temporary API key
 4. **Repository-scoped** - Only this repository (`paulfryer/ibkr`) can publish these packages
+5. **Only your username** - Uses `NUGET_USER` secret to verify package owner
 
 ### Benefits
 
-- ✅ No secrets management or rotation needed
-- ✅ No risk of leaked API keys
-- ✅ Automatic token expiration
+- ✅ No long-lived API keys stored in GitHub
+- ✅ Temporary keys expire automatically (~1 hour)
+- ✅ Repository identity verified by OIDC
 - ✅ Audit trail in NuGet.org
+- ✅ Only your NuGet username needed as a secret
 
 ## Troubleshooting
 
@@ -123,12 +130,25 @@ Follow [Semantic Versioning (semver)](https://semver.org/):
 **Possible causes:**
 - Trusted Publishing configuration is incorrect
 - Package owner doesn't match (`pfryer`)
+- `NUGET_USER` secret is missing or incorrect
 - Repository name changed
 
 **Fix:**
 1. Verify Trusted Publishing settings on NuGet.org
 2. Ensure package owner is `pfryer`
-3. Check workflow name is exactly `release.yml`
+3. Check `NUGET_USER` secret is set to `pfryer` in GitHub
+4. Check workflow name is exactly `release.yml`
+
+### ❌ "401 Unauthorized" or "API key must be provided"
+
+**Cause:** `NUGET_USER` secret is not configured
+
+**Fix:**
+1. Go to GitHub repository Settings → Secrets and variables → Actions
+2. Click "New repository secret"
+3. Name: `NUGET_USER`
+4. Value: `pfryer`
+5. Click "Add secret"
 
 ### ❌ "Package already exists"
 

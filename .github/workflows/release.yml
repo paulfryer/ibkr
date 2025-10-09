@@ -835,6 +835,12 @@ jobs:
           echo "📦 Packages to publish:"
           ls -lh nuget-packages/
 
+      - name: 🔑 NuGet login (OIDC → temp API key)
+        uses: NuGet/login@v1
+        id: nuget-login
+        with:
+          user: ${{ secrets.NUGET_USER }}
+
       - name: 🚀 Publish to NuGet.org using Trusted Publishing
         run: |
           echo "🚀 Publishing packages to NuGet.org using Trusted Publishing (OIDC)..."
@@ -843,6 +849,7 @@ jobs:
             if [ -f "$package" ]; then
               echo "📤 Publishing: $(basename $package)"
               dotnet nuget push "$package" \
+                --api-key "${{ steps.nuget-login.outputs.NUGET_API_KEY }}" \
                 --source https://api.nuget.org/v3/index.json \
                 --skip-duplicate
             fi
