@@ -8,20 +8,35 @@ A comprehensive, production-ready .NET SDK for Interactive Brokers Client Portal
 
 ## Quick Start
 
+**1. Install package:**
 ```bash
 dotnet add package IBKR.Sdk.Client
 ```
 
-```csharp
-builder.Services.AddIBKRSdk(options =>
-{
-    options.ClientId = "TESTCONS";
-    options.Credential = "your_username";
-    options.ClientKeyId = "kid-from-portal";
-    options.ClientPemPath = "/path/to/private-key.pem";
-});
+**2. Set environment variables:**
+```bash
+export IBKR_CLIENT_ID="TESTCONS"
+export IBKR_CREDENTIAL="your_username"
+export IBKR_CLIENT_KEY_ID="your-kid-from-ibkr"
+export IBKR_CLIENT_PEM_PATH="/path/to/private-key.pem"
+```
 
-// Inject and use
+**3. Configure in Program.cs:**
+```csharp
+using IBKR.Sdk.Client;
+using IBKR.Sdk.Contract.Interfaces;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Add IBKR SDK - automatically uses environment variables
+builder.Services.AddIBKRSdk();
+
+var app = builder.Build();
+app.Run();
+```
+
+**4. Inject and use:**
+```csharp
 public class MyService
 {
     private readonly IOptionService _options;
@@ -31,7 +46,11 @@ public class MyService
     public async Task GetOptions()
     {
         var chain = await _options.GetOptionChainAsync("AAPL", DateTime.Today, DateTime.Today.AddDays(30));
-        // ... use chain.Contracts
+
+        foreach (var contract in chain.Contracts)
+        {
+            Console.WriteLine($"{contract.Symbol} - IV: {contract.ImpliedVolatility:P2}");
+        }
     }
 }
 ```

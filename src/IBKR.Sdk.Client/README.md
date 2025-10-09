@@ -23,23 +23,35 @@ The IBKR Client Portal API is powerful but has a complex, inconsistent surface. 
 dotnet add package IBKR.Sdk.Client
 ```
 
-### Basic Setup
+### Basic Setup (Environment Variables - Recommended)
 
+**1. Set environment variables:**
+```bash
+export IBKR_CLIENT_ID="TESTCONS"
+export IBKR_CREDENTIAL="your_username"
+export IBKR_CLIENT_KEY_ID="your-kid-from-ibkr"
+export IBKR_CLIENT_PEM_PATH="/path/to/private-key.pem"
+```
+
+**2. Configure in Program.cs:**
 ```csharp
 using IBKR.Sdk.Client;
 using IBKR.Sdk.Contract.Interfaces;
 
-// In Program.cs or Startup.cs
-builder.Services.AddIBKRSdk(options =>
-{
-    options.ClientId = "TESTCONS";
-    options.Credential = "your_username";
-    options.ClientKeyId = "kid-from-portal";
-    options.ClientPemPath = "/path/to/private-key.pem";
-    options.BaseUrl = "https://api.ibkr.com";
-});
+// Standard .NET web application setup
+var builder = WebApplication.CreateBuilder(args);
 
-// Inject and use
+// Add IBKR SDK - automatically reads environment variables
+builder.Services.AddIBKRSdk();
+
+var app = builder.Build();
+app.Run();
+```
+
+> **Note**: `builder` is from .NET's standard `WebApplication.CreateBuilder()`. For console apps, use `HostApplicationBuilder` or a `ServiceCollection` directly.
+
+**3. Inject and use in your services:**
+```csharp
 public class MyService
 {
     private readonly IOptionService _options;
@@ -67,7 +79,27 @@ public class MyService
 
 ## Configuration Options
 
-### 1. Configuration File (Recommended)
+### 1. Environment Variables (Recommended)
+
+The SDK automatically reads environment variables:
+- `IBKR_CLIENT_ID` - Your client/consumer ID (e.g., "TESTCONS")
+- `IBKR_CREDENTIAL` - Your IBKR username
+- `IBKR_CLIENT_KEY_ID` - Your key ID (kid)
+- `IBKR_CLIENT_PEM_PATH` - Path to your RSA private key PEM file
+- `IBKR_BASE_URL` - Optional, defaults to `https://api.ibkr.com`
+
+```bash
+export IBKR_CLIENT_ID="TESTCONS"
+export IBKR_CREDENTIAL="your_username"
+export IBKR_CLIENT_KEY_ID="your-kid"
+export IBKR_CLIENT_PEM_PATH="/path/to/key.pem"
+```
+
+```csharp
+builder.Services.AddIBKRSdk();  // Automatically uses env vars
+```
+
+### 2. Configuration File
 
 **appsettings.json:**
 ```json
@@ -75,7 +107,7 @@ public class MyService
   "IBKR": {
     "ClientId": "TESTCONS",
     "Credential": "your_username",
-    "ClientKeyId": "kid-from-portal",
+    "ClientKeyId": "your-kid",
     "ClientPemPath": "/path/to/private-key.pem",
     "BaseUrl": "https://api.ibkr.com"
   }
@@ -87,28 +119,15 @@ public class MyService
 builder.Services.AddIBKRSdk(builder.Configuration.GetSection("IBKR"));
 ```
 
-### 2. Environment Variables
-
-The SDK automatically reads environment variables:
-- `IBKR_CLIENT_ID`
-- `IBKR_CREDENTIAL`
-- `IBKR_CLIENT_KEY_ID`
-- `IBKR_CLIENT_PEM_PATH`
-- `IBKR_BASE_URL` (optional, defaults to `https://api.ibkr.com`)
-
-```csharp
-builder.Services.AddIBKRSdk();  // Uses env vars
-```
-
 ### 3. Configuration Action
 
 ```csharp
 builder.Services.AddIBKRSdk(options =>
 {
-    options.ClientId = Environment.GetEnvironmentVariable("IBKR_CLIENT_ID");
-    options.Credential = Environment.GetEnvironmentVariable("IBKR_CREDENTIAL");
-    options.ClientKeyId = Environment.GetEnvironmentVariable("IBKR_CLIENT_KEY_ID");
-    options.ClientPemPath = Environment.GetEnvironmentVariable("IBKR_CLIENT_PEM_PATH");
+    options.ClientId = "TESTCONS";
+    options.Credential = "your_username";
+    options.ClientKeyId = "your-kid";
+    options.ClientPemPath = "/path/to/private-key.pem";
     options.BaseUrl = "https://api.ibkr.com";
 });
 ```
