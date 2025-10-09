@@ -185,7 +185,6 @@ class Program
         Console.WriteLine($"\n✓ {generatorName} generation complete!");
         Console.WriteLine($"  Contract: {Path.Combine(solutionDir, "src", generatorName, "IBKR.Api.Kiota.Contract")}");
         Console.WriteLine($"  Client: {Path.Combine(solutionDir, "src", generatorName, "IBKR.Api.Kiota.Client")}");
-        Console.WriteLine($"  MockClient: {Path.Combine(solutionDir, "src", generatorName, "IBKR.Api.Kiota.MockClient")}");
     }
 
     static async Task GenerateWithNSwag(string specPath)
@@ -323,7 +322,6 @@ class Program
         Console.WriteLine($"\n✓ {generatorName} generation complete!");
         Console.WriteLine($"  Contract: {Path.GetDirectoryName(contractProjectFile)}");
         Console.WriteLine($"  Client: {Path.GetDirectoryName(httpClientProjectFile)}");
-        Console.WriteLine($"\nNote: Run IBKR.Api.TestScaffold to create MockClient and Test projects");
     }
 
     static string GetSolutionDirectory()

@@ -1,4 +1,4 @@
-using IBKR.Sdk.Authentication;
+using IBKR.Api.Authentication;
 using IBKR.Api.Kiota.Client;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Kiota.Abstractions;

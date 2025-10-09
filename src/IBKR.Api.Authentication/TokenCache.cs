@@ -1,4 +1,4 @@
-namespace IBKR.Sdk.Authentication;
+namespace IBKR.Api.Authentication;
 
 /// <summary>
 /// Simple in-memory token cache with expiration

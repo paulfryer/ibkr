@@ -200,11 +200,71 @@ jobs:
           if-no-files-found: error
 
   #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  # JOB 4: Build and Package NSwag SDK (Parallel)
+  # JOB 4: Build and Package Core Authentication Library
+  #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  build-auth:
+    name: 📦 Build Core Authentication
+    needs: [validate]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🔨 Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: 💾 Cache NuGet packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: 🔄 Restore dependencies
+        run: dotnet restore src/IBKR.Api.Authentication/IBKR.Api.Authentication.csproj
+
+      - name: 🏗️ Build Core Authentication
+        run: |
+          dotnet build src/IBKR.Api.Authentication/IBKR.Api.Authentication.csproj \
+            --configuration ${{ env.CONFIGURATION }} \
+            --no-restore \
+            /p:Version=${{ needs.validate.outputs.version }}
+
+      - name: 📦 Pack NuGet package
+        run: |
+          mkdir -p packages/Auth
+
+          echo "📦 Packing IBKR.Api.Authentication..."
+          dotnet pack src/IBKR.Api.Authentication/IBKR.Api.Authentication.csproj \
+            --configuration ${{ env.CONFIGURATION }} \
+            --no-build \
+            --output packages/Auth \
+            /p:PackageVersion=${{ needs.validate.outputs.version }}
+
+      - name: 📋 List generated packages
+        working-directory: packages/Auth
+        run: |
+          echo "📦 Core Authentication package created:"
+          ls -lh *.nupkg
+
+      - name: 📤 Upload Authentication package
+        uses: actions/upload-artifact@v4
+        with:
+          name: Authentication-SDK-v${{ needs.validate.outputs.version }}
+          path: packages/Auth/*.nupkg
+          retention-days: 90
+          if-no-files-found: error
+
+  #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # JOB 5: Build and Package NSwag SDK (Parallel)
   #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   build-nswag:
     name: 📦 Build NSwag SDK
-    needs: [validate, scaffold-tests]
+    needs: [validate, scaffold-tests, build-auth]
     runs-on: ubuntu-latest
 
     steps:
@@ -235,6 +295,7 @@ jobs:
         run: |
           dotnet restore IBKR.Api.NSwag.Contract/IBKR.Api.NSwag.Contract.csproj
           dotnet restore IBKR.Api.NSwag.Client/IBKR.Api.NSwag.Client.csproj
+          dotnet restore IBKR.Api.NSwag.Authentication/IBKR.Api.NSwag.Authentication.csproj
 
       - name: 🏗️ Build NSwag Contract
         working-directory: src/NSwag
@@ -248,6 +309,14 @@ jobs:
         working-directory: src/NSwag
         run: |
           dotnet build IBKR.Api.NSwag.Client/IBKR.Api.NSwag.Client.csproj \
+            --configuration ${{ env.CONFIGURATION }} \
+            --no-restore \
+            /p:Version=${{ needs.validate.outputs.version }}
+
+      - name: 🏗️ Build NSwag Authentication
+        working-directory: src/NSwag
+        run: |
+          dotnet build IBKR.Api.NSwag.Authentication/IBKR.Api.NSwag.Authentication.csproj \
             --configuration ${{ env.CONFIGURATION }} \
             --no-restore \
             /p:Version=${{ needs.validate.outputs.version }}
@@ -271,6 +340,13 @@ jobs:
             --output ../../packages/NSwag \
             /p:PackageVersion=${{ needs.validate.outputs.version }}
 
+          echo "📦 Packing NSwag.Authentication..."
+          dotnet pack IBKR.Api.NSwag.Authentication/IBKR.Api.NSwag.Authentication.csproj \
+            --configuration ${{ env.CONFIGURATION }} \
+            --no-build \
+            --output ../../packages/NSwag \
+            /p:PackageVersion=${{ needs.validate.outputs.version }}
+
       - name: 📋 List generated packages
         working-directory: packages/NSwag
         run: |
@@ -286,11 +362,11 @@ jobs:
           if-no-files-found: error
 
   #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  # JOB 5: Build and Package Kiota SDK (Parallel)
+  # JOB 6: Build and Package Kiota SDK (Parallel)
   #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   build-kiota:
     name: 📦 Build Kiota SDK
-    needs: [validate, scaffold-tests]
+    needs: [validate, scaffold-tests, build-auth]
     runs-on: ubuntu-latest
 
     steps:
@@ -321,6 +397,7 @@ jobs:
         run: |
           dotnet restore IBKR.Api.Kiota.Contract/IBKR.Api.Kiota.Contract.csproj
           dotnet restore IBKR.Api.Kiota.Client/IBKR.Api.Kiota.Client.csproj
+          dotnet restore IBKR.Api.Kiota.Authentication/IBKR.Api.Kiota.Authentication.csproj
 
       - name: 🏗️ Build Kiota Contract
         working-directory: src/Kiota
@@ -334,6 +411,14 @@ jobs:
         working-directory: src/Kiota
         run: |
           dotnet build IBKR.Api.Kiota.Client/IBKR.Api.Kiota.Client.csproj \
+            --configuration ${{ env.CONFIGURATION }} \
+            --no-restore \
+            /p:Version=${{ needs.validate.outputs.version }}
+
+      - name: 🏗️ Build Kiota Authentication
+        working-directory: src/Kiota
+        run: |
+          dotnet build IBKR.Api.Kiota.Authentication/IBKR.Api.Kiota.Authentication.csproj \
             --configuration ${{ env.CONFIGURATION }} \
             --no-restore \
             /p:Version=${{ needs.validate.outputs.version }}
@@ -357,6 +442,13 @@ jobs:
             --output ../../packages/Kiota \
             /p:PackageVersion=${{ needs.validate.outputs.version }}
 
+          echo "📦 Packing Kiota.Authentication..."
+          dotnet pack IBKR.Api.Kiota.Authentication/IBKR.Api.Kiota.Authentication.csproj \
+            --configuration ${{ env.CONFIGURATION }} \
+            --no-build \
+            --output ../../packages/Kiota \
+            /p:PackageVersion=${{ needs.validate.outputs.version }}
+
       - name: 📋 List generated packages
         working-directory: packages/Kiota
         run: |
@@ -372,7 +464,7 @@ jobs:
           if-no-files-found: error
 
   #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  # JOB 6: Build and Package IBKR SDK (after NSwag completes)
+  # JOB 7: Build and Package IBKR SDK (after NSwag completes)
   #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   build-clean-api:
     name: 📦 Build IBKR SDK
@@ -405,19 +497,11 @@ jobs:
       - name: 🔄 Restore dependencies
         run: |
           dotnet restore src/IBKR.Sdk.Contract/IBKR.Sdk.Contract.csproj
-          dotnet restore src/IBKR.Sdk.Authentication/IBKR.Sdk.Authentication.csproj
           dotnet restore src/IBKR.Sdk.Client/IBKR.Sdk.Client.csproj
 
       - name: 🏗️ Build IBKR SDK Contract
         run: |
           dotnet build src/IBKR.Sdk.Contract/IBKR.Sdk.Contract.csproj \
-            --configuration ${{ env.CONFIGURATION }} \
-            --no-restore \
-            /p:Version=${{ needs.validate.outputs.version }}
-
-      - name: 🏗️ Build IBKR SDK Authentication
-        run: |
-          dotnet build src/IBKR.Sdk.Authentication/IBKR.Sdk.Authentication.csproj \
             --configuration ${{ env.CONFIGURATION }} \
             --no-restore \
             /p:Version=${{ needs.validate.outputs.version }}
@@ -435,13 +519,6 @@ jobs:
 
           echo "📦 Packing IBKR.Sdk.Contract..."
           dotnet pack src/IBKR.Sdk.Contract/IBKR.Sdk.Contract.csproj \
-            --configuration ${{ env.CONFIGURATION }} \
-            --no-build \
-            --output packages/CleanAPI \
-            /p:PackageVersion=${{ needs.validate.outputs.version }}
-
-          echo "📦 Packing IBKR.Sdk.Authentication..."
-          dotnet pack src/IBKR.Sdk.Authentication/IBKR.Sdk.Authentication.csproj \
             --configuration ${{ env.CONFIGURATION }} \
             --no-build \
             --output packages/CleanAPI \
@@ -469,7 +546,7 @@ jobs:
           if-no-files-found: error
 
   #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  # JOB 7: Test NSwag SDK (Parallel)
+  # JOB 8: Test NSwag SDK (Parallel)
   #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   test-nswag:
     name: ✅ Test NSwag SDK
@@ -515,7 +592,7 @@ jobs:
           if-no-files-found: ignore
 
   #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  # JOB 8: Test Kiota SDK (Parallel)
+  # JOB 9: Test Kiota SDK (Parallel)
   #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   test-kiota:
     name: ✅ Test Kiota SDK
@@ -561,7 +638,7 @@ jobs:
           if-no-files-found: ignore
 
   #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  # JOB 9: Test IBKR SDK (Parallel)
+  # JOB 10: Test IBKR SDK (Parallel)
   #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   test-clean-api:
     name: ✅ Test IBKR SDK
@@ -607,7 +684,7 @@ jobs:
           if-no-files-found: ignore
 
   #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  # JOB 10: Create Release Summary
+  # JOB 11: Create Release Summary
   #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   create-summary:
     name: 📊 Create Release Summary
@@ -691,7 +768,7 @@ jobs:
           echo "4. Download the SDK packages (90-day retention)" >> $GITHUB_STEP_SUMMARY
 
   #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  # JOB 11: Create GitHub Release (Optional)
+  # JOB 12: Create GitHub Release (Optional)
   #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   create-release:
     name: 🚀 Create GitHub Release
@@ -752,43 +829,41 @@ jobs:
 
             Auto-generated C# SDKs for the Interactive Brokers REST API with a clean, production-ready abstraction layer.
 
-            ## 📦 Packages Included
+            ## 📦 Packages Included (9 total)
 
-            ### ⭐ IBKR SDK (Recommended)
-            Production-ready abstraction with comprehensive error handling and logging:
-            - **IBKR.Sdk.Contract** - Interfaces and strongly-typed models
-            - **IBKR.Sdk.Client** - Production-ready implementation with built-in workarounds
-            - **IBKR.Sdk.Authentication** - Thread-safe authentication provider
+            ### ⭐ High-Level SDK (Recommended)
+            - **IBKR.Sdk.Client** - Clean, AWS-like developer experience
+            - **IBKR.Sdk.Contract** - Hand-crafted interfaces and models
 
-            ### NSwag SDK (Lower-level)
-            Service-oriented architecture with direct API access:
-            - **IBKR.Api.NSwag.Contract** - Generated models and service interfaces
-            - **IBKR.Api.NSwag.Client** - HTTP client implementations
+            ### 🔐 Authentication
+            - **IBKR.Api.Authentication** - Core OAuth2 + JWT authentication
+            - **IBKR.Api.NSwag.Authentication** - NSwag authentication adapter
+            - **IBKR.Api.Kiota.Authentication** - Kiota authentication adapter
 
-            ### Kiota SDK (Lower-level)
-            Fluent API architecture with request builders:
-            - **IBKR.Api.Kiota.Contract** - Generated model classes (POCOs)
-            - **IBKR.Api.Kiota.Client** - Fluent request builders
+            ### ⚙️ Generated Clients (Auto-Updated)
+            - **IBKR.Api.NSwag.Client** - NSwag-generated HTTP client
+            - **IBKR.Api.NSwag.Contract** - NSwag-generated models
+            - **IBKR.Api.Kiota.Client** - Kiota-generated HTTP client
+            - **IBKR.Api.Kiota.Contract** - Kiota-generated models
 
             ## 🚀 Installation
 
-            ### Recommended: IBKR SDK
+            ### Recommended: High-Level SDK
             ```bash
-            dotnet add package IBKR.Sdk.Contract --version ${{ needs.validate.outputs.version }}
             dotnet add package IBKR.Sdk.Client --version ${{ needs.validate.outputs.version }}
-            dotnet add package IBKR.Sdk.Authentication --version ${{ needs.validate.outputs.version }}
             ```
+            This automatically includes all dependencies (Authentication, NSwag client, etc.)
 
-            ### Alternative: NSwag SDK
+            ### Advanced: Direct API Access with NSwag
             ```bash
-            dotnet add package IBKR.Api.NSwag.Contract --version ${{ needs.validate.outputs.version }}
             dotnet add package IBKR.Api.NSwag.Client --version ${{ needs.validate.outputs.version }}
+            dotnet add package IBKR.Api.NSwag.Authentication --version ${{ needs.validate.outputs.version }}
             ```
 
-            ### Alternative: Kiota SDK
+            ### Advanced: Direct API Access with Kiota
             ```bash
-            dotnet add package IBKR.Api.Kiota.Contract --version ${{ needs.validate.outputs.version }}
             dotnet add package IBKR.Api.Kiota.Client --version ${{ needs.validate.outputs.version }}
+            dotnet add package IBKR.Api.Kiota.Authentication --version ${{ needs.validate.outputs.version }}
             ```
 
             ## 📖 Documentation
@@ -803,19 +878,23 @@ jobs:
             - **Production-ready** - Battle-tested with comprehensive test suite
             - **Excellent DX** - Intuitive API surface
 
-            ## 🔍 Testing
+            ## ✅ Features
 
-            All SDKs include comprehensive test suites with MockClient packages for testing purposes.
+            - Clean, typed interfaces (no raw JSON or confusing generated code)
+            - AWS SDK-like developer experience
+            - Automatic authentication, token refresh, and session management
+            - Built-in dependency injection support
+            - Comprehensive test coverage
           files: |
             release-files/*.nupkg
             release-files/*.snupkg
 
   #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  # JOB 12: Publish to NuGet.org (Optional)
+  # JOB 13: Publish to NuGet.org (Optional)
   #━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   publish-nuget:
     name: 📤 Publish to NuGet.org
-    needs: [validate, build-nswag, build-kiota, build-clean-api, test-nswag, test-kiota, test-clean-api]
+    needs: [validate, build-auth, build-nswag, build-kiota, build-clean-api, test-nswag, test-kiota, test-clean-api]
     if: inputs.publish_to_nuget  # Publish to NuGet when checkbox is selected
     runs-on: ubuntu-latest
 
@@ -863,15 +942,19 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "Successfully published to NuGet.org:" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "## IBKR SDK Packages" >> $GITHUB_STEP_SUMMARY
-          echo "- [IBKR.Sdk.Contract ${{ needs.validate.outputs.version }}](https://www.nuget.org/packages/IBKR.Sdk.Contract/${{ needs.validate.outputs.version }})" >> $GITHUB_STEP_SUMMARY
-          echo "- [IBKR.Sdk.Client ${{ needs.validate.outputs.version }}](https://www.nuget.org/packages/IBKR.Sdk.Client/${{ needs.validate.outputs.version }})" >> $GITHUB_STEP_SUMMARY
-          echo "- [IBKR.Sdk.Authentication ${{ needs.validate.outputs.version }}](https://www.nuget.org/packages/IBKR.Sdk.Authentication/${{ needs.validate.outputs.version }})" >> $GITHUB_STEP_SUMMARY
+          echo "## Core Authentication" >> $GITHUB_STEP_SUMMARY
+          echo "- [IBKR.Api.Authentication ${{ needs.validate.outputs.version }}](https://www.nuget.org/packages/IBKR.Api.Authentication/${{ needs.validate.outputs.version }})" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "## NSwag SDK Packages" >> $GITHUB_STEP_SUMMARY
           echo "- [IBKR.Api.NSwag.Contract ${{ needs.validate.outputs.version }}](https://www.nuget.org/packages/IBKR.Api.NSwag.Contract/${{ needs.validate.outputs.version }})" >> $GITHUB_STEP_SUMMARY
           echo "- [IBKR.Api.NSwag.Client ${{ needs.validate.outputs.version }}](https://www.nuget.org/packages/IBKR.Api.NSwag.Client/${{ needs.validate.outputs.version }})" >> $GITHUB_STEP_SUMMARY
+          echo "- [IBKR.Api.NSwag.Authentication ${{ needs.validate.outputs.version }}](https://www.nuget.org/packages/IBKR.Api.NSwag.Authentication/${{ needs.validate.outputs.version }})" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "## Kiota SDK Packages" >> $GITHUB_STEP_SUMMARY
           echo "- [IBKR.Api.Kiota.Contract ${{ needs.validate.outputs.version }}](https://www.nuget.org/packages/IBKR.Api.Kiota.Contract/${{ needs.validate.outputs.version }})" >> $GITHUB_STEP_SUMMARY
           echo "- [IBKR.Api.Kiota.Client ${{ needs.validate.outputs.version }}](https://www.nuget.org/packages/IBKR.Api.Kiota.Client/${{ needs.validate.outputs.version }})" >> $GITHUB_STEP_SUMMARY
+          echo "- [IBKR.Api.Kiota.Authentication ${{ needs.validate.outputs.version }}](https://www.nuget.org/packages/IBKR.Api.Kiota.Authentication/${{ needs.validate.outputs.version }})" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## IBKR SDK Packages" >> $GITHUB_STEP_SUMMARY
+          echo "- [IBKR.Sdk.Contract ${{ needs.validate.outputs.version }}](https://www.nuget.org/packages/IBKR.Sdk.Contract/${{ needs.validate.outputs.version }})" >> $GITHUB_STEP_SUMMARY
+          echo "- [IBKR.Sdk.Client ${{ needs.validate.outputs.version }}](https://www.nuget.org/packages/IBKR.Sdk.Client/${{ needs.validate.outputs.version }})" >> $GITHUB_STEP_SUMMARY

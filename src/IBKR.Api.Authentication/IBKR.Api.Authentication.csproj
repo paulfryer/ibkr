@@ -4,16 +4,14 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <Description>IBKR authentication integration for NSwag SDK using HttpMessageHandler</Description>
+    <Description>Core IBKR authentication logic including JWT signing and token management</Description>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\IBKR.Api.Authentication\IBKR.Api.Authentication.csproj" />
-    <ProjectReference Include="..\IBKR.Api.NSwag.Client\IBKR.Api.NSwag.Client.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.2.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.2" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.1" />
   </ItemGroup>
 

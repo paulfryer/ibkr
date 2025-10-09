@@ -1,190 +1,143 @@
-# IBKR REST API SDKs for .NET
+# IBKR SDK for .NET
 
-[![Build and Release](https://github.com/paulfryer/ibkr/actions/workflows/release.yml/badge.svg)](https://github.com/paulfryer/ibkr/actions/workflows/release.yml)
-![License](https://img.shields.io/badge/license-MIT-green)
-![.NET](https://img.shields.io/badge/.NET-8.0-purple)
+A comprehensive, production-ready .NET SDK for Interactive Brokers Client Portal API.
 
-> Production-ready C# SDKs for the Interactive Brokers Client Portal Web API
+[![NuGet](https://img.shields.io/nuget/v/IBKR.Sdk.Client.svg)](https://www.nuget.org/packages/IBKR.Sdk.Client/)
+[![Build](https://github.com/USERNAME/REPO/workflows/Build%20and%20Release/badge.svg)](https://github.com/USERNAME/REPO/actions)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-## 🚀 Quick Start
-
-### ⭐ IBKR SDK (Recommended)
-Production-ready abstraction with comprehensive error handling and strongly-typed models:
+## Quick Start
 
 ```bash
-dotnet add package IBKR.Sdk.Contract
 dotnet add package IBKR.Sdk.Client
-dotnet add package IBKR.Sdk.Authentication
 ```
 
 ```csharp
-// ⭐ One-line setup - just like AWS SDK!
-services.AddIBKRSdk(configuration.GetSection("IBKR"));
-
-// Use the SDK
-var optionService = serviceProvider.GetRequiredService<IOptionService>();
-var chain = await optionService.GetOptionChainAsync(
-    "AAPL",
-    DateTime.UtcNow,
-    DateTime.UtcNow.AddDays(30));
-
-// All contracts are strongly typed with DateTime, enums, decimals
-foreach (var contract in chain.Contracts)
+builder.Services.AddIBKRSdk(options =>
 {
-    Console.WriteLine($"{contract.Symbol} {contract.Right} " +
-                     $"Strike: {contract.Strike:C} Exp: {contract.Expiration:yyyy-MM-dd}");
+    options.ClientId = "TESTCONS";
+    options.Credential = "your_username";
+    options.ClientKeyId = "kid-from-portal";
+    options.ClientPemPath = "/path/to/private-key.pem";
+});
+
+// Inject and use
+public class MyService
+{
+    private readonly IOptionService _options;
+
+    public MyService(IOptionService options) => _options = options;
+
+    public async Task GetOptions()
+    {
+        var chain = await _options.GetOptionChainAsync("AAPL", DateTime.Today, DateTime.Today.AddDays(30));
+        // ... use chain.Contracts
+    }
 }
 ```
 
-**Configuration (appsettings.json):**
-```json
-{
-  "IBKR": {
-    "ClientId": "YOUR_CLIENT_ID",
-    "Credential": "YOUR_USERNAME",
-    "ClientKeyId": "YOUR_KEY_ID",
-    "ClientPemPath": "/path/to/private-key.pem",
-    "BaseUrl": "https://api.ibkr.com"
-  }
-}
-```
+## Packages
 
-Or use environment variables: `IBKR_CLIENT_ID`, `IBKR_CREDENTIAL`, `IBKR_CLIENT_KEY_ID`, `IBKR_CLIENT_PEM_PATH`
+This repository contains 9 NuGet packages organized by layer:
 
-### Alternative: Lower-Level SDKs
+### 🎯 High-Level SDK (Recommended)
 
-<details>
-<summary><b>NSwag SDK</b> (Service-Oriented)</summary>
+| Package | Description | NuGet |
+|---------|-------------|-------|
+| **[IBKR.Sdk.Client](src/IBKR.Sdk.Client)** | Clean, intuitive SDK with AWS-like DX | [![NuGet](https://img.shields.io/nuget/v/IBKR.Sdk.Client.svg)](https://www.nuget.org/packages/IBKR.Sdk.Client/) |
+| [IBKR.Sdk.Contract](src/IBKR.Sdk.Contract) | Hand-crafted models and interfaces | [![NuGet](https://img.shields.io/nuget/v/IBKR.Sdk.Contract.svg)](https://www.nuget.org/packages/IBKR.Sdk.Contract/) |
 
-```bash
-dotnet add package IBKR.Api.NSwag.Contract
-dotnet add package IBKR.Api.NSwag.Client
-```
+### 🔐 Authentication
 
-```csharp
-// Direct API access with service interfaces
-services.AddTransient<IIserverService, IserverService>();
-var searchResults = await iserverService.SearchAllGETAsync(symbol: "AAPL");
-```
-</details>
+| Package | Description | NuGet |
+|---------|-------------|-------|
+| [IBKR.Api.Authentication](src/IBKR.Api.Authentication) | Core OAuth2 + JWT authentication | [![NuGet](https://img.shields.io/nuget/v/IBKR.Api.Authentication.svg)](https://www.nuget.org/packages/IBKR.Api.Authentication/) |
+| [IBKR.Api.NSwag.Authentication](src/NSwag/IBKR.Api.NSwag.Authentication) | NSwag authentication adapter | [![NuGet](https://img.shields.io/nuget/v/IBKR.Api.NSwag.Authentication.svg)](https://www.nuget.org/packages/IBKR.Api.NSwag.Authentication/) |
+| [IBKR.Api.Kiota.Authentication](src/Kiota/IBKR.Api.Kiota.Authentication) | Kiota authentication adapter | [![NuGet](https://img.shields.io/nuget/v/IBKR.Api.Kiota.Authentication.svg)](https://www.nuget.org/packages/IBKR.Api.Kiota.Authentication/) |
 
-<details>
-<summary><b>Kiota SDK</b> (Fluent API)</summary>
+### ⚙️ Generated Clients (Auto-Updated)
 
-```bash
-dotnet add package IBKR.Api.Kiota.Contract
-dotnet add package IBKR.Api.Kiota.Client
-```
+| Package | Description | NuGet |
+|---------|-------------|-------|
+| [IBKR.Api.NSwag.Client](src/NSwag/IBKR.Api.NSwag.Client) | NSwag-generated HTTP client | [![NuGet](https://img.shields.io/nuget/v/IBKR.Api.NSwag.Client.svg)](https://www.nuget.org/packages/IBKR.Api.NSwag.Client/) |
+| [IBKR.Api.NSwag.Contract](src/NSwag/IBKR.Api.NSwag.Contract) | NSwag-generated models | [![NuGet](https://img.shields.io/nuget/v/IBKR.Api.NSwag.Contract.svg)](https://www.nuget.org/packages/IBKR.Api.NSwag.Contract/) |
+| [IBKR.Api.Kiota.Client](src/Kiota/IBKR.Api.Kiota.Client) | Kiota-generated HTTP client | [![NuGet](https://img.shields.io/nuget/v/IBKR.Api.Kiota.Client.svg)](https://www.nuget.org/packages/IBKR.Api.Kiota.Client/) |
+| [IBKR.Api.Kiota.Contract](src/Kiota/IBKR.Api.Kiota.Contract) | Kiota-generated models | [![NuGet](https://img.shields.io/nuget/v/IBKR.Api.Kiota.Contract.svg)](https://www.nuget.org/packages/IBKR.Api.Kiota.Contract/) |
 
-```csharp
-// Fluent, discoverable API surface
-var client = new IBKRClient(requestAdapter);
-var results = await client.Iserver.Secdef.Search.GetAsync();
-```
-</details>
+## Features
 
-## 📦 What's Inside
+- ✅ **Clean API** - No confusing generated types in your code
+- ✅ **AWS SDK-like DX** - Simple `AddIBKRSdk()` setup
+- ✅ **Production-ready** - Handles auth, token refresh, session management automatically
+- ✅ **Dependency Injection** - Built for modern .NET
+- ✅ **Comprehensive Options** - Full option chain support with Greeks, IV, volume
+- ✅ **Auto-generated** - Stays up-to-date with IBKR API changes
+- ✅ **Dual generators** - Both NSwag and Kiota support
 
-Three SDK layers offering different levels of abstraction:
+## Architecture
 
 ```
-📁 src/
-├── ⭐ IBKR SDK/        # Production-ready abstraction (Recommended)
-│   ├── IBKR.Sdk.Contract       # Clean interfaces & strongly-typed models
-│   ├── IBKR.Sdk.Client         # Implementation with built-in workarounds
-│   ├── IBKR.Sdk.Authentication # Thread-safe session management
-│   └── IBKR.Sdk.Tests          # Comprehensive test suite
-│
-├── 🔷 NSwag/            # Lower-level generated SDK
-│   ├── Contract         # Generated models + service interfaces
-│   ├── Client           # HTTP client implementations
-│   ├── MockClient       # Test mocks
-│   └── Tests            # Discovery & quirk testing
-│
-└── 🔶 Kiota/            # Lower-level generated SDK
-    ├── Contract         # Generated model classes (POCOs)
-    ├── Client           # Fluent request builders
-    ├── MockClient       # Test mocks
-    └── Tests            # Discovery & quirk testing
+┌─────────────────────────────────────┐
+│     Your Application Code           │
+└──────────────┬──────────────────────┘
+               │ IOptionService, etc.
+┌──────────────▼──────────────────────┐
+│   IBKR.Sdk.Client (High-level)      │
+│   - Clean interfaces                │
+│   - Intuitive models                │
+│   - Production-ready wrappers       │
+└──────────────┬──────────────────────┘
+               │
+┌──────────────▼──────────────────────┐
+│   Authentication Layer              │
+│   - OAuth2 + JWT                    │
+│   - Token caching                   │
+│   - Session management              │
+└──────────────┬──────────────────────┘
+               │
+┌──────────────▼──────────────────────┐
+│   Generated Clients                 │
+│   - NSwag (default)                 │
+│   - Kiota (alternative)             │
+└──────────────┬──────────────────────┘
+               │
+┌──────────────▼──────────────────────┐
+│   IBKR Client Portal API            │
+└─────────────────────────────────────┘
 ```
 
-## 🎯 Which SDK Should I Use?
+## Documentation
 
-| Scenario | Recommended SDK | Why? |
-|----------|----------------|------|
-| **Production applications** | **IBKR SDK** ⭐ | Strongly-typed, built-in error handling, API quirks handled |
-| **Quick prototypes** | **IBKR SDK** ⭐ | Minimal setup, comprehensive documentation |
-| **Enterprise .NET apps** | **IBKR SDK** ⭐ | DI-friendly, production-ready abstractions |
-| **Need lower-level control** | **NSwag** | Direct API access, service interfaces |
-| **Fluent API preference** | **Kiota** | Discoverable API surface, smaller footprint |
-| **SDK development/testing** | **NSwag/Kiota** | Full mock infrastructure, quirk discovery |
+- **[IBKR.Sdk.Client README](src/IBKR.Sdk.Client/README.md)** - Comprehensive usage guide
+- **[IBKR API Docs](https://www.interactivebrokers.com/api/doc.html)** - Official API documentation
 
-**→ [Detailed SDK Comparison](docs/SDK-COMPARISON.md)**
+## Requirements
 
-## 📚 Documentation
+- .NET 8.0 or later
+- IBKR account with OAuth2 credentials
+- RSA key pair generated from IBKR portal
 
-### Getting Started
-- **[Getting Started](docs/GETTING-STARTED.md)** - Installation, first API call, authentication
-- **[IBKR SDK Guide](docs/IBKR-SDK.md)** - Production-ready abstraction layer (recommended)
-- **[SDK Comparison](docs/SDK-COMPARISON.md)** - Side-by-side code examples and decision guide
+## Authentication Setup
 
-### SDK-Specific Guides
-- **[NSwag SDK Guide](docs/NSWAG-SDK.md)** - Service-oriented architecture details
-- **[Kiota SDK Guide](docs/KIOTA-SDK.md)** - Fluent API architecture details
+1. Go to [IBKR Web Portal](https://www.interactivebrokers.com/portal)
+2. Navigate to Settings → API → OAuth2
+3. Create consumer app → Generate RSA key pair
+4. Save `kid` (Key ID) and download private key PEM file
+5. Use credentials in your app configuration
 
-### Development & Testing
-- **[Testing Guide](docs/TESTING.md)** - Mock vs real implementations, DI patterns
-- **[Architecture](docs/ARCHITECTURE.md)** - Repository structure and generation workflow
-- **[Contributing](docs/CONTRIBUTING.md)** - How to regenerate SDKs and contribute
-- **[Release Workflow](docs/RELEASE-WORKFLOW.md)** - CI/CD and package publishing
+## Contributing
 
-## 🏗️ Architecture Highlights
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-- ✅ **Three-Layer Architecture** - IBKR SDK → NSwag/Kiota → OpenAPI spec
-- ✅ **Production-Ready Abstractions** - Built-in error handling and API quirk workarounds
-- ✅ **Dual SDK Generation** - NSwag + Kiota from single OpenAPI spec
-- ✅ **Automated Reorganization** - Splits generated code into Contract/Client projects
-- ✅ **Comprehensive Test Suite** - High-quality logging, mocks + real API support
-- ✅ **CI/CD Ready** - GitHub Actions workflow with parallel job execution
-- ✅ **NuGet Packaging** - Production-ready packages with symbols
+## License
 
-## 🔧 Development
+MIT License - see [LICENSE](LICENSE) for details
 
-```bash
-# Generate both SDKs locally
-cd src/IBKR.Api.Generator
-dotnet run
+## Disclaimer
 
-# Scaffold test infrastructure
-cd ../IBKR.Api.TestScaffold
-dotnet run
+This is an unofficial SDK. Not affiliated with or endorsed by Interactive Brokers LLC. Use at your own risk.
 
-# Build everything
-cd ..
-dotnet build IBKR.Sdk.sln
+## Support
 
-# Run tests (uses mocks by default)
-dotnet test IBKR.Sdk.sln
-```
-
-See [Testing Guide](docs/TESTING.md) for using real IBKR API credentials.
-
-## 📝 License
-
-MIT License - Copyright © 2025 Paul Fryer
-
-See [LICENSE](LICENSE) for full details.
-
-## 🤝 Contributing
-
-Contributions welcome! Please see [CONTRIBUTING.md](docs/CONTRIBUTING.md) for guidelines.
-
-## 🔗 Links
-
-- **GitHub Repository**: https://github.com/paulfryer/ibkr
-- **Interactive Brokers API Docs**: https://ibkrcampus.com/ibkr-api-page/cpapi-v1/
-- **Issues & Support**: https://github.com/paulfryer/ibkr/issues
-
----
-
-**Note**: These SDKs are auto-generated from the Interactive Brokers OpenAPI specification. They are not officially maintained by Interactive Brokers.
+- **Issues**: [GitHub Issues](https://github.com/USERNAME/REPO/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/USERNAME/REPO/discussions)

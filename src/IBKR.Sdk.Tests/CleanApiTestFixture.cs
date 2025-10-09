@@ -1,4 +1,4 @@
-using IBKR.Sdk.Authentication;
+using IBKR.Api.Authentication;
 using IBKR.Sdk.Client.Services;
 using IBKR.Sdk.Contract.Interfaces;
 using IBKR.Api.NSwag.Authentication;

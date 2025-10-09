@@ -2,7 +2,7 @@ using System.Security.Cryptography;
 using System.Text;
 using Newtonsoft.Json;
 
-namespace IBKR.Sdk.Authentication;
+namespace IBKR.Api.Authentication;
 
 /// <summary>
 /// JWT signing with RSA for IBKR OAuth2

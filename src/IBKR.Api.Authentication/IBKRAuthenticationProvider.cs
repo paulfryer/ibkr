@@ -2,7 +2,7 @@ using System.Net.Http.Json;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace IBKR.Sdk.Authentication;
+namespace IBKR.Api.Authentication;
 
 /// <summary>
 /// IBKR OAuth2 authentication provider implementing 3-step flow:

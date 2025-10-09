@@ -24,13 +24,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\IBKR.Sdk.Authentication\IBKR.Sdk.Authentication.csproj" />
     <ProjectReference Include="..\..\IBKR.Sdk.Contract\IBKR.Sdk.Contract.csproj" />
     <ProjectReference Include="..\..\IBKR.Sdk.Client\IBKR.Sdk.Client.csproj" />
     <ProjectReference Include="..\IBKR.Api.NSwag.Authentication\IBKR.Api.NSwag.Authentication.csproj" />
     <ProjectReference Include="..\IBKR.Api.NSwag.Contract\IBKR.Api.NSwag.Contract.csproj" />
     <ProjectReference Include="..\IBKR.Api.NSwag.Client\IBKR.Api.NSwag.Client.csproj" />
-    <ProjectReference Include="..\IBKR.Api.NSwag.MockClient\IBKR.Api.NSwag.MockClient.csproj" />
   </ItemGroup>
 
   <ItemGroup>

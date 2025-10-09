@@ -8,13 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\IBKR.Sdk.Authentication\IBKR.Sdk.Authentication.csproj" />
+    <ProjectReference Include="..\..\IBKR.Api.Authentication\IBKR.Api.Authentication.csproj" />
     <ProjectReference Include="..\IBKR.Api.Kiota.Client\IBKR.Api.Kiota.Client.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.1" />
     <PackageReference Include="Microsoft.Kiota.Abstractions" Version="1.19.0" />
     <PackageReference Include="Microsoft.Kiota.Http.HttpClientLibrary" Version="1.19.0" />
   </ItemGroup>
