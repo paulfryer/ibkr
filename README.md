@@ -119,11 +119,15 @@ This repository contains 9 NuGet packages organized by layer:
 
 ## Authentication Setup
 
-1. Go to [IBKR Web Portal](https://www.interactivebrokers.com/portal)
-2. Navigate to Settings → API → OAuth2
-3. Create consumer app → Generate RSA key pair
-4. Save `kid` (Key ID) and download private key PEM file
-5. Use credentials in your app configuration
+You'll need OAuth2 credentials with RSA key pair from IBKR:
+
+1. **Contact IBKR API Team**: Email api-solutions@interactivebrokers.com to request OAuth2 access
+2. **Generate RSA Key Pair**: Create a 3072-bit RSA key pair for signing JWTs
+3. **Register with IBKR**: Provide your public key and receive your `kid` (Key ID)
+4. **Get Client ID**: Use "TESTCONS" for paper trading, or your assigned consumer ID for live
+5. **Configure SDK**: Use your credentials (ClientId, Credential/username, ClientKeyId/kid, PEM file path)
+
+See [IBKR OAuth Documentation](https://www.interactivebrokers.com/campus/ibkr-api-page/oauth-1-0a-extended/) for details.
 
 ## Contributing
 
