@@ -11,7 +11,7 @@ namespace IBKR.Api.NSwag.Tests;
 /// <summary>
 /// Test fixture for dependency injection setup.
 /// Uses Mock client by default. Set Testing:UseMockClient=false to test against real IBKR API.
-/// Credentials can be provided via appsettings.json or environment variables (IBKR__ClientId, etc.)
+/// Credentials can be provided via appsettings.json or environment variables (IBKR_CLIENT_ID, etc.)
 /// </summary>
 public class TestFixture : IDisposable
 {
@@ -59,10 +59,10 @@ public class TestFixture : IDisposable
             // Load authentication options from configuration or environment variables
             var authOptions = new IBKRAuthenticationOptions
             {
-                ClientId = Configuration["IBKR:ClientId"] ?? throw new InvalidOperationException("IBKR:ClientId not configured. Set via appsettings.json or environment variable IBKR__ClientId"),
-                Credential = Configuration["IBKR:Credential"] ?? throw new InvalidOperationException("IBKR:Credential not configured. Set via appsettings.json or environment variable IBKR__Credential"),
-                ClientKeyId = Configuration["IBKR:ClientKeyId"] ?? throw new InvalidOperationException("IBKR:ClientKeyId not configured. Set via appsettings.json or environment variable IBKR__ClientKeyId"),
-                ClientPemPath = Configuration["IBKR:ClientPemPath"] ?? throw new InvalidOperationException("IBKR:ClientPemPath not configured. Set via appsettings.json or environment variable IBKR__ClientPemPath"),
+                ClientId = Configuration["IBKR:ClientId"] ?? throw new InvalidOperationException("IBKR:ClientId not configured. Set via appsettings.json or environment variable IBKR_CLIENT_ID"),
+                Credential = Configuration["IBKR:Credential"] ?? throw new InvalidOperationException("IBKR:Credential not configured. Set via appsettings.json or environment variable IBKR_CREDENTIAL"),
+                ClientKeyId = Configuration["IBKR:ClientKeyId"] ?? throw new InvalidOperationException("IBKR:ClientKeyId not configured. Set via appsettings.json or environment variable IBKR_CLIENT_KEY_ID"),
+                ClientPemPath = Configuration["IBKR:ClientPemPath"] ?? throw new InvalidOperationException("IBKR:ClientPemPath not configured. Set via appsettings.json or environment variable IBKR_CLIENT_PEM_PATH"),
                 BaseUrl = Configuration["IBKR:BaseUrl"] ?? "https://api.ibkr.com"
             };
 
