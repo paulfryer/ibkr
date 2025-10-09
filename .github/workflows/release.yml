@@ -493,10 +493,10 @@ jobs:
       - name: 📥 Checkout repository
         uses: actions/checkout@v4
 
-      - name: 📥 Download SDKs with tests
+      - name: 📥 Download generated SDKs
         uses: actions/download-artifact@v4
         with:
-          name: sdks-with-tests
+          name: generated-sdks
           path: src/
 
       - name: 🔨 Setup .NET SDK
@@ -539,10 +539,10 @@ jobs:
       - name: 📥 Checkout repository
         uses: actions/checkout@v4
 
-      - name: 📥 Download SDKs with tests
+      - name: 📥 Download generated SDKs
         uses: actions/download-artifact@v4
         with:
-          name: sdks-with-tests
+          name: generated-sdks
           path: src/
 
       - name: 🔨 Setup .NET SDK
@@ -587,10 +587,10 @@ jobs:
       - name: 📥 Checkout repository
         uses: actions/checkout@v4
 
-      - name: 📥 Download SDKs with tests
+      - name: 📥 Download generated SDKs
         uses: actions/download-artifact@v4
         with:
-          name: sdks-with-tests
+          name: generated-sdks
           path: src/
 
       - name: 🔨 Setup .NET SDK
