@@ -17,7 +17,6 @@
 
     <!-- Documentation -->
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
 
     <!--
       Suppress warnings common in auto-generated code:

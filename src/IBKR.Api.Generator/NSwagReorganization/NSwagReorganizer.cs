@@ -318,6 +318,7 @@ public partial class ApiException<TResult> : ApiException
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <Description>Auto-generated data models for Interactive Brokers Client Portal API using NSwag</Description>
   </PropertyGroup>
 
   <ItemGroup>
@@ -342,6 +343,7 @@ public partial class ApiException<TResult> : ApiException
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <Description>Auto-generated HTTP client for Interactive Brokers Client Portal API using NSwag</Description>
   </PropertyGroup>
 
   <ItemGroup>

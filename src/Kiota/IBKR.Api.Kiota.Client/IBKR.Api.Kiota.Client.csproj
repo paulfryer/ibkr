@@ -16,8 +16,4 @@
     <ProjectReference Include="..\IBKR.Api.Kiota.Contract\IBKR.Api.Kiota.Contract.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include="README.md" Pack="true" PackagePath="\"/>
-  </ItemGroup>
-
 </Project>

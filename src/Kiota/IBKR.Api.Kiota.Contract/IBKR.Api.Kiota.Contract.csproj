@@ -13,8 +13,4 @@
     <PackageReference Include="Microsoft.Kiota.Serialization.Text" Version="1.19.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include="README.md" Pack="true" PackagePath="\"/>
-  </ItemGroup>
-
 </Project>

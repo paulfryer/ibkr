@@ -13,6 +13,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <Description>A clean, intuitive .NET SDK for Interactive Brokers Client Portal API with AWS SDK-like developer experience</Description>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>

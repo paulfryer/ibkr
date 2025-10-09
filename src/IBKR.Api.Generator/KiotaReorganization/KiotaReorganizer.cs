@@ -69,6 +69,7 @@ public class KiotaReorganizer
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <Description>Auto-generated data models for Interactive Brokers Client Portal API using Microsoft Kiota</Description>
   </PropertyGroup>
 
   <ItemGroup>
@@ -92,6 +93,7 @@ public class KiotaReorganizer
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <Description>Auto-generated HTTP client for Interactive Brokers Client Portal API using Microsoft Kiota</Description>
   </PropertyGroup>
 
   <ItemGroup>
