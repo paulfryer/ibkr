@@ -793,7 +793,7 @@ jobs:
             ## 📦 Packages Included (9 total)
 
             ### ⭐ High-Level SDK (Recommended)
-            - **IBKR.Sdk.Client** - Clean, AWS-like developer experience
+            - **IBKR.Sdk.Client** - Clean, intuitive developer experience
             - **IBKR.Sdk.Contract** - Hand-crafted interfaces and models
 
             ### 🔐 Authentication
@@ -842,7 +842,7 @@ jobs:
             ## ✅ Features
 
             - Clean, typed interfaces (no raw JSON or confusing generated code)
-            - AWS SDK-like developer experience
+            - Simple one-line setup with dependency injection
             - Automatic authentication, token refresh, and session management
             - Built-in dependency injection support
             - Comprehensive test coverage

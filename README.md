@@ -60,7 +60,7 @@ This repository contains 9 NuGet packages organized by layer:
 
 | Package | Description | NuGet |
 |---------|-------------|-------|
-| **[IBKR.Sdk.Client](src/IBKR.Sdk.Client)** | Clean, intuitive SDK with AWS-like DX | [![NuGet](https://img.shields.io/nuget/v/IBKR.Sdk.Client.svg)](https://www.nuget.org/packages/IBKR.Sdk.Client/) |
+| **[IBKR.Sdk.Client](src/IBKR.Sdk.Client)** | Clean, intuitive SDK for .NET | [![NuGet](https://img.shields.io/nuget/v/IBKR.Sdk.Client.svg)](https://www.nuget.org/packages/IBKR.Sdk.Client/) |
 | [IBKR.Sdk.Contract](src/IBKR.Sdk.Contract) | Hand-crafted models and interfaces | [![NuGet](https://img.shields.io/nuget/v/IBKR.Sdk.Contract.svg)](https://www.nuget.org/packages/IBKR.Sdk.Contract/) |
 
 ### 🔐 Authentication
@@ -83,7 +83,7 @@ This repository contains 9 NuGet packages organized by layer:
 ## Features
 
 - ✅ **Clean API** - No confusing generated types in your code
-- ✅ **AWS SDK-like DX** - Simple `AddIBKRSdk()` setup
+- ✅ **Simple setup** - One-line `AddIBKRSdk()` configuration
 - ✅ **Production-ready** - Handles auth, token refresh, session management automatically
 - ✅ **Dependency Injection** - Built for modern .NET
 - ✅ **Option Chain Discovery** - Find available strikes and expirations for any symbol

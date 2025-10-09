@@ -1,6 +1,6 @@
 # IBKR SDK Quick Start Example
 
-This example demonstrates the AWS SDK-like developer experience of the IBKR SDK.
+This example demonstrates the clean, intuitive developer experience of the IBKR SDK.
 
 ## Setup
 
@@ -8,13 +8,11 @@ This example demonstrates the AWS SDK-like developer experience of the IBKR SDK.
 
 ```json
 {
-  "IBKR": {
-    "ClientId": "YOUR_CLIENT_ID",
-    "Credential": "YOUR_USERNAME",
-    "ClientKeyId": "YOUR_KEY_ID_FROM_PORTAL",
-    "ClientPemPath": "/path/to/your/private-key.pem",
-    "BaseUrl": "https://api.ibkr.com"
-  }
+  "IBKR_CLIENT_ID": "YOUR_CLIENT_ID",
+  "IBKR_CREDENTIAL": "YOUR_USERNAME",
+  "IBKR_CLIENT_KEY_ID": "YOUR_KEY_ID_FROM_PORTAL",
+  "IBKR_CLIENT_PEM_PATH": "/path/to/your/private-key.pem",
+  "IBKR_BASE_URL": "https://api.ibkr.com"
 }
 ```
 
@@ -26,7 +24,7 @@ dotnet run
 
 ## What This Demonstrates
 
-- **One-line setup**: `services.AddIBKRSdk(configuration.GetSection("IBKR"))`
+- **One-line setup**: `services.AddIBKRSdk()`
 - **Configuration-based**: No hardcoded credentials in code
 - **Environment variable support**: Override appsettings.json with env vars
 - **Dependency injection**: Clean, testable architecture

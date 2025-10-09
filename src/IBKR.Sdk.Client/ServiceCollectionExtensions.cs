@@ -12,30 +12,28 @@ namespace IBKR.Sdk.Client;
 
 /// <summary>
 /// Extension methods for configuring IBKR SDK services with dependency injection.
-/// Provides AWS SDK-like developer experience: services.AddIBKRSdk(config).
+/// Provides simple one-line setup: services.AddIBKRSdk(config).
 /// </summary>
 public static class ServiceCollectionExtensions
 {
     /// <summary>
-    /// Add IBKR SDK services to the service collection using configuration from appsettings.json.
+    /// Add IBKR SDK services to the service collection using configuration from appsettings.json or environment variables.
     /// </summary>
     /// <param name="services">The service collection</param>
-    /// <param name="configuration">Configuration section containing IBKR settings (e.g., from "IBKR" section)</param>
+    /// <param name="configuration">Configuration root (reads IBKR_* keys from flat structure)</param>
     /// <returns>The service collection for chaining</returns>
     /// <example>
     /// <code>
     /// // In Program.cs or Startup.cs
-    /// services.AddIBKRSdk(Configuration.GetSection("IBKR"));
+    /// services.AddIBKRSdk(Configuration);
     ///
     /// // appsettings.json:
     /// {
-    ///   "IBKR": {
-    ///     "ClientId": "TESTCONS",
-    ///     "Credential": "username",
-    ///     "ClientKeyId": "kid-from-portal",
-    ///     "ClientPemPath": "/path/to/private-key.pem",
-    ///     "BaseUrl": "https://api.ibkr.com"
-    ///   }
+    ///   "IBKR_CLIENT_ID": "TESTCONS",
+    ///   "IBKR_CREDENTIAL": "username",
+    ///   "IBKR_CLIENT_KEY_ID": "kid-from-portal",
+    ///   "IBKR_CLIENT_PEM_PATH": "/path/to/private-key.pem",
+    ///   "IBKR_BASE_URL": "https://api.ibkr.com"
     /// }
     /// </code>
     /// </example>

@@ -13,8 +13,8 @@ var configuration = new ConfigurationBuilder()
 // Setup dependency injection
 var services = new ServiceCollection();
 
-// ⭐ AWS SDK-like setup - ONE LINE!
-services.AddIBKRSdk(configuration.GetSection("IBKR"));
+// ⭐ Simple one-line setup!
+services.AddIBKRSdk(configuration);
 
 var serviceProvider = services.BuildServiceProvider();
 

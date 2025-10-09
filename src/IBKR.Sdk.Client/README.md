@@ -1,6 +1,6 @@
 # IBKR.Sdk.Client
 
-A clean, intuitive .NET SDK for Interactive Brokers Client Portal API with AWS SDK-like developer experience.
+A clean, intuitive .NET SDK for Interactive Brokers Client Portal API.
 
 [![NuGet](https://img.shields.io/nuget/v/IBKR.Sdk.Client.svg)](https://www.nuget.org/packages/IBKR.Sdk.Client/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
@@ -10,7 +10,7 @@ A clean, intuitive .NET SDK for Interactive Brokers Client Portal API with AWS S
 The IBKR Client Portal API is powerful but has a complex, inconsistent surface. This SDK provides:
 
 - **Clean, typed interfaces** - No raw JSON, no confusing generated code in your application
-- **AWS SDK-like DX** - Simple setup with `services.AddIBKRSdk()`
+- **Simple setup** - One-line configuration with `services.AddIBKRSdk()`
 - **Production-ready** - Handles authentication, token refresh, session management automatically
 - **Dependency injection native** - Built for modern .NET with full DI support
 - **Option chain discovery** - Find available strikes and expirations for any symbol
@@ -91,19 +91,17 @@ builder.Services.AddIBKRSdk();  // Automatically uses env vars
 **appsettings.json:**
 ```json
 {
-  "IBKR": {
-    "ClientId": "TESTCONS",
-    "Credential": "your_username",
-    "ClientKeyId": "your-kid",
-    "ClientPemPath": "/path/to/private-key.pem",
-    "BaseUrl": "https://api.ibkr.com"
-  }
+  "IBKR_CLIENT_ID": "TESTCONS",
+  "IBKR_CREDENTIAL": "your_username",
+  "IBKR_CLIENT_KEY_ID": "your-kid",
+  "IBKR_CLIENT_PEM_PATH": "/path/to/private-key.pem",
+  "IBKR_BASE_URL": "https://api.ibkr.com"
 }
 ```
 
 **Program.cs:**
 ```csharp
-builder.Services.AddIBKRSdk(builder.Configuration.GetSection("IBKR"));
+builder.Services.AddIBKRSdk(builder.Configuration);
 ```
 
 ### 3. Configuration Action
