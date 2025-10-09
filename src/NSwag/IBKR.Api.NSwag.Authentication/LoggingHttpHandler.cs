@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Logging;
+
 namespace IBKR.Api.NSwag.Authentication;
 
 /// <summary>
@@ -5,51 +7,58 @@ namespace IBKR.Api.NSwag.Authentication;
 /// </summary>
 public class LoggingHttpHandler : DelegatingHandler
 {
+    private readonly ILogger<LoggingHttpHandler> _logger;
+
+    public LoggingHttpHandler(ILogger<LoggingHttpHandler> logger)
+    {
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+    }
+
     protected override async Task<HttpResponseMessage> SendAsync(
         HttpRequestMessage request,
         CancellationToken cancellationToken)
     {
-        Console.WriteLine("=== HTTP REQUEST ===");
-        Console.WriteLine($"Method: {request.Method}");
-        Console.WriteLine($"URI: {request.RequestUri}");
-        Console.WriteLine("Headers:");
+        _logger.LogDebug("=== HTTP REQUEST ===");
+        _logger.LogDebug("Method: {Method}", request.Method);
+        _logger.LogDebug("URI: {Uri}", request.RequestUri);
+        _logger.LogDebug("Headers:");
         foreach (var header in request.Headers)
         {
-            Console.WriteLine($"  {header.Key}: {string.Join(", ", header.Value)}");
+            _logger.LogDebug("  {HeaderKey}: {HeaderValue}", header.Key, string.Join(", ", header.Value));
         }
 
         if (request.Content != null)
         {
-            Console.WriteLine("Content Headers:");
+            _logger.LogDebug("Content Headers:");
             foreach (var header in request.Content.Headers)
             {
-                Console.WriteLine($"  {header.Key}: {string.Join(", ", header.Value)}");
+                _logger.LogDebug("  {HeaderKey}: {HeaderValue}", header.Key, string.Join(", ", header.Value));
             }
 
             var content = await request.Content.ReadAsStringAsync(cancellationToken);
             if (!string.IsNullOrEmpty(content))
             {
-                Console.WriteLine($"Body: {content}");
+                _logger.LogDebug("Body: {Body}", content);
             }
         }
 
         var response = await base.SendAsync(request, cancellationToken);
 
-        Console.WriteLine("=== HTTP RESPONSE ===");
-        Console.WriteLine($"Status: {(int)response.StatusCode} {response.StatusCode}");
-        Console.WriteLine("Headers:");
+        _logger.LogDebug("=== HTTP RESPONSE ===");
+        _logger.LogDebug("Status: {StatusCode} {StatusText}", (int)response.StatusCode, response.StatusCode);
+        _logger.LogDebug("Headers:");
         foreach (var header in response.Headers)
         {
-            Console.WriteLine($"  {header.Key}: {string.Join(", ", header.Value)}");
+            _logger.LogDebug("  {HeaderKey}: {HeaderValue}", header.Key, string.Join(", ", header.Value));
         }
 
         if (response.Content != null)
         {
             var responseContent = await response.Content.ReadAsStringAsync(cancellationToken);
-            Console.WriteLine($"Body: {responseContent}");
+            _logger.LogDebug("Body: {Body}", responseContent);
         }
 
-        Console.WriteLine("===================");
+        _logger.LogDebug("===================");
 
         return response;
     }

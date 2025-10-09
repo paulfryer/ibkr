@@ -2,6 +2,7 @@ using IBKR.Sdk.Client.Services;
 using IBKR.Sdk.Contract.Enums;
 using IBKR.Sdk.Contract.Interfaces;
 using IBKR.Api.NSwag.Contract.Interfaces;
+using Microsoft.Extensions.Logging;
 using Xunit;
 
 namespace IBKR.Api.NSwag.Tests;
@@ -20,9 +21,10 @@ public class CleanOptionServiceTests : IClassFixture<TestFixture>
     {
         // Get the raw NSwag service from TestFixture
         var nswagIserver = fixture.GetService<IIserverService>();
+        var logger = fixture.GetService<ILogger<OptionService>>();
 
         // Wrap it with our clean service
-        _optionService = new OptionService(nswagIserver);
+        _optionService = new OptionService(nswagIserver, logger);
     }
 
     [Theory(Skip = "Requires authenticated IBKR session")]

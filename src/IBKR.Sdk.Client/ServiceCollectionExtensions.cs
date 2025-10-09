@@ -6,6 +6,7 @@ using IBKR.Api.NSwag.Client.Services;
 using IBKR.Api.NSwag.Contract.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace IBKR.Sdk.Client;
 
@@ -114,7 +115,8 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IOptionService>(sp =>
         {
             var nswagIserver = sp.GetRequiredService<IIserverService>();
-            return new OptionService(nswagIserver);
+            var logger = sp.GetRequiredService<ILogger<OptionService>>();
+            return new OptionService(nswagIserver, logger);
         });
 
         // Future: Add more high-level services here as they're developed

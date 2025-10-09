@@ -4,6 +4,7 @@ using IBKR.Sdk.Contract.Models;
 using IBKR.Sdk.Client.Mappers;
 using IBKR.Api.NSwag.Contract.Interfaces;
 using IBKR.Api.NSwag.Contract.Models;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace IBKR.Sdk.Client.Services;
@@ -16,10 +17,12 @@ public class OptionService : IOptionService
 {
     private readonly IIserverService _nswagIserver;
     private readonly OptionMapper _mapper;
+    private readonly ILogger<OptionService> _logger;
 
-    public OptionService(IIserverService nswagIserver)
+    public OptionService(IIserverService nswagIserver, ILogger<OptionService> logger)
     {
         _nswagIserver = nswagIserver ?? throw new ArgumentNullException(nameof(nswagIserver));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _mapper = new OptionMapper();
     }
 
@@ -82,7 +85,7 @@ public class OptionService : IOptionService
             catch (Exception ex)
             {
                 // Log but continue processing other months
-                Console.WriteLine($"Error processing month {month}: {ex.Message}");
+                _logger.LogError(ex, "Error processing month {Month}", month);
             }
         }
 
